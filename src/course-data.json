@@ -1,0 +1,3592 @@
+{
+  "generatedAt": "2026-07-28",
+  "stages": [
+    {
+      "id": "stage-0",
+      "index": 0,
+      "title": "第 0 阶段 · 前置能力诊断与定向复习",
+      "shortTitle": "前置能力诊断与定向复习",
+      "time": "第 1～2 周",
+      "weekStart": 1,
+      "weekEnd": 2,
+      "color": "#38bdf8"
+    },
+    {
+      "id": "stage-1",
+      "index": 1,
+      "title": "第 1 阶段 · CUDA 编程模型与 GPU 架构",
+      "shortTitle": "CUDA 编程模型与 GPU 架构",
+      "time": "第 3～8 周",
+      "weekStart": 3,
+      "weekEnd": 8,
+      "color": "#22d3ee"
+    },
+    {
+      "id": "stage-2",
+      "index": 2,
+      "title": "第 2 阶段 · 并行算法模式",
+      "shortTitle": "并行算法模式",
+      "time": "第 9～14 周",
+      "weekStart": 9,
+      "weekEnd": 14,
+      "color": "#2dd4bf"
+    },
+    {
+      "id": "stage-3",
+      "index": 3,
+      "title": "第 3 阶段 · GEMM、流水线与 Tensor Core",
+      "shortTitle": "GEMM、流水线与 Tensor Core",
+      "time": "第 15～20 周",
+      "weekStart": 15,
+      "weekEnd": 20,
+      "color": "#4ade80"
+    },
+    {
+      "id": "stage-4",
+      "index": 4,
+      "title": "第 4 阶段 · PyTorch 自定义 CUDA 算子",
+      "shortTitle": "PyTorch 自定义 CUDA 算子",
+      "time": "第 21～25 周",
+      "weekStart": 21,
+      "weekEnd": 25,
+      "color": "#a3e635"
+    },
+    {
+      "id": "stage-5",
+      "index": 5,
+      "title": "第 5 阶段 · Triton Kernel",
+      "shortTitle": "Triton Kernel",
+      "time": "第 26～30 周",
+      "weekStart": 26,
+      "weekEnd": 30,
+      "color": "#facc15"
+    },
+    {
+      "id": "stage-6",
+      "index": 6,
+      "title": "第 6 阶段 · FlashAttention 与大模型核心 Kernel",
+      "shortTitle": "FlashAttention 与大模型核心 Kernel",
+      "time": "第 31～37 周",
+      "weekStart": 31,
+      "weekEnd": 37,
+      "color": "#fb923c"
+    },
+    {
+      "id": "stage-7",
+      "index": 7,
+      "title": "第 7 阶段 · CUTLASS 与 CuTe",
+      "shortTitle": "CUTLASS 与 CuTe",
+      "time": "第 38～42 周",
+      "weekStart": 38,
+      "weekEnd": 42,
+      "color": "#f472b6"
+    },
+    {
+      "id": "stage-8",
+      "index": 8,
+      "title": "第 8 阶段 · 多 GPU 与大模型训练系统",
+      "shortTitle": "多 GPU 与大模型训练系统",
+      "time": "第 43～47 周",
+      "weekStart": 43,
+      "weekEnd": 47,
+      "color": "#a78bfa"
+    },
+    {
+      "id": "stage-9",
+      "index": 9,
+      "title": "第 9 阶段 · 作品集、源码与求职",
+      "shortTitle": "作品集、源码与求职",
+      "time": "第 48～52 周",
+      "weekStart": 48,
+      "weekEnd": 52,
+      "color": "#818cf8"
+    }
+  ],
+  "weeks": [
+    {
+      "id": "week-1",
+      "week": 1,
+      "title": "C++、内存与编译工程",
+      "stageId": "stage-0",
+      "stageName": "前置能力诊断与定向复习",
+      "stageIndex": 0,
+      "sections": [
+        {
+          "id": "week-1-阅读",
+          "title": "阅读",
+          "blocks": [
+            {
+              "type": "subheading",
+              "text": "《Effective Modern C++》"
+            },
+            {
+              "type": "paragraph",
+              "text": "读："
+            },
+            {
+              "type": "list",
+              "ordered": false,
+              "items": [
+                "Item 1～4：类型推导；",
+                "Item 5～8：`auto`、初始化、`nullptr`；",
+                "Item 17～23：特殊成员函数、移动语义、完美转发；",
+                "Item 37～39：线程、异步和内存模型基础。"
+              ]
+            },
+            {
+              "type": "paragraph",
+              "text": "不需要把所有 Item 都读完。"
+            },
+            {
+              "type": "subheading",
+              "text": "《深入理解计算机系统》第 3 版"
+            },
+            {
+              "type": "paragraph",
+              "text": "复习："
+            },
+            {
+              "type": "list",
+              "ordered": false,
+              "items": [
+                "第 3 章中与汇编、函数调用、数据布局有关的部分；",
+                "第 5 章：优化程序性能；",
+                "第 6 章：存储器层次结构；",
+                "第 7 章前半部分：链接基础。"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "week-1-需要完善的能力",
+          "title": "需要完善的能力",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "text": "**【科班复习】**"
+            },
+            {
+              "type": "list",
+              "ordered": false,
+              "items": [
+                "栈与堆；",
+                "指针和引用；",
+                "对象生命周期；",
+                "静态库与动态库；",
+                "编译与链接；",
+                "Cache Line；",
+                "空间局部性和时间局部性。"
+              ]
+            },
+            {
+              "type": "paragraph",
+              "text": "**【必须掌握】**"
+            },
+            {
+              "type": "list",
+              "ordered": false,
+              "items": [
+                "RAII；",
+                "移动语义；",
+                "模板函数；",
+                "编译期常量；",
+                "内存对齐；",
+                "`restrict` 思想；",
+                "CMake；",
+                "GDB；",
+                "AddressSanitizer。"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "week-1-编程任务",
+          "title": "编程任务",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "text": "实现一个 CPU 端的基础库："
+            },
+            {
+              "type": "code",
+              "language": "text",
+              "text": "cpp-foundation/\n├── include/\n│   ├── aligned_buffer.hpp\n│   ├── timer.hpp\n│   └── tensor_view.hpp\n├── src/\n├── tests/\n└── CMakeLists.txt"
+            },
+            {
+              "type": "paragraph",
+              "text": "要求实现："
+            },
+            {
+              "type": "list",
+              "ordered": true,
+              "items": [
+                "一个 RAII 管理的对齐内存类；",
+                "一个支持二维 Shape 和 Stride 的 `TensorView`；",
+                "CPU 矩阵乘法；",
+                "CPU Softmax；",
+                "GoogleTest 或 Catch2 单元测试；",
+                "编译成共享库。"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "week-1-达到的深度",
+          "title": "达到的深度",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "text": "本周结束，你必须能回答："
+            },
+            {
+              "type": "list",
+              "ordered": false,
+              "items": [
+                "移动构造函数解决什么问题？",
+                "模板参数和运行时参数有什么区别？",
+                "为什么矩阵按行访问通常比按列访问快？",
+                "静态库和动态库有什么差异？",
+                "为什么内存对齐可能影响 SIMD 和 GPU 访存？",
+                "CMake 是如何组织 `.cpp`、`.cu` 和测试程序的？"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "week-1-验收",
+          "title": "验收",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "text": "不看资料，能在 90 分钟内："
+            },
+            {
+              "type": "list",
+              "ordered": false,
+              "items": [
+                "创建一个 CMake C++ 项目；",
+                "编译共享库；",
+                "编写一个模板函数；",
+                "用单元测试验证 CPU Softmax；",
+                "使用 GDB 定位一次数组越界。"
+              ]
+            },
+            {
+              "type": "paragraph",
+              "text": "全部做到，可以把本周压缩成 3～4 天。"
+            }
+          ]
+        }
+      ],
+      "searchText": "c++、内存与编译工程 前置能力诊断与定向复习 阅读 《effective modern c++》 读： item 1～4：类型推导； item 5～8：`auto`、初始化、`nullptr`； item 17～23：特殊成员函数、移动语义、完美转发； item 37～39：线程、异步和内存模型基础。 不需要把所有 item 都读完。 《深入理解计算机系统》第 3 版 复习： 第 3 章中与汇编、函数调用、数据布局有关的部分； 第 5 章：优化程序性能； 第 6 章：存储器层次结构； 第 7 章前半部分：链接基础。 需要完善的能力 **【科班复习】** 栈与堆； 指针和引用； 对象生命周期； 静态库与动态库； 编译与链接； cache line； 空间局部性和时间局部性。 **【必须掌握】** raii； 移动语义； 模板函数； 编译期常量； 内存对齐； `restrict` 思想； cmake； gdb； addresssanitizer。 编程任务 实现一个 cpu 端的基础库： cpp-foundation/\n├── include/\n│   ├── aligned_buffer.hpp\n│   ├── timer.hpp\n│   └── tensor_view.hpp\n├── src/\n├── tests/\n└── cmakelists.txt 要求实现： 一个 raii 管理的对齐内存类； 一个支持二维 shape 和 stride 的 `tensorview`； cpu 矩阵乘法； cpu softmax； googletest 或 catch2 单元测试； 编译成共享库。 达到的深度 本周结束，你必须能回答： 移动构造函数解决什么问题？ 模板参数和运行时参数有什么区别？ 为什么矩阵按行访问通常比按列访问快？ 静态库和动态库有什么差异？ 为什么内存对齐可能影响 simd 和 gpu 访存？ cmake 是如何组织 `.cpp`、`.cu` 和测试程序的？ 验收 不看资料，能在 90 分钟内： 创建一个 cmake c++ 项目； 编译共享库； 编写一个模板函数； 用单元测试验证 cpu softmax； 使用 gdb 定位一次数组越界。 全部做到，可以把本周压缩成 3～4 天。"
+    },
+    {
+      "id": "week-2",
+      "week": 2,
+      "title": "浮点数、Transformer 计算与性能模型",
+      "stageId": "stage-0",
+      "stageName": "前置能力诊断与定向复习",
+      "stageIndex": 0,
+      "sections": [
+        {
+          "id": "week-2-阅读",
+          "title": "阅读",
+          "blocks": [
+            {
+              "type": "subheading",
+              "text": "PMPP4"
+            },
+            {
+              "type": "list",
+              "ordered": false,
+              "items": [
+                "附录 A：Numerical Considerations；",
+                "第 1 章：Introduction。"
+              ]
+            },
+            {
+              "type": "subheading",
+              "text": "《Build a Large Language Model From Scratch》"
+            },
+            {
+              "type": "paragraph",
+              "text": "重点读："
+            },
+            {
+              "type": "list",
+              "ordered": false,
+              "items": [
+                "第 3 章：Attention；",
+                "第 4 章：GPT 模型结构。"
+              ]
+            },
+            {
+              "type": "paragraph",
+              "text": "第 3 章从头实现 Self-Attention，第 4 章将其组装成 GPT 风格模型。[Manning Publications](https://www.manning.com/preview/build-a-large-language-model-from-scratch/chapter-3)"
+            },
+            {
+              "type": "subheading",
+              "text": "CSAPP"
+            },
+            {
+              "type": "list",
+              "ordered": false,
+              "items": [
+                "第 2 章中浮点数表示部分；",
+                "第 5 章中循环展开、内存访问和编译器优化部分。"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "week-2-需要完善的能力",
+          "title": "需要完善的能力",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "text": "**【科班复习】**"
+            },
+            {
+              "type": "list",
+              "ordered": false,
+              "items": [
+                "IEEE 754；",
+                "FP32；",
+                "矩阵乘法；",
+                "链式法则；",
+                "Big-O；",
+                "Cache 和带宽。"
+              ]
+            },
+            {
+              "type": "paragraph",
+              "text": "**【主修】**"
+            },
+            {
+              "type": "list",
+              "ordered": false,
+              "items": [
+                "FP16；",
+                "BF16；",
+                "TF32；",
+                "FP8 的基本概念；",
+                "Softmax 数值稳定性；",
+                "Mixed Precision；",
+                "FLOPs；",
+                "内存访问量；",
+                "Arithmetic Intensity；",
+                "Compute-bound 与 Memory-bound。"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "week-2-编程任务",
+          "title": "编程任务",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "text": "使用 PyTorch 实现："
+            },
+            {
+              "type": "list",
+              "ordered": false,
+              "items": [
+                "Linear；",
+                "Softmax；",
+                "RMSNorm；",
+                "RoPE；",
+                "MHA；",
+                "GQA；",
+                "SwiGLU。"
+              ]
+            },
+            {
+              "type": "paragraph",
+              "text": "再写一个模型配置分析器："
+            },
+            {
+              "type": "code",
+              "language": "bash",
+              "text": "python analyze_model.py --hidden-size 4096 \\\n                        --layers 32 \\\n                        --heads 32 \\\n                        --kv-heads 8 \\\n                        --seq-len 4096 \\\n                        --dtype bf16"
+            },
+            {
+              "type": "paragraph",
+              "text": "输出："
+            },
+            {
+              "type": "list",
+              "ordered": false,
+              "items": [
+                "参数量；",
+                "权重显存；",
+                "单层 QKV Shape；",
+                "Attention 矩阵大小；",
+                "KV Cache 大小；",
+                "主要矩阵乘法 Shape；",
+                "近似 FLOPs；",
+                "近似内存读写量。"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "week-2-达到的深度",
+          "title": "达到的深度",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "text": "必须能够不查资料推导："
+            },
+            {
+              "type": "code",
+              "language": "text",
+              "text": "X: [B, S, H]\nQ: [B, Nq, S, D]\nK/V: [B, Nkv, S, D]\nAttention Score: [B, Nq, S, S]"
+            },
+            {
+              "type": "paragraph",
+              "text": "并能解释："
+            },
+            {
+              "type": "list",
+              "ordered": false,
+              "items": [
+                "MHA、MQA、GQA 对 KV Cache 的影响；",
+                "Softmax 为什么需要减去最大值；",
+                "FP16 累加为什么容易出现精度问题；",
+                "为什么 RMSNorm 通常是带宽受限算子；",
+                "为什么矩阵乘法通常更偏计算受限。"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "week-2-验收",
+          "title": "验收",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "text": "给你一个任意 Transformer 配置，应在 30 分钟内算出："
+            },
+            {
+              "type": "list",
+              "ordered": false,
+              "items": [
+                "权重显存的数量级；",
+                "KV Cache 显存；",
+                "Attention 的主要 Tensor Shape；",
+                "主要 GEMM 的 M、N、K；",
+                "哪些算子值得融合。"
+              ]
+            }
+          ]
+        }
+      ],
+      "searchText": "浮点数、transformer 计算与性能模型 前置能力诊断与定向复习 阅读 pmpp4 附录 a：numerical considerations； 第 1 章：introduction。 《build a large language model from scratch》 重点读： 第 3 章：attention； 第 4 章：gpt 模型结构。 第 3 章从头实现 self-attention，第 4 章将其组装成 gpt 风格模型。[manning publications](https://www.manning.com/preview/build-a-large-language-model-from-scratch/chapter-3) csapp 第 2 章中浮点数表示部分； 第 5 章中循环展开、内存访问和编译器优化部分。 需要完善的能力 **【科班复习】** ieee 754； fp32； 矩阵乘法； 链式法则； big-o； cache 和带宽。 **【主修】** fp16； bf16； tf32； fp8 的基本概念； softmax 数值稳定性； mixed precision； flops； 内存访问量； arithmetic intensity； compute-bound 与 memory-bound。 编程任务 使用 pytorch 实现： linear； softmax； rmsnorm； rope； mha； gqa； swiglu。 再写一个模型配置分析器： python analyze_model.py --hidden-size 4096 \\\n                        --layers 32 \\\n                        --heads 32 \\\n                        --kv-heads 8 \\\n                        --seq-len 4096 \\\n                        --dtype bf16 输出： 参数量； 权重显存； 单层 qkv shape； attention 矩阵大小； kv cache 大小； 主要矩阵乘法 shape； 近似 flops； 近似内存读写量。 达到的深度 必须能够不查资料推导： x: [b, s, h]\nq: [b, nq, s, d]\nk/v: [b, nkv, s, d]\nattention score: [b, nq, s, s] 并能解释： mha、mqa、gqa 对 kv cache 的影响； softmax 为什么需要减去最大值； fp16 累加为什么容易出现精度问题； 为什么 rmsnorm 通常是带宽受限算子； 为什么矩阵乘法通常更偏计算受限。 验收 给你一个任意 transformer 配置，应在 30 分钟内算出： 权重显存的数量级； kv cache 显存； attention 的主要 tensor shape； 主要 gemm 的 m、n、k； 哪些算子值得融合。"
+    },
+    {
+      "id": "week-3",
+      "week": 3,
+      "title": "CUDA 程序基本结构",
+      "stageId": "stage-1",
+      "stageName": "CUDA 编程模型与 GPU 架构",
+      "stageIndex": 1,
+      "sections": [
+        {
+          "id": "week-3-阅读",
+          "title": "阅读",
+          "blocks": [
+            {
+              "type": "subheading",
+              "text": "PMPP4"
+            },
+            {
+              "type": "list",
+              "ordered": false,
+              "items": [
+                "第 2 章：Heterogeneous Data Parallel Computing。"
+              ]
+            },
+            {
+              "type": "subheading",
+              "text": "CUDA Programming Guide"
+            },
+            {
+              "type": "list",
+              "ordered": false,
+              "items": [
+                "1.1 Introduction；",
+                "1.2 Programming Model；",
+                "1.3 CUDA Platform；",
+                "2.1 Intro to CUDA C++。"
+              ]
+            },
+            {
+              "type": "paragraph",
+              "text": "官方指南将 Part 1 和 Part 2 定位为 CUDA 新学习者的引导式内容。[NVIDIA Docs](https://docs.nvidia.com/cuda/cuda-programming-guide/index.html)"
+            }
+          ]
+        },
+        {
+          "id": "week-3-学习要求",
+          "title": "学习要求",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "text": "掌握："
+            },
+            {
+              "type": "list",
+              "ordered": false,
+              "items": [
+                "Host 与 Device；",
+                "Kernel；",
+                "`__global__`；",
+                "`__device__`；",
+                "`__host__`；",
+                "`cudaMalloc`；",
+                "`cudaMemcpy`；",
+                "`cudaFree`；",
+                "Kernel Launch；",
+                "Grid、Block、Thread；",
+                "CUDA 错误检查；",
+                "CUDA Event。"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "week-3-编程任务",
+          "title": "编程任务",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "text": "实现："
+            },
+            {
+              "type": "list",
+              "ordered": true,
+              "items": [
+                "Vector Add；",
+                "SAXPY；",
+                "Vector Scale；",
+                "Element-wise ReLU；",
+                "Element-wise SiLU。"
+              ]
+            },
+            {
+              "type": "paragraph",
+              "text": "每个算子都需要："
+            },
+            {
+              "type": "list",
+              "ordered": false,
+              "items": [
+                "CPU Reference；",
+                "CUDA Kernel；",
+                "随机测试；",
+                "边界测试；",
+                "CUDA Event Benchmark。"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "week-3-达到的深度",
+          "title": "达到的深度",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "text": "你不能只会复制代码，必须能够解释："
+            },
+            {
+              "type": "code",
+              "language": "cpp",
+              "text": "kernel<<<grid_size, block_size>>>(...);"
+            },
+            {
+              "type": "paragraph",
+              "text": "其中："
+            },
+            {
+              "type": "list",
+              "ordered": false,
+              "items": [
+                "Grid Size 为什么这样计算；",
+                "Block Size 为什么选择 128、256 或 512；",
+                "数据规模不是 Block Size 整数倍时如何处理；",
+                "Kernel Launch 为什么是异步的；",
+                "为什么错误检查通常需要检查 Launch 和同步结果。"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "week-3-验收",
+          "title": "验收",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "text": "在空白文件中独立写出 Vector Add，包括："
+            },
+            {
+              "type": "list",
+              "ordered": false,
+              "items": [
+                "CUDA 内存分配；",
+                "H2D；",
+                "Kernel；",
+                "D2H；",
+                "错误处理；",
+                "Event 计时；",
+                "结果验证。"
+              ]
+            }
+          ]
+        }
+      ],
+      "searchText": "cuda 程序基本结构 cuda 编程模型与 gpu 架构 阅读 pmpp4 第 2 章：heterogeneous data parallel computing。 cuda programming guide 1.1 introduction； 1.2 programming model； 1.3 cuda platform； 2.1 intro to cuda c++。 官方指南将 part 1 和 part 2 定位为 cuda 新学习者的引导式内容。[nvidia docs](https://docs.nvidia.com/cuda/cuda-programming-guide/index.html) 学习要求 掌握： host 与 device； kernel； `__global__`； `__device__`； `__host__`； `cudamalloc`； `cudamemcpy`； `cudafree`； kernel launch； grid、block、thread； cuda 错误检查； cuda event。 编程任务 实现： vector add； saxpy； vector scale； element-wise relu； element-wise silu。 每个算子都需要： cpu reference； cuda kernel； 随机测试； 边界测试； cuda event benchmark。 达到的深度 你不能只会复制代码，必须能够解释： kernel<<<grid_size, block_size>>>(...); 其中： grid size 为什么这样计算； block size 为什么选择 128、256 或 512； 数据规模不是 block size 整数倍时如何处理； kernel launch 为什么是异步的； 为什么错误检查通常需要检查 launch 和同步结果。 验收 在空白文件中独立写出 vector add，包括： cuda 内存分配； h2d； kernel； d2h； 错误处理； event 计时； 结果验证。"
+    },
+    {
+      "id": "week-4",
+      "week": 4,
+      "title": "多维线程映射",
+      "stageId": "stage-1",
+      "stageName": "CUDA 编程模型与 GPU 架构",
+      "stageIndex": 1,
+      "sections": [
+        {
+          "id": "week-4-阅读",
+          "title": "阅读",
+          "blocks": [
+            {
+              "type": "subheading",
+              "text": "PMPP4"
+            },
+            {
+              "type": "list",
+              "ordered": false,
+              "items": [
+                "第 3 章：Multidimensional Grids and Data。"
+              ]
+            },
+            {
+              "type": "subheading",
+              "text": "CUDA Programming Guide"
+            },
+            {
+              "type": "list",
+              "ordered": false,
+              "items": [
+                "2.3 Writing SIMT Kernels；",
+                "5.4 C/C++ Language Extensions 中与内置变量、Kernel Launch 有关的部分。"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "week-4-学习要求",
+          "title": "学习要求",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "text": "掌握："
+            },
+            {
+              "type": "list",
+              "ordered": false,
+              "items": [
+                "`threadIdx`；",
+                "`blockIdx`；",
+                "`blockDim`；",
+                "`gridDim`；",
+                "`dim3`；",
+                "一维、二维、三维线程映射；",
+                "线程与 Tensor 坐标的映射；",
+                "Boundary Check；",
+                "Grid-stride Loop。"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "week-4-编程任务",
+          "title": "编程任务",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "text": "实现："
+            },
+            {
+              "type": "list",
+              "ordered": true,
+              "items": [
+                "Matrix Add；",
+                "Matrix Copy；",
+                "RGB 图像灰度化；",
+                "2D Transpose Naive 版本；",
+                "Batched Element-wise Kernel。"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "week-4-深度要求",
+          "title": "深度要求",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "text": "必须能够自己设计："
+            },
+            {
+              "type": "code",
+              "language": "text",
+              "text": "一个线程处理一个元素\n一个线程处理多个元素\n一个 Block 处理一行\n一个 Block 处理一个 Tile"
+            },
+            {
+              "type": "paragraph",
+              "text": "并说明各自适合什么数据布局。"
+            }
+          ]
+        },
+        {
+          "id": "week-4-验收",
+          "title": "验收",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "text": "给出 `[B, H, S, D]` Tensor，能够设计线程索引，将它映射到线性地址，并正确处理任意 Shape。"
+            }
+          ]
+        }
+      ],
+      "searchText": "多维线程映射 cuda 编程模型与 gpu 架构 阅读 pmpp4 第 3 章：multidimensional grids and data。 cuda programming guide 2.3 writing simt kernels； 5.4 c/c++ language extensions 中与内置变量、kernel launch 有关的部分。 学习要求 掌握： `threadidx`； `blockidx`； `blockdim`； `griddim`； `dim3`； 一维、二维、三维线程映射； 线程与 tensor 坐标的映射； boundary check； grid-stride loop。 编程任务 实现： matrix add； matrix copy； rgb 图像灰度化； 2d transpose naive 版本； batched element-wise kernel。 深度要求 必须能够自己设计： 一个线程处理一个元素\n一个线程处理多个元素\n一个 block 处理一行\n一个 block 处理一个 tile 并说明各自适合什么数据布局。 验收 给出 `[b, h, s, d]` tensor，能够设计线程索引，将它映射到线性地址，并正确处理任意 shape。"
+    },
+    {
+      "id": "week-5",
+      "week": 5,
+      "title": "Warp、SIMT 与分支发散",
+      "stageId": "stage-1",
+      "stageName": "CUDA 编程模型与 GPU 架构",
+      "stageIndex": 1,
+      "sections": [
+        {
+          "id": "week-5-阅读",
+          "title": "阅读",
+          "blocks": [
+            {
+              "type": "subheading",
+              "text": "PMPP4"
+            },
+            {
+              "type": "list",
+              "ordered": false,
+              "items": [
+                "第 4 章：Compute Architecture and Scheduling。"
+              ]
+            },
+            {
+              "type": "subheading",
+              "text": "CUDA Programming Guide"
+            },
+            {
+              "type": "list",
+              "ordered": false,
+              "items": [
+                "2.3 Writing SIMT Kernels；",
+                "3.2 Advanced Kernel Programming 中 Warp 和执行模型相关内容；",
+                "5.8 CUDA C++ Execution Model。"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "week-5-学习要求",
+          "title": "学习要求",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "text": "掌握："
+            },
+            {
+              "type": "list",
+              "ordered": false,
+              "items": [
+                "SM；",
+                "Warp；",
+                "SIMT；",
+                "Warp Scheduler；",
+                "Active Warp；",
+                "Eligible Warp；",
+                "Branch Divergence；",
+                "Latency Hiding；",
+                "Block 调度；",
+                "Warp-level Execution。"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "week-5-编程实验",
+          "title": "编程实验",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "text": "设计三组实验："
+            },
+            {
+              "type": "subheading",
+              "text": "实验 A：分支发散"
+            },
+            {
+              "type": "code",
+              "language": "cpp",
+              "text": "if (threadIdx.x % 2 == 0) {\n    ...\n} else {\n    ...\n}"
+            },
+            {
+              "type": "paragraph",
+              "text": "对比："
+            },
+            {
+              "type": "list",
+              "ordered": false,
+              "items": [
+                "Warp 内发散；",
+                "Warp 间分支；",
+                "无分支版本。"
+              ]
+            },
+            {
+              "type": "subheading",
+              "text": "实验 B：Block Size"
+            },
+            {
+              "type": "paragraph",
+              "text": "测试："
+            },
+            {
+              "type": "code",
+              "language": "text",
+              "text": "32\n64\n128\n256\n512\n1024"
+            },
+            {
+              "type": "paragraph",
+              "text": "观察性能和 Occupancy。"
+            },
+            {
+              "type": "subheading",
+              "text": "实验 C：每线程工作量"
+            },
+            {
+              "type": "paragraph",
+              "text": "每个线程分别处理："
+            },
+            {
+              "type": "code",
+              "language": "text",
+              "text": "1\n2\n4\n8"
+            },
+            {
+              "type": "paragraph",
+              "text": "个元素。"
+            }
+          ]
+        },
+        {
+          "id": "week-5-深度要求",
+          "title": "深度要求",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "text": "必须能解释："
+            },
+            {
+              "type": "list",
+              "ordered": false,
+              "items": [
+                "Warp 发散是如何发生的；",
+                "为什么 `if` 不一定慢；",
+                "为什么 Block 越大不一定越快；",
+                "为什么 Occupancy 高不等于性能一定高；",
+                "GPU 如何通过切换 Warp 隐藏延迟。"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "week-5-验收",
+          "title": "验收",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "text": "使用 Nsight Compute 找到一个 Kernel 的："
+            },
+            {
+              "type": "list",
+              "ordered": false,
+              "items": [
+                "Warp 数量；",
+                "Branch Efficiency；",
+                "Occupancy；",
+                "主要 Stall 原因。"
+              ]
+            },
+            {
+              "type": "paragraph",
+              "text": "并写一页分析报告。"
+            }
+          ]
+        }
+      ],
+      "searchText": "warp、simt 与分支发散 cuda 编程模型与 gpu 架构 阅读 pmpp4 第 4 章：compute architecture and scheduling。 cuda programming guide 2.3 writing simt kernels； 3.2 advanced kernel programming 中 warp 和执行模型相关内容； 5.8 cuda c++ execution model。 学习要求 掌握： sm； warp； simt； warp scheduler； active warp； eligible warp； branch divergence； latency hiding； block 调度； warp-level execution。 编程实验 设计三组实验： 实验 a：分支发散 if (threadidx.x % 2 == 0) {\n    ...\n} else {\n    ...\n} 对比： warp 内发散； warp 间分支； 无分支版本。 实验 b：block size 测试： 32\n64\n128\n256\n512\n1024 观察性能和 occupancy。 实验 c：每线程工作量 每个线程分别处理： 1\n2\n4\n8 个元素。 深度要求 必须能解释： warp 发散是如何发生的； 为什么 `if` 不一定慢； 为什么 block 越大不一定越快； 为什么 occupancy 高不等于性能一定高； gpu 如何通过切换 warp 隐藏延迟。 验收 使用 nsight compute 找到一个 kernel 的： warp 数量； branch efficiency； occupancy； 主要 stall 原因。 并写一页分析报告。"
+    },
+    {
+      "id": "week-6",
+      "week": 6,
+      "title": "GPU 内存体系",
+      "stageId": "stage-1",
+      "stageName": "CUDA 编程模型与 GPU 架构",
+      "stageIndex": 1,
+      "sections": [
+        {
+          "id": "week-6-阅读",
+          "title": "阅读",
+          "blocks": [
+            {
+              "type": "subheading",
+              "text": "PMPP4"
+            },
+            {
+              "type": "list",
+              "ordered": false,
+              "items": [
+                "第 5 章：Memory Architecture and Data Locality。"
+              ]
+            },
+            {
+              "type": "subheading",
+              "text": "CUDA Best Practices Guide"
+            },
+            {
+              "type": "paragraph",
+              "text": "精读："
+            },
+            {
+              "type": "list",
+              "ordered": false,
+              "items": [
+                "10.2.1 Coalesced Access；",
+                "10.2.2 L2 Cache；",
+                "10.2.3 Shared Memory；",
+                "10.2.6 Constant Memory；",
+                "10.2.7 Registers；",
+                "10.2.7.1 Register Pressure。"
+              ]
+            },
+            {
+              "type": "paragraph",
+              "text": "这些章节分别覆盖合并访存、L2、共享内存、寄存器和寄存器压力。[NVIDIA Docs](https://docs.nvidia.com/cuda/cuda-c-best-practices-guide/contents.html)"
+            }
+          ]
+        },
+        {
+          "id": "week-6-学习要求",
+          "title": "学习要求",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "text": "掌握："
+            },
+            {
+              "type": "list",
+              "ordered": false,
+              "items": [
+                "Global Memory；",
+                "L2 Cache；",
+                "Shared Memory；",
+                "Register；",
+                "Local Memory；",
+                "Constant Memory；",
+                "Memory Transaction；",
+                "Coalesced Access；",
+                "Misaligned Access；",
+                "Strided Access；",
+                "Shared Memory Bank；",
+                "Bank Conflict。"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "week-6-编程任务-矩阵转置",
+          "title": "编程任务：矩阵转置",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "text": "实现四版："
+            },
+            {
+              "type": "list",
+              "ordered": true,
+              "items": [
+                "Naive Transpose；",
+                "Coalesced Read；",
+                "Shared Memory Tiled；",
+                "Padding 避免 Bank Conflict。"
+              ]
+            },
+            {
+              "type": "paragraph",
+              "text": "例如："
+            },
+            {
+              "type": "code",
+              "language": "cpp",
+              "text": "__shared__ float tile[TILE][TILE + 1];"
+            },
+            {
+              "type": "paragraph",
+              "text": "但必须解释为什么加 1，而不能只背代码。"
+            }
+          ]
+        },
+        {
+          "id": "week-6-深度要求",
+          "title": "深度要求",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "text": "必须能从地址计算判断："
+            },
+            {
+              "type": "list",
+              "ordered": false,
+              "items": [
+                "一个 Warp 会产生多少内存事务；",
+                "为什么按列读取可能变成 Strided Access；",
+                "Shared Memory 为什么能改善 Transpose；",
+                "为什么 Shared Memory 也可能发生冲突；",
+                "Register Spill 后数据通常去哪。"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "week-6-验收",
+          "title": "验收",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "text": "Nsight Compute 报告中至少对比："
+            },
+            {
+              "type": "list",
+              "ordered": false,
+              "items": [
+                "Global Load Efficiency；",
+                "Global Store Efficiency；",
+                "Shared Memory Bank Conflict；",
+                "DRAM Throughput；",
+                "Kernel Duration。"
+              ]
+            },
+            {
+              "type": "paragraph",
+              "text": "目标不是达到某个固定 GB/s，而是能证明每一步优化为什么有效。"
+            }
+          ]
+        }
+      ],
+      "searchText": "gpu 内存体系 cuda 编程模型与 gpu 架构 阅读 pmpp4 第 5 章：memory architecture and data locality。 cuda best practices guide 精读： 10.2.1 coalesced access； 10.2.2 l2 cache； 10.2.3 shared memory； 10.2.6 constant memory； 10.2.7 registers； 10.2.7.1 register pressure。 这些章节分别覆盖合并访存、l2、共享内存、寄存器和寄存器压力。[nvidia docs](https://docs.nvidia.com/cuda/cuda-c-best-practices-guide/contents.html) 学习要求 掌握： global memory； l2 cache； shared memory； register； local memory； constant memory； memory transaction； coalesced access； misaligned access； strided access； shared memory bank； bank conflict。 编程任务：矩阵转置 实现四版： naive transpose； coalesced read； shared memory tiled； padding 避免 bank conflict。 例如： __shared__ float tile[tile][tile + 1]; 但必须解释为什么加 1，而不能只背代码。 深度要求 必须能从地址计算判断： 一个 warp 会产生多少内存事务； 为什么按列读取可能变成 strided access； shared memory 为什么能改善 transpose； 为什么 shared memory 也可能发生冲突； register spill 后数据通常去哪。 验收 nsight compute 报告中至少对比： global load efficiency； global store efficiency； shared memory bank conflict； dram throughput； kernel duration。 目标不是达到某个固定 gb/s，而是能证明每一步优化为什么有效。"
+    },
+    {
+      "id": "week-7",
+      "week": 7,
+      "title": "性能指标与优化方法",
+      "stageId": "stage-1",
+      "stageName": "CUDA 编程模型与 GPU 架构",
+      "stageIndex": 1,
+      "sections": [
+        {
+          "id": "week-7-阅读",
+          "title": "阅读",
+          "blocks": [
+            {
+              "type": "subheading",
+              "text": "PMPP4"
+            },
+            {
+              "type": "list",
+              "ordered": false,
+              "items": [
+                "第 6 章：Performance Considerations。"
+              ]
+            },
+            {
+              "type": "subheading",
+              "text": "CUDA Best Practices Guide"
+            },
+            {
+              "type": "paragraph",
+              "text": "精读："
+            },
+            {
+              "type": "list",
+              "ordered": false,
+              "items": [
+                "第 4 章 Application Profiling；",
+                "第 7 章 Getting the Right Answer；",
+                "第 9 章 Performance Metrics；",
+                "第 11 章 Execution Configuration；",
+                "第 13 章 Control Flow。"
+              ]
+            },
+            {
+              "type": "paragraph",
+              "text": "其中第 9 章包括 GPU Timer 和有效带宽计算，第 11 章包括 Occupancy、Block 配置和并发 Kernel。[NVIDIA Docs](https://docs.nvidia.com/cuda/cuda-c-best-practices-guide/contents.html)"
+            }
+          ]
+        },
+        {
+          "id": "week-7-学习要求",
+          "title": "学习要求",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "text": "掌握："
+            },
+            {
+              "type": "list",
+              "ordered": false,
+              "items": [
+                "Theoretical Bandwidth；",
+                "Effective Bandwidth；",
+                "Arithmetic Intensity；",
+                "Occupancy；",
+                "Register Pressure；",
+                "Shared Memory 限制；",
+                "Roofline 基础；",
+                "Amdahl’s Law；",
+                "Kernel Launch Overhead；",
+                "Throughput 与 Latency。"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "week-7-编程任务",
+          "title": "编程任务",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "text": "编写统一 Benchmark 框架："
+            },
+            {
+              "type": "code",
+              "language": "bash",
+              "text": "./benchmark \\\n  --kernel transpose \\\n  --rows 4096 \\\n  --cols 4096 \\\n  --warmup 20 \\\n  --repeat 100"
+            },
+            {
+              "type": "paragraph",
+              "text": "输出："
+            },
+            {
+              "type": "code",
+              "language": "text",
+              "text": "median latency\np95 latency\neffective bandwidth\nestimated FLOPs\narithmetic intensity\nmaximum error\nGPU model\nCUDA version\ncompile flags"
+            }
+          ]
+        },
+        {
+          "id": "week-7-深度要求",
+          "title": "深度要求",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "text": "能够针对一个 Kernel 给出："
+            },
+            {
+              "type": "code",
+              "language": "text",
+              "text": "理论最小内存流量\n理论 FLOPs\nArithmetic Intensity\n实测带宽\n实测吞吐\n瓶颈判断"
+            }
+          ]
+        },
+        {
+          "id": "week-7-验收",
+          "title": "验收",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "text": "对 Vector Add、Transpose 和 SiLU 分别判断："
+            },
+            {
+              "type": "list",
+              "ordered": false,
+              "items": [
+                "更偏带宽受限还是计算受限；",
+                "是否值得使用 Shared Memory；",
+                "是否值得 Kernel Fusion。"
+              ]
+            }
+          ]
+        }
+      ],
+      "searchText": "性能指标与优化方法 cuda 编程模型与 gpu 架构 阅读 pmpp4 第 6 章：performance considerations。 cuda best practices guide 精读： 第 4 章 application profiling； 第 7 章 getting the right answer； 第 9 章 performance metrics； 第 11 章 execution configuration； 第 13 章 control flow。 其中第 9 章包括 gpu timer 和有效带宽计算，第 11 章包括 occupancy、block 配置和并发 kernel。[nvidia docs](https://docs.nvidia.com/cuda/cuda-c-best-practices-guide/contents.html) 学习要求 掌握： theoretical bandwidth； effective bandwidth； arithmetic intensity； occupancy； register pressure； shared memory 限制； roofline 基础； amdahl’s law； kernel launch overhead； throughput 与 latency。 编程任务 编写统一 benchmark 框架： ./benchmark \\\n  --kernel transpose \\\n  --rows 4096 \\\n  --cols 4096 \\\n  --warmup 20 \\\n  --repeat 100 输出： median latency\np95 latency\neffective bandwidth\nestimated flops\narithmetic intensity\nmaximum error\ngpu model\ncuda version\ncompile flags 深度要求 能够针对一个 kernel 给出： 理论最小内存流量\n理论 flops\narithmetic intensity\n实测带宽\n实测吞吐\n瓶颈判断 验收 对 vector add、transpose 和 silu 分别判断： 更偏带宽受限还是计算受限； 是否值得使用 shared memory； 是否值得 kernel fusion。"
+    },
+    {
+      "id": "week-8",
+      "week": 8,
+      "title": "Stream、异步执行与阶段项目",
+      "stageId": "stage-1",
+      "stageName": "CUDA 编程模型与 GPU 架构",
+      "stageIndex": 1,
+      "sections": [
+        {
+          "id": "week-8-阅读",
+          "title": "阅读",
+          "blocks": [
+            {
+              "type": "subheading",
+              "text": "CUDA Programming Guide"
+            },
+            {
+              "type": "list",
+              "ordered": false,
+              "items": [
+                "2.5 Asynchronous Execution；",
+                "4.9 Asynchronous Barriers；",
+                "4.10 Pipelines；",
+                "4.11 Asynchronous Data Copies。"
+              ]
+            },
+            {
+              "type": "subheading",
+              "text": "CUDA Best Practices Guide"
+            },
+            {
+              "type": "list",
+              "ordered": false,
+              "items": [
+                "10.1 Host 与 Device 数据传输；",
+                "10.1.1 Pinned Memory；",
+                "10.1.2 异步传输与计算重叠。"
+              ]
+            },
+            {
+              "type": "paragraph",
+              "text": "[NVIDIA Docs](https://docs.nvidia.com/cuda/cuda-programming-guide/index.html)"
+            }
+          ]
+        },
+        {
+          "id": "week-8-学习要求",
+          "title": "学习要求",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "text": "掌握："
+            },
+            {
+              "type": "list",
+              "ordered": false,
+              "items": [
+                "CUDA Stream；",
+                "Default Stream；",
+                "CUDA Event；",
+                "Pinned Memory；",
+                "Async Copy；",
+                "H2D、Kernel、D2H 重叠；",
+                "Stream Synchronization；",
+                "Event Dependency。"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "week-8-编程任务",
+          "title": "编程任务",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "text": "实现一个分块处理流水线："
+            },
+            {
+              "type": "code",
+              "language": "text",
+              "text": "Chunk 0: H2D → Kernel → D2H\nChunk 1:      H2D → Kernel → D2H\nChunk 2:           H2D → Kernel → D2H"
+            },
+            {
+              "type": "paragraph",
+              "text": "分别测试："
+            },
+            {
+              "type": "list",
+              "ordered": false,
+              "items": [
+                "普通 Pageable Memory；",
+                "Pinned Memory；",
+                "单 Stream；",
+                "双 Stream；",
+                "四 Stream。"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "week-8-阶段项目",
+          "title": "阶段项目",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "text": "完成："
+            },
+            {
+              "type": "quote",
+              "text": "**CUDA Memory and Execution Lab**"
+            },
+            {
+              "type": "paragraph",
+              "text": "至少包含："
+            },
+            {
+              "type": "list",
+              "ordered": false,
+              "items": [
+                "Vector Add；",
+                "Transpose；",
+                "SiLU；",
+                "多 Stream Pipeline；",
+                "Benchmark 框架；",
+                "Nsight Systems 报告；",
+                "Nsight Compute 报告。"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "week-8-阶段通过标准",
+          "title": "阶段通过标准",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "text": "你应当可以："
+            },
+            {
+              "type": "list",
+              "ordered": true,
+              "items": [
+                "独立搭建 CUDA CMake 项目；",
+                "正确编写 Kernel；",
+                "解释 Warp 执行；",
+                "识别合并访存；",
+                "使用 Shared Memory；",
+                "使用 CUDA Event；",
+                "使用 Nsight；",
+                "写出有证据的性能分析。"
+              ]
+            },
+            {
+              "type": "paragraph",
+              "text": "做不到其中任意两项，不进入下一阶段。"
+            }
+          ]
+        }
+      ],
+      "searchText": "stream、异步执行与阶段项目 cuda 编程模型与 gpu 架构 阅读 cuda programming guide 2.5 asynchronous execution； 4.9 asynchronous barriers； 4.10 pipelines； 4.11 asynchronous data copies。 cuda best practices guide 10.1 host 与 device 数据传输； 10.1.1 pinned memory； 10.1.2 异步传输与计算重叠。 [nvidia docs](https://docs.nvidia.com/cuda/cuda-programming-guide/index.html) 学习要求 掌握： cuda stream； default stream； cuda event； pinned memory； async copy； h2d、kernel、d2h 重叠； stream synchronization； event dependency。 编程任务 实现一个分块处理流水线： chunk 0: h2d → kernel → d2h\nchunk 1:      h2d → kernel → d2h\nchunk 2:           h2d → kernel → d2h 分别测试： 普通 pageable memory； pinned memory； 单 stream； 双 stream； 四 stream。 阶段项目 完成： **cuda memory and execution lab** 至少包含： vector add； transpose； silu； 多 stream pipeline； benchmark 框架； nsight systems 报告； nsight compute 报告。 阶段通过标准 你应当可以： 独立搭建 cuda cmake 项目； 正确编写 kernel； 解释 warp 执行； 识别合并访存； 使用 shared memory； 使用 cuda event； 使用 nsight； 写出有证据的性能分析。 做不到其中任意两项，不进入下一阶段。"
+    },
+    {
+      "id": "week-9",
+      "week": 9,
+      "title": "Reduction 基础",
+      "stageId": "stage-2",
+      "stageName": "并行算法模式",
+      "stageIndex": 2,
+      "sections": [
+        {
+          "id": "week-9-阅读",
+          "title": "阅读",
+          "blocks": [
+            {
+              "type": "list",
+              "ordered": false,
+              "items": [
+                "PMPP4 第 10 章：Reduction；",
+                "CUDA Programming Guide 中 Synchronization 和 Atomic 相关部分。"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "week-9-实现顺序",
+          "title": "实现顺序",
+          "blocks": [
+            {
+              "type": "list",
+              "ordered": true,
+              "items": [
+                "Interleaved Addressing；",
+                "Sequential Addressing；",
+                "Shared Memory Reduction；",
+                "每线程多元素；",
+                "展开最后一个 Warp。"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "week-9-要掌握",
+          "title": "要掌握",
+          "blocks": [
+            {
+              "type": "list",
+              "ordered": false,
+              "items": [
+                "Reduction Tree；",
+                "同步位置；",
+                "分支发散；",
+                "Shared Memory；",
+                "非 2 的幂长度；",
+                "多 Block Reduction。"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "week-9-验收",
+          "title": "验收",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "text": "实现任意长度数组求和，并与："
+            },
+            {
+              "type": "list",
+              "ordered": false,
+              "items": [
+                "CPU；",
+                "`torch.sum`；",
+                "CUB 或等效高性能实现"
+              ]
+            },
+            {
+              "type": "paragraph",
+              "text": "比较正确性和性能。"
+            }
+          ]
+        }
+      ],
+      "searchText": "reduction 基础 并行算法模式 阅读 pmpp4 第 10 章：reduction； cuda programming guide 中 synchronization 和 atomic 相关部分。 实现顺序 interleaved addressing； sequential addressing； shared memory reduction； 每线程多元素； 展开最后一个 warp。 要掌握 reduction tree； 同步位置； 分支发散； shared memory； 非 2 的幂长度； 多 block reduction。 验收 实现任意长度数组求和，并与： cpu； `torch.sum`； cub 或等效高性能实现 比较正确性和性能。"
+    },
+    {
+      "id": "week-10",
+      "week": 10,
+      "title": "Warp-level Programming",
+      "stageId": "stage-2",
+      "stageName": "并行算法模式",
+      "stageIndex": 2,
+      "sections": [
+        {
+          "id": "week-10-阅读",
+          "title": "阅读",
+          "blocks": [
+            {
+              "type": "list",
+              "ordered": false,
+              "items": [
+                "PMPP5 中 warp-level programming 专题；",
+                "CUDA Programming Guide 4.4 Cooperative Groups；",
+                "Warp Shuffle 相关 API 文档。"
+              ]
+            },
+            {
+              "type": "paragraph",
+              "text": "第 5 版新增了更完整的 warp-level 和 Cooperative Groups 内容。[Google 图书](https://books.google.com/books?id=KRN3EQAAQBAJ)"
+            }
+          ]
+        },
+        {
+          "id": "week-10-实现",
+          "title": "实现",
+          "blocks": [
+            {
+              "type": "list",
+              "ordered": false,
+              "items": [
+                "`__shfl_down_sync` Reduction；",
+                "Warp Max；",
+                "Warp Sum；",
+                "Block Reduction；",
+                "Cooperative Groups 版本。"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "week-10-深度要求",
+          "title": "深度要求",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "text": "理解："
+            },
+            {
+              "type": "list",
+              "ordered": false,
+              "items": [
+                "Shuffle 与 Shared Memory 的区别；",
+                "Mask 的含义；",
+                "Warp-level 同步；",
+                "为什么不能错误假设所有线程都 Active。"
+              ]
+            }
+          ]
+        }
+      ],
+      "searchText": "warp-level programming 并行算法模式 阅读 pmpp5 中 warp-level programming 专题； cuda programming guide 4.4 cooperative groups； warp shuffle 相关 api 文档。 第 5 版新增了更完整的 warp-level 和 cooperative groups 内容。[google 图书](https://books.google.com/books?id=krn3eqaaqbaj) 实现 `__shfl_down_sync` reduction； warp max； warp sum； block reduction； cooperative groups 版本。 深度要求 理解： shuffle 与 shared memory 的区别； mask 的含义； warp-level 同步； 为什么不能错误假设所有线程都 active。"
+    },
+    {
+      "id": "week-11",
+      "week": 11,
+      "title": "Prefix Sum / Scan",
+      "stageId": "stage-2",
+      "stageName": "并行算法模式",
+      "stageIndex": 2,
+      "sections": [
+        {
+          "id": "week-11-阅读",
+          "title": "阅读",
+          "blocks": [
+            {
+              "type": "list",
+              "ordered": false,
+              "items": [
+                "PMPP4 第 11 章：Prefix Sum。"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "week-11-实现",
+          "title": "实现",
+          "blocks": [
+            {
+              "type": "list",
+              "ordered": true,
+              "items": [
+                "Hillis-Steele；",
+                "Blelloch Scan；",
+                "Block Scan；",
+                "多 Block Scan；",
+                "Exclusive 和 Inclusive Scan。"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "week-11-深度要求",
+          "title": "深度要求",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "text": "能够分析："
+            },
+            {
+              "type": "list",
+              "ordered": false,
+              "items": [
+                "Work Complexity；",
+                "Span；",
+                "Work-efficient；",
+                "Bank Conflict；",
+                "多 Block 间状态传递。"
+              ]
+            }
+          ]
+        }
+      ],
+      "searchText": "prefix sum / scan 并行算法模式 阅读 pmpp4 第 11 章：prefix sum。 实现 hillis-steele； blelloch scan； block scan； 多 block scan； exclusive 和 inclusive scan。 深度要求 能够分析： work complexity； span； work-efficient； bank conflict； 多 block 间状态传递。"
+    },
+    {
+      "id": "week-12",
+      "week": 12,
+      "title": "Histogram 与 Atomic",
+      "stageId": "stage-2",
+      "stageName": "并行算法模式",
+      "stageIndex": 2,
+      "sections": [
+        {
+          "id": "week-12-阅读",
+          "title": "阅读",
+          "blocks": [
+            {
+              "type": "list",
+              "ordered": false,
+              "items": [
+                "PMPP4 第 9 章：Parallel Histogram。"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "week-12-实现",
+          "title": "实现",
+          "blocks": [
+            {
+              "type": "list",
+              "ordered": true,
+              "items": [
+                "Global Atomic；",
+                "Shared Memory Privatization；",
+                "Warp Privatization；",
+                "分层合并。"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "week-12-深度要求",
+          "title": "深度要求",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "text": "理解："
+            },
+            {
+              "type": "list",
+              "ordered": false,
+              "items": [
+                "Atomic Contention；",
+                "Privatization；",
+                "热点分布；",
+                "数据分布如何影响性能。"
+              ]
+            },
+            {
+              "type": "paragraph",
+              "text": "必须测试："
+            },
+            {
+              "type": "list",
+              "ordered": false,
+              "items": [
+                "均匀分布；",
+                "高度偏斜分布；",
+                "全部元素相同。"
+              ]
+            }
+          ]
+        }
+      ],
+      "searchText": "histogram 与 atomic 并行算法模式 阅读 pmpp4 第 9 章：parallel histogram。 实现 global atomic； shared memory privatization； warp privatization； 分层合并。 深度要求 理解： atomic contention； privatization； 热点分布； 数据分布如何影响性能。 必须测试： 均匀分布； 高度偏斜分布； 全部元素相同。"
+    },
+    {
+      "id": "week-13",
+      "week": 13,
+      "title": "Convolution、Stencil 与缓存",
+      "stageId": "stage-2",
+      "stageName": "并行算法模式",
+      "stageIndex": 2,
+      "sections": [
+        {
+          "id": "week-13-阅读",
+          "title": "阅读",
+          "blocks": [
+            {
+              "type": "list",
+              "ordered": false,
+              "items": [
+                "PMPP4 第 7 章：Convolution；",
+                "PMPP4 第 8 章：Stencil。"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "week-13-实现",
+          "title": "实现",
+          "blocks": [
+            {
+              "type": "list",
+              "ordered": false,
+              "items": [
+                "1D Convolution；",
+                "2D Convolution；",
+                "Constant Memory Filter；",
+                "Shared Memory Halo；",
+                "Tiled Stencil。"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "week-13-深度要求",
+          "title": "深度要求",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "text": "理解："
+            },
+            {
+              "type": "list",
+              "ordered": false,
+              "items": [
+                "Halo；",
+                "Tile；",
+                "数据复用；",
+                "Constant Cache；",
+                "Boundary Handling；",
+                "Tile Size 与 Shared Memory 消耗。"
+              ]
+            }
+          ]
+        }
+      ],
+      "searchText": "convolution、stencil 与缓存 并行算法模式 阅读 pmpp4 第 7 章：convolution； pmpp4 第 8 章：stencil。 实现 1d convolution； 2d convolution； constant memory filter； shared memory halo； tiled stencil。 深度要求 理解： halo； tile； 数据复用； constant cache； boundary handling； tile size 与 shared memory 消耗。"
+    },
+    {
+      "id": "week-14",
+      "week": 14,
+      "title": "阶段项目",
+      "stageId": "stage-2",
+      "stageName": "并行算法模式",
+      "stageIndex": 2,
+      "sections": [
+        {
+          "id": "week-14-本周导读",
+          "title": "本周导读",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "text": "完成："
+            },
+            {
+              "type": "quote",
+              "text": "**Parallel Primitives Library**"
+            },
+            {
+              "type": "paragraph",
+              "text": "包含："
+            },
+            {
+              "type": "list",
+              "ordered": false,
+              "items": [
+                "Reduction；",
+                "Scan；",
+                "Histogram；",
+                "Convolution；",
+                "Transpose。"
+              ]
+            },
+            {
+              "type": "paragraph",
+              "text": "每个算子至少有："
+            },
+            {
+              "type": "list",
+              "ordered": false,
+              "items": [
+                "Naive；",
+                "Optimized；",
+                "正确性测试；",
+                "5 组以上 Shape；",
+                "Nsight 分析；",
+                "优化日志。"
+              ]
+            },
+            {
+              "type": "paragraph",
+              "text": "通过标准："
+            },
+            {
+              "type": "quote",
+              "text": "能根据一个陌生并行问题，判断它更接近 Map、Reduction、Scan、Histogram、Stencil 还是 GEMM。"
+            }
+          ]
+        }
+      ],
+      "searchText": "阶段项目 并行算法模式 本周导读 完成： **parallel primitives library** 包含： reduction； scan； histogram； convolution； transpose。 每个算子至少有： naive； optimized； 正确性测试； 5 组以上 shape； nsight 分析； 优化日志。 通过标准： 能根据一个陌生并行问题，判断它更接近 map、reduction、scan、histogram、stencil 还是 gemm。"
+    },
+    {
+      "id": "week-15",
+      "week": 15,
+      "title": "Naive GEMM 与性能模型",
+      "stageId": "stage-3",
+      "stageName": "GEMM、流水线与 Tensor Core",
+      "stageIndex": 3,
+      "sections": [
+        {
+          "id": "week-15-阅读",
+          "title": "阅读",
+          "blocks": [
+            {
+              "type": "list",
+              "ordered": false,
+              "items": [
+                "PMPP4 中矩阵乘法相关内容；",
+                "PMPP5 的 Advanced Matrix Multiplication 专题；",
+                "CUDA Best Practices 10.2.3.2 Shared Memory in GEMM。"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "week-15-实现",
+          "title": "实现",
+          "blocks": [
+            {
+              "type": "list",
+              "ordered": false,
+              "items": [
+                "CPU GEMM；",
+                "Naive CUDA GEMM；",
+                "cuBLAS 基线。"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "week-15-深度要求",
+          "title": "深度要求",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "text": "推导："
+            },
+            {
+              "type": "code",
+              "language": "text",
+              "text": "C[M,N] = A[M,K] × B[K,N]\n\nFLOPs ≈ 2MNK"
+            },
+            {
+              "type": "paragraph",
+              "text": "计算理论内存流量和 Arithmetic Intensity。"
+            }
+          ]
+        }
+      ],
+      "searchText": "naive gemm 与性能模型 gemm、流水线与 tensor core 阅读 pmpp4 中矩阵乘法相关内容； pmpp5 的 advanced matrix multiplication 专题； cuda best practices 10.2.3.2 shared memory in gemm。 实现 cpu gemm； naive cuda gemm； cublas 基线。 深度要求 推导： c[m,n] = a[m,k] × b[k,n]\n\nflops ≈ 2mnk 计算理论内存流量和 arithmetic intensity。"
+    },
+    {
+      "id": "week-16",
+      "week": 16,
+      "title": "Shared Memory Tiling",
+      "stageId": "stage-3",
+      "stageName": "GEMM、流水线与 Tensor Core",
+      "stageIndex": 3,
+      "sections": [
+        {
+          "id": "week-16-本周导读",
+          "title": "本周导读",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "text": "实现："
+            },
+            {
+              "type": "list",
+              "ordered": false,
+              "items": [
+                "16×16 Tile；",
+                "32×32 Tile；",
+                "非整除尺寸；",
+                "Boundary Mask；",
+                "不同 Tile Size 对比。"
+              ]
+            },
+            {
+              "type": "paragraph",
+              "text": "掌握："
+            },
+            {
+              "type": "list",
+              "ordered": false,
+              "items": [
+                "A Tile；",
+                "B Tile；",
+                "数据复用；",
+                "同步；",
+                "Shared Memory 容量。"
+              ]
+            }
+          ]
+        }
+      ],
+      "searchText": "shared memory tiling gemm、流水线与 tensor core 本周导读 实现： 16×16 tile； 32×32 tile； 非整除尺寸； boundary mask； 不同 tile size 对比。 掌握： a tile； b tile； 数据复用； 同步； shared memory 容量。"
+    },
+    {
+      "id": "week-17",
+      "week": 17,
+      "title": "Register Tiling 与向量化",
+      "stageId": "stage-3",
+      "stageName": "GEMM、流水线与 Tensor Core",
+      "stageIndex": 3,
+      "sections": [
+        {
+          "id": "week-17-本周导读",
+          "title": "本周导读",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "text": "实现："
+            },
+            {
+              "type": "list",
+              "ordered": false,
+              "items": [
+                "每线程一个输出；",
+                "每线程多个输出；",
+                "Register Tile；",
+                "`float2` / `float4` Load；",
+                "Loop Unroll。"
+              ]
+            },
+            {
+              "type": "paragraph",
+              "text": "理解："
+            },
+            {
+              "type": "list",
+              "ordered": false,
+              "items": [
+                "Register Reuse；",
+                "Register Pressure；",
+                "Occupancy Trade-off；",
+                "向量化 Load 的对齐要求。"
+              ]
+            }
+          ]
+        }
+      ],
+      "searchText": "register tiling 与向量化 gemm、流水线与 tensor core 本周导读 实现： 每线程一个输出； 每线程多个输出； register tile； `float2` / `float4` load； loop unroll。 理解： register reuse； register pressure； occupancy trade-off； 向量化 load 的对齐要求。"
+    },
+    {
+      "id": "week-18",
+      "week": 18,
+      "title": "Double Buffering 与 Async Copy",
+      "stageId": "stage-3",
+      "stageName": "GEMM、流水线与 Tensor Core",
+      "stageIndex": 3,
+      "sections": [
+        {
+          "id": "week-18-阅读",
+          "title": "阅读",
+          "blocks": [
+            {
+              "type": "list",
+              "ordered": false,
+              "items": [
+                "CUDA Programming Guide 4.9～4.11；",
+                "CUTLASS Efficient GEMM 文档中的分层 Tiling 思想。"
+              ]
+            },
+            {
+              "type": "paragraph",
+              "text": "CUTLASS 的 GEMM 将 Tile 映射到 Threadblock、Warp 和指令级，并在 Shared Memory 与 Register 中利用局部性。[NVIDIA Docs](https://docs.nvidia.com/cutlass/latest/media/docs/cpp/efficient_gemm.html)"
+            }
+          ]
+        },
+        {
+          "id": "week-18-实现",
+          "title": "实现",
+          "blocks": [
+            {
+              "type": "list",
+              "ordered": false,
+              "items": [
+                "双缓冲 Shared Memory；",
+                "加载下一块时计算当前块；",
+                "有条件时实验异步复制。"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "week-18-深度要求",
+          "title": "深度要求",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "text": "能够画出："
+            },
+            {
+              "type": "code",
+              "language": "text",
+              "text": "Load Tile 0\nCompute Tile 0 + Load Tile 1\nCompute Tile 1 + Load Tile 2\n..."
+            }
+          ]
+        }
+      ],
+      "searchText": "double buffering 与 async copy gemm、流水线与 tensor core 阅读 cuda programming guide 4.9～4.11； cutlass efficient gemm 文档中的分层 tiling 思想。 cutlass 的 gemm 将 tile 映射到 threadblock、warp 和指令级，并在 shared memory 与 register 中利用局部性。[nvidia docs](https://docs.nvidia.com/cutlass/latest/media/docs/cpp/efficient_gemm.html) 实现 双缓冲 shared memory； 加载下一块时计算当前块； 有条件时实验异步复制。 深度要求 能够画出： load tile 0\ncompute tile 0 + load tile 1\ncompute tile 1 + load tile 2\n..."
+    },
+    {
+      "id": "week-19",
+      "week": 19,
+      "title": "Tensor Core 与混合精度",
+      "stageId": "stage-3",
+      "stageName": "GEMM、流水线与 Tensor Core",
+      "stageIndex": 3,
+      "sections": [
+        {
+          "id": "week-19-本周导读",
+          "title": "本周导读",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "text": "学习："
+            },
+            {
+              "type": "list",
+              "ordered": false,
+              "items": [
+                "FP16/BF16 输入；",
+                "FP32 Accumulator；",
+                "WMMA 基础；",
+                "Tensor Core Tile；",
+                "TF32；",
+                "cuBLAS 与 cuBLASLt 基础。"
+              ]
+            },
+            {
+              "type": "paragraph",
+              "text": "实现："
+            },
+            {
+              "type": "list",
+              "ordered": false,
+              "items": [
+                "WMMA GEMM；",
+                "FP16 GEMM；",
+                "FP32 Accumulation；",
+                "与普通 CUDA Core GEMM 对比。"
+              ]
+            }
+          ]
+        }
+      ],
+      "searchText": "tensor core 与混合精度 gemm、流水线与 tensor core 本周导读 学习： fp16/bf16 输入； fp32 accumulator； wmma 基础； tensor core tile； tf32； cublas 与 cublaslt 基础。 实现： wmma gemm； fp16 gemm； fp32 accumulation； 与普通 cuda core gemm 对比。"
+    },
+    {
+      "id": "week-20",
+      "week": 20,
+      "title": "GEMM 综合分析",
+      "stageId": "stage-3",
+      "stageName": "GEMM、流水线与 Tensor Core",
+      "stageIndex": 3,
+      "sections": [
+        {
+          "id": "week-20-本周导读",
+          "title": "本周导读",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "text": "最终至少保留："
+            },
+            {
+              "type": "list",
+              "ordered": true,
+              "items": [
+                "Naive；",
+                "Shared Memory Tiled；",
+                "Register Tiled；",
+                "Double Buffered；",
+                "Tensor Core；",
+                "cuBLAS Baseline。"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "week-20-通过标准",
+          "title": "通过标准",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "text": "不是要求击败 cuBLAS，而是能够解释："
+            },
+            {
+              "type": "list",
+              "ordered": false,
+              "items": [
+                "为什么你的 Kernel 慢；",
+                "差距来自访存、指令、流水线还是 Tile；",
+                "哪些 Shape 表现好；",
+                "哪些 Shape 性能差；",
+                "Register、Shared Memory、Occupancy 如何相互制约。"
+              ]
+            }
+          ]
+        }
+      ],
+      "searchText": "gemm 综合分析 gemm、流水线与 tensor core 本周导读 最终至少保留： naive； shared memory tiled； register tiled； double buffered； tensor core； cublas baseline。 通过标准 不是要求击败 cublas，而是能够解释： 为什么你的 kernel 慢； 差距来自访存、指令、流水线还是 tile； 哪些 shape 表现好； 哪些 shape 性能差； register、shared memory、occupancy 如何相互制约。"
+    },
+    {
+      "id": "week-21",
+      "week": 21,
+      "title": "PyTorch Tensor 内部表示",
+      "stageId": "stage-4",
+      "stageName": "PyTorch 自定义 CUDA 算子",
+      "stageIndex": 4,
+      "sections": [
+        {
+          "id": "week-21-本周导读",
+          "title": "本周导读",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "text": "学习："
+            },
+            {
+              "type": "list",
+              "ordered": false,
+              "items": [
+                "Storage；",
+                "Shape；",
+                "Stride；",
+                "Contiguous；",
+                "View；",
+                "Dtype；",
+                "Device；",
+                "Data Pointer；",
+                "Dispatcher 基础。"
+              ]
+            },
+            {
+              "type": "paragraph",
+              "text": "任务："
+            },
+            {
+              "type": "list",
+              "ordered": false,
+              "items": [
+                "打印不同 Tensor 的 Shape 和 Stride；",
+                "手写连续性判断；",
+                "使用 C++ 读取 PyTorch Tensor。"
+              ]
+            }
+          ]
+        }
+      ],
+      "searchText": "pytorch tensor 内部表示 pytorch 自定义 cuda 算子 本周导读 学习： storage； shape； stride； contiguous； view； dtype； device； data pointer； dispatcher 基础。 任务： 打印不同 tensor 的 shape 和 stride； 手写连续性判断； 使用 c++ 读取 pytorch tensor。"
+    },
+    {
+      "id": "week-22",
+      "week": 22,
+      "title": "C++/CUDA Extension",
+      "stageId": "stage-4",
+      "stageName": "PyTorch 自定义 CUDA 算子",
+      "stageIndex": 4,
+      "sections": [
+        {
+          "id": "week-22-阅读官方教程",
+          "title": "阅读官方教程",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "text": "重点看："
+            },
+            {
+              "type": "list",
+              "ordered": false,
+              "items": [
+                "Build System；",
+                "C++/CUDA Source；",
+                "Operator Schema；",
+                "`TORCH_LIBRARY`；",
+                "CPU/CUDA Registration；",
+                "Python Binding。"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "week-22-任务",
+          "title": "任务",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "text": "实现："
+            },
+            {
+              "type": "quote",
+              "text": "Fused Multiply + Add"
+            },
+            {
+              "type": "paragraph",
+              "text": "要求："
+            },
+            {
+              "type": "code",
+              "language": "python",
+              "text": "torch.ops.my_ops.fma(a, b, c)"
+            },
+            {
+              "type": "paragraph",
+              "text": "可直接调用。"
+            }
+          ]
+        }
+      ],
+      "searchText": "c++/cuda extension pytorch 自定义 cuda 算子 阅读官方教程 重点看： build system； c++/cuda source； operator schema； `torch_library`； cpu/cuda registration； python binding。 任务 实现： fused multiply + add 要求： torch.ops.my_ops.fma(a, b, c) 可直接调用。"
+    },
+    {
+      "id": "week-23",
+      "week": 23,
+      "title": "Fused RMSNorm Forward",
+      "stageId": "stage-4",
+      "stageName": "PyTorch 自定义 CUDA 算子",
+      "stageIndex": 4,
+      "sections": [
+        {
+          "id": "week-23-本周导读",
+          "title": "本周导读",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "text": "实现："
+            },
+            {
+              "type": "list",
+              "ordered": false,
+              "items": [
+                "PyTorch Reference；",
+                "CUDA FP32；",
+                "CUDA FP16/BF16；",
+                "每行一个 Block；",
+                "Warp Reduction；",
+                "向量化读取。"
+              ]
+            },
+            {
+              "type": "paragraph",
+              "text": "测试 Shape："
+            },
+            {
+              "type": "code",
+              "language": "text",
+              "text": "[1, 128]\n[32, 768]\n[1024, 4096]\n[4096, 4096]\n[8192, 8192]"
+            },
+            {
+              "type": "paragraph",
+              "text": "深度要求："
+            },
+            {
+              "type": "list",
+              "ordered": false,
+              "items": [
+                "解释为什么 RMSNorm 是归约加逐元素运算；",
+                "解释为什么适合融合；",
+                "计算中间 Tensor 被消除后减少了多少显存流量。"
+              ]
+            }
+          ]
+        }
+      ],
+      "searchText": "fused rmsnorm forward pytorch 自定义 cuda 算子 本周导读 实现： pytorch reference； cuda fp32； cuda fp16/bf16； 每行一个 block； warp reduction； 向量化读取。 测试 shape： [1, 128]\n[32, 768]\n[1024, 4096]\n[4096, 4096]\n[8192, 8192] 深度要求： 解释为什么 rmsnorm 是归约加逐元素运算； 解释为什么适合融合； 计算中间 tensor 被消除后减少了多少显存流量。"
+    },
+    {
+      "id": "week-24",
+      "week": 24,
+      "title": "Backward 和 Autograd",
+      "stageId": "stage-4",
+      "stageName": "PyTorch 自定义 CUDA 算子",
+      "stageIndex": 4,
+      "sections": [
+        {
+          "id": "week-24-本周导读",
+          "title": "本周导读",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "text": "推导并实现："
+            },
+            {
+              "type": "list",
+              "ordered": false,
+              "items": [
+                "RMSNorm Input Gradient；",
+                "Weight Gradient；",
+                "Autograd Registration；",
+                "`gradcheck`；",
+                "FP32 Reference；",
+                "混合精度误差分析。"
+              ]
+            },
+            {
+              "type": "paragraph",
+              "text": "深度要求："
+            },
+            {
+              "type": "paragraph",
+              "text": "不能只让 PyTorch 自动求导，必须理解 Backward 数学公式和并行归约位置。"
+            }
+          ]
+        }
+      ],
+      "searchText": "backward 和 autograd pytorch 自定义 cuda 算子 本周导读 推导并实现： rmsnorm input gradient； weight gradient； autograd registration； `gradcheck`； fp32 reference； 混合精度误差分析。 深度要求： 不能只让 pytorch 自动求导，必须理解 backward 数学公式和并行归约位置。"
+    },
+    {
+      "id": "week-25",
+      "week": 25,
+      "title": "完整算子兼容性",
+      "stageId": "stage-4",
+      "stageName": "PyTorch 自定义 CUDA 算子",
+      "stageIndex": 4,
+      "sections": [
+        {
+          "id": "week-25-本周导读",
+          "title": "本周导读",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "text": "完善："
+            },
+            {
+              "type": "list",
+              "ordered": false,
+              "items": [
+                "FakeTensor；",
+                "`opcheck`；",
+                "`torch.compile`；",
+                "Error Handling；",
+                "Dtype Dispatch；",
+                "Device Check；",
+                "Shape Check；",
+                "CI 测试。"
+              ]
+            },
+            {
+              "type": "paragraph",
+              "text": "阶段项目："
+            },
+            {
+              "type": "quote",
+              "text": "**Production-style Fused RMSNorm Extension**"
+            },
+            {
+              "type": "paragraph",
+              "text": "通过标准："
+            },
+            {
+              "type": "list",
+              "ordered": false,
+              "items": [
+                "能安装；",
+                "能测试；",
+                "能前向；",
+                "能反向；",
+                "能被 PyTorch 调用；",
+                "能被 Benchmark；",
+                "有 Nsight 报告；",
+                "有完整 README。"
+              ]
+            }
+          ]
+        }
+      ],
+      "searchText": "完整算子兼容性 pytorch 自定义 cuda 算子 本周导读 完善： faketensor； `opcheck`； `torch.compile`； error handling； dtype dispatch； device check； shape check； ci 测试。 阶段项目： **production-style fused rmsnorm extension** 通过标准： 能安装； 能测试； 能前向； 能反向； 能被 pytorch 调用； 能被 benchmark； 有 nsight 报告； 有完整 readme。"
+    },
+    {
+      "id": "week-26",
+      "week": 26,
+      "title": "Triton 编程模型",
+      "stageId": "stage-5",
+      "stageName": "Triton Kernel",
+      "stageIndex": 5,
+      "sections": [
+        {
+          "id": "week-26-本周导读",
+          "title": "本周导读",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "text": "阅读官方："
+            },
+            {
+              "type": "list",
+              "ordered": false,
+              "items": [
+                "Vector Addition；",
+                "Fused Softmax。"
+              ]
+            },
+            {
+              "type": "paragraph",
+              "text": "实现："
+            },
+            {
+              "type": "list",
+              "ordered": false,
+              "items": [
+                "Vector Add；",
+                "SiLU；",
+                "Fused Bias + SiLU；",
+                "Softmax。"
+              ]
+            },
+            {
+              "type": "paragraph",
+              "text": "掌握："
+            },
+            {
+              "type": "list",
+              "ordered": false,
+              "items": [
+                "Program Instance；",
+                "`tl.program_id`；",
+                "Block；",
+                "Mask；",
+                "Pointer Arithmetic；",
+                "`tl.load`；",
+                "`tl.store`；",
+                "`tl.max`；",
+                "`tl.sum`。"
+              ]
+            }
+          ]
+        }
+      ],
+      "searchText": "triton 编程模型 triton kernel 本周导读 阅读官方： vector addition； fused softmax。 实现： vector add； silu； fused bias + silu； softmax。 掌握： program instance； `tl.program_id`； block； mask； pointer arithmetic； `tl.load`； `tl.store`； `tl.max`； `tl.sum`。"
+    },
+    {
+      "id": "week-27",
+      "week": 27,
+      "title": "Triton Matmul",
+      "stageId": "stage-5",
+      "stageName": "Triton Kernel",
+      "stageIndex": 5,
+      "sections": [
+        {
+          "id": "week-27-本周导读",
+          "title": "本周导读",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "text": "阅读 Matrix Multiplication Tutorial。"
+            },
+            {
+              "type": "paragraph",
+              "text": "掌握："
+            },
+            {
+              "type": "list",
+              "ordered": false,
+              "items": [
+                "Block-level Matmul；",
+                "二维指针运算；",
+                "`tl.dot`；",
+                "L2 Cache Reordering；",
+                "Autotune；",
+                "`num_warps`；",
+                "`num_stages`。"
+              ]
+            },
+            {
+              "type": "paragraph",
+              "text": "实现不同 M、N、K 的 Matmul。"
+            }
+          ]
+        }
+      ],
+      "searchText": "triton matmul triton kernel 本周导读 阅读 matrix multiplication tutorial。 掌握： block-level matmul； 二维指针运算； `tl.dot`； l2 cache reordering； autotune； `num_warps`； `num_stages`。 实现不同 m、n、k 的 matmul。"
+    },
+    {
+      "id": "week-28",
+      "week": 28,
+      "title": "Triton LLM 基础算子",
+      "stageId": "stage-5",
+      "stageName": "Triton Kernel",
+      "stageIndex": 5,
+      "sections": [
+        {
+          "id": "week-28-本周导读",
+          "title": "本周导读",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "text": "实现："
+            },
+            {
+              "type": "list",
+              "ordered": false,
+              "items": [
+                "RMSNorm；",
+                "LayerNorm；",
+                "RoPE；",
+                "SwiGLU。"
+              ]
+            },
+            {
+              "type": "paragraph",
+              "text": "要求："
+            },
+            {
+              "type": "list",
+              "ordered": false,
+              "items": [
+                "PyTorch Reference；",
+                "Triton；",
+                "CUDA C++；",
+                "同一 Benchmark 框架。"
+              ]
+            }
+          ]
+        }
+      ],
+      "searchText": "triton llm 基础算子 triton kernel 本周导读 实现： rmsnorm； layernorm； rope； swiglu。 要求： pytorch reference； triton； cuda c++； 同一 benchmark 框架。"
+    },
+    {
+      "id": "week-29",
+      "week": 29,
+      "title": "Autotune 与 Shape 泛化",
+      "stageId": "stage-5",
+      "stageName": "Triton Kernel",
+      "stageIndex": 5,
+      "sections": [
+        {
+          "id": "week-29-本周导读",
+          "title": "本周导读",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "text": "测试："
+            },
+            {
+              "type": "code",
+              "language": "text",
+              "text": "Batch\nSequence Length\nHidden Size\nHead Dimension\nDtype"
+            },
+            {
+              "type": "paragraph",
+              "text": "不能只针对一个 Shape 写死。"
+            },
+            {
+              "type": "paragraph",
+              "text": "分析："
+            },
+            {
+              "type": "list",
+              "ordered": false,
+              "items": [
+                "不同 Block Size；",
+                "不同 Warp 数；",
+                "不同 Stage；",
+                "小 Shape；",
+                "大 Shape；",
+                "不规则 Shape。"
+              ]
+            }
+          ]
+        }
+      ],
+      "searchText": "autotune 与 shape 泛化 triton kernel 本周导读 测试： batch\nsequence length\nhidden size\nhead dimension\ndtype 不能只针对一个 shape 写死。 分析： 不同 block size； 不同 warp 数； 不同 stage； 小 shape； 大 shape； 不规则 shape。"
+    },
+    {
+      "id": "week-30",
+      "week": 30,
+      "title": "CUDA 与 Triton 对照项目",
+      "stageId": "stage-5",
+      "stageName": "Triton Kernel",
+      "stageIndex": 5,
+      "sections": [
+        {
+          "id": "week-30-本周导读",
+          "title": "本周导读",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "text": "选择两个算子："
+            },
+            {
+              "type": "list",
+              "ordered": false,
+              "items": [
+                "RMSNorm；",
+                "SwiGLU。"
+              ]
+            },
+            {
+              "type": "paragraph",
+              "text": "分别实现："
+            },
+            {
+              "type": "code",
+              "language": "text",
+              "text": "PyTorch\ntorch.compile\nTriton\nCUDA C++"
+            },
+            {
+              "type": "paragraph",
+              "text": "比较："
+            },
+            {
+              "type": "list",
+              "ordered": false,
+              "items": [
+                "开发复杂度；",
+                "编译时间；",
+                "性能；",
+                "Shape 泛化；",
+                "调试难度；",
+                "数值误差。"
+              ]
+            }
+          ]
+        }
+      ],
+      "searchText": "cuda 与 triton 对照项目 triton kernel 本周导读 选择两个算子： rmsnorm； swiglu。 分别实现： pytorch\ntorch.compile\ntriton\ncuda c++ 比较： 开发复杂度； 编译时间； 性能； shape 泛化； 调试难度； 数值误差。"
+    },
+    {
+      "id": "week-31",
+      "week": 31,
+      "title": "普通 Attention 实现",
+      "stageId": "stage-6",
+      "stageName": "FlashAttention 与大模型核心 Kernel",
+      "stageIndex": 6,
+      "sections": [
+        {
+          "id": "week-31-本周导读",
+          "title": "本周导读",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "text": "重新实现："
+            },
+            {
+              "type": "code",
+              "language": "text",
+              "text": "QK^T\nScale\nMask\nSoftmax\nPV"
+            },
+            {
+              "type": "paragraph",
+              "text": "要求记录每一步："
+            },
+            {
+              "type": "list",
+              "ordered": false,
+              "items": [
+                "Shape；",
+                "FLOPs；",
+                "中间 Tensor；",
+                "HBM 读写；",
+                "峰值显存。"
+              ]
+            }
+          ]
+        }
+      ],
+      "searchText": "普通 attention 实现 flashattention 与大模型核心 kernel 本周导读 重新实现： qk^t\nscale\nmask\nsoftmax\npv 要求记录每一步： shape； flops； 中间 tensor； hbm 读写； 峰值显存。"
+    },
+    {
+      "id": "week-32",
+      "week": 32,
+      "title": "Online Softmax",
+      "stageId": "stage-6",
+      "stageName": "FlashAttention 与大模型核心 Kernel",
+      "stageIndex": 6,
+      "sections": [
+        {
+          "id": "week-32-本周导读",
+          "title": "本周导读",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "text": "学习并实现："
+            },
+            {
+              "type": "list",
+              "ordered": false,
+              "items": [
+                "分块最大值；",
+                "分块指数和；",
+                "Running Max；",
+                "Running Sum；",
+                "分块结果重缩放。"
+              ]
+            },
+            {
+              "type": "paragraph",
+              "text": "先写："
+            },
+            {
+              "type": "list",
+              "ordered": true,
+              "items": [
+                "Python 版本；",
+                "PyTorch 版本；",
+                "CUDA 版本。"
+              ]
+            },
+            {
+              "type": "paragraph",
+              "text": "深度要求："
+            },
+            {
+              "type": "paragraph",
+              "text": "能从数学上证明分块 Softmax 与完整 Softmax 等价。"
+            }
+          ]
+        }
+      ],
+      "searchText": "online softmax flashattention 与大模型核心 kernel 本周导读 学习并实现： 分块最大值； 分块指数和； running max； running sum； 分块结果重缩放。 先写： python 版本； pytorch 版本； cuda 版本。 深度要求： 能从数学上证明分块 softmax 与完整 softmax 等价。"
+    },
+    {
+      "id": "week-33",
+      "week": 33,
+      "title": "精读 FlashAttention",
+      "stageId": "stage-6",
+      "stageName": "FlashAttention 与大模型核心 Kernel",
+      "stageIndex": 6,
+      "sections": [
+        {
+          "id": "week-33-本周导读",
+          "title": "本周导读",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "text": "重点阅读："
+            },
+            {
+              "type": "list",
+              "ordered": false,
+              "items": [
+                "摘要与引言；",
+                "标准 Attention 的 IO 分析；",
+                "FlashAttention Algorithm；",
+                "IO Complexity；",
+                "Forward；",
+                "Backward。"
+              ]
+            },
+            {
+              "type": "paragraph",
+              "text": "整理："
+            },
+            {
+              "type": "code",
+              "language": "text",
+              "text": "标准 Attention 写回哪些中间结果\nFlashAttention 保留哪些片上状态\nQ、K、V 如何分块\nSoftmax 状态如何更新\n为什么不需要保存完整 S×S 矩阵"
+            }
+          ]
+        }
+      ],
+      "searchText": "精读 flashattention flashattention 与大模型核心 kernel 本周导读 重点阅读： 摘要与引言； 标准 attention 的 io 分析； flashattention algorithm； io complexity； forward； backward。 整理： 标准 attention 写回哪些中间结果\nflashattention 保留哪些片上状态\nq、k、v 如何分块\nsoftmax 状态如何更新\n为什么不需要保存完整 s×s 矩阵"
+    },
+    {
+      "id": "week-34",
+      "week": 34,
+      "title": "Mini FlashAttention Forward",
+      "stageId": "stage-6",
+      "stageName": "FlashAttention 与大模型核心 Kernel",
+      "stageIndex": 6,
+      "sections": [
+        {
+          "id": "week-34-本周导读",
+          "title": "本周导读",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "text": "第一版限制："
+            },
+            {
+              "type": "list",
+              "ordered": false,
+              "items": [
+                "FP32；",
+                "固定 Head Dimension；",
+                "不支持 Dropout；",
+                "单 GPU；",
+                "Forward Only；",
+                "支持 Causal Mask。"
+              ]
+            },
+            {
+              "type": "paragraph",
+              "text": "目标是正确，不追求极致性能。"
+            }
+          ]
+        }
+      ],
+      "searchText": "mini flashattention forward flashattention 与大模型核心 kernel 本周导读 第一版限制： fp32； 固定 head dimension； 不支持 dropout； 单 gpu； forward only； 支持 causal mask。 目标是正确，不追求极致性能。"
+    },
+    {
+      "id": "week-35",
+      "week": 35,
+      "title": "混合精度与 Shape 扩展",
+      "stageId": "stage-6",
+      "stageName": "FlashAttention 与大模型核心 Kernel",
+      "stageIndex": 6,
+      "sections": [
+        {
+          "id": "week-35-本周导读",
+          "title": "本周导读",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "text": "增加："
+            },
+            {
+              "type": "list",
+              "ordered": false,
+              "items": [
+                "FP16/BF16；",
+                "FP32 累加；",
+                "多个 Head Dimension；",
+                "多种 Sequence Length；",
+                "Non-causal；",
+                "Causal。"
+              ]
+            },
+            {
+              "type": "paragraph",
+              "text": "测试与："
+            },
+            {
+              "type": "list",
+              "ordered": false,
+              "items": [
+                "PyTorch SDPA；",
+                "普通 Attention；",
+                "开源 FlashAttention"
+              ]
+            },
+            {
+              "type": "paragraph",
+              "text": "的结果差异。"
+            }
+          ]
+        }
+      ],
+      "searchText": "混合精度与 shape 扩展 flashattention 与大模型核心 kernel 本周导读 增加： fp16/bf16； fp32 累加； 多个 head dimension； 多种 sequence length； non-causal； causal。 测试与： pytorch sdpa； 普通 attention； 开源 flashattention 的结果差异。"
+    },
+    {
+      "id": "week-36",
+      "week": 36,
+      "title": "Backward",
+      "stageId": "stage-6",
+      "stageName": "FlashAttention 与大模型核心 Kernel",
+      "stageIndex": 6,
+      "sections": [
+        {
+          "id": "week-36-本周导读",
+          "title": "本周导读",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "text": "推导并实现："
+            },
+            {
+              "type": "list",
+              "ordered": false,
+              "items": [
+                "`dQ`；",
+                "`dK`；",
+                "`dV`；",
+                "Softmax Backward；",
+                "分块重计算。"
+              ]
+            },
+            {
+              "type": "paragraph",
+              "text": "可以先用 Triton 实现，再尝试 CUDA。"
+            }
+          ]
+        }
+      ],
+      "searchText": "backward flashattention 与大模型核心 kernel 本周导读 推导并实现： `dq`； `dk`； `dv`； softmax backward； 分块重计算。 可以先用 triton 实现，再尝试 cuda。"
+    },
+    {
+      "id": "week-37",
+      "week": 37,
+      "title": "FlashAttention-2/3/4 专题",
+      "stageId": "stage-6",
+      "stageName": "FlashAttention 与大模型核心 Kernel",
+      "stageIndex": 6,
+      "sections": [
+        {
+          "id": "week-37-本周导读",
+          "title": "本周导读",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "text": "FlashAttention-2 重点改进 Threadblock 和 Warp 的工作划分；FlashAttention-3 针对 Hopper 使用异步执行、Warp Specialization、TMA 和 FP8。2026 年的 FlashAttention-4 进一步针对 Blackwell 和异步 MMA 重新设计流水线。[arXiv](https://arxiv.org/abs/2307.08691)"
+            },
+            {
+              "type": "paragraph",
+              "text": "这一周不要求完整复现，而要求："
+            },
+            {
+              "type": "list",
+              "ordered": false,
+              "items": [
+                "能解释 FA1、FA2、FA3 的主要差异；",
+                "能在 Nsight 中查看现有实现；",
+                "能定位 Matmul、Softmax 和数据搬运的时间；",
+                "完成 Mini FlashAttention 技术报告。"
+              ]
+            }
+          ]
+        }
+      ],
+      "searchText": "flashattention-2/3/4 专题 flashattention 与大模型核心 kernel 本周导读 flashattention-2 重点改进 threadblock 和 warp 的工作划分；flashattention-3 针对 hopper 使用异步执行、warp specialization、tma 和 fp8。2026 年的 flashattention-4 进一步针对 blackwell 和异步 mma 重新设计流水线。[arxiv](https://arxiv.org/abs/2307.08691) 这一周不要求完整复现，而要求： 能解释 fa1、fa2、fa3 的主要差异； 能在 nsight 中查看现有实现； 能定位 matmul、softmax 和数据搬运的时间； 完成 mini flashattention 技术报告。"
+    },
+    {
+      "id": "week-38",
+      "week": 38,
+      "title": "CUTLASS 基础",
+      "stageId": "stage-7",
+      "stageName": "CUTLASS 与 CuTe",
+      "stageIndex": 7,
+      "sections": [
+        {
+          "id": "week-38-本周导读",
+          "title": "本周导读",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "text": "阅读："
+            },
+            {
+              "type": "list",
+              "ordered": false,
+              "items": [
+                "CUTLASS Overview；",
+                "Efficient GEMM；",
+                "GEMM API；",
+                "Basic GEMM Example。"
+              ]
+            },
+            {
+              "type": "paragraph",
+              "text": "掌握："
+            },
+            {
+              "type": "list",
+              "ordered": false,
+              "items": [
+                "Device；",
+                "Kernel；",
+                "Collective；",
+                "Threadblock Tile；",
+                "Warp Tile；",
+                "Instruction Tile；",
+                "Epilogue。"
+              ]
+            }
+          ]
+        }
+      ],
+      "searchText": "cutlass 基础 cutlass 与 cute 本周导读 阅读： cutlass overview； efficient gemm； gemm api； basic gemm example。 掌握： device； kernel； collective； threadblock tile； warp tile； instruction tile； epilogue。"
+    },
+    {
+      "id": "week-39",
+      "week": 39,
+      "title": "CuTe Layout",
+      "stageId": "stage-7",
+      "stageName": "CUTLASS 与 CuTe",
+      "stageIndex": 7,
+      "sections": [
+        {
+          "id": "week-39-本周导读",
+          "title": "本周导读",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "text": "阅读："
+            },
+            {
+              "type": "list",
+              "ordered": false,
+              "items": [
+                "`00_quickstart`；",
+                "`01_layout`；",
+                "`02_layout_algebra`；",
+                "`03_tensor`。"
+              ]
+            },
+            {
+              "type": "paragraph",
+              "text": "官方建议从 GEMM Tutorial 或 Quickstart 入手，并按 Layout、Layout Algebra、Tensor 逐步学习。[NVIDIA Docs](https://docs.nvidia.com/cutlass/latest/media/docs/cpp/cute/00_quickstart.html)"
+            },
+            {
+              "type": "paragraph",
+              "text": "要求能理解："
+            },
+            {
+              "type": "list",
+              "ordered": false,
+              "items": [
+                "Shape；",
+                "Stride；",
+                "Layout；",
+                "Composition；",
+                "Tiling；",
+                "Tensor；",
+                "Coordinate Mapping。"
+              ]
+            }
+          ]
+        }
+      ],
+      "searchText": "cute layout cutlass 与 cute 本周导读 阅读： `00_quickstart`； `01_layout`； `02_layout_algebra`； `03_tensor`。 官方建议从 gemm tutorial 或 quickstart 入手，并按 layout、layout algebra、tensor 逐步学习。[nvidia docs](https://docs.nvidia.com/cutlass/latest/media/docs/cpp/cute/00_quickstart.html) 要求能理解： shape； stride； layout； composition； tiling； tensor； coordinate mapping。"
+    },
+    {
+      "id": "week-40",
+      "week": 40,
+      "title": "CuTe GEMM",
+      "stageId": "stage-7",
+      "stageName": "CUTLASS 与 CuTe",
+      "stageIndex": 7,
+      "sections": [
+        {
+          "id": "week-40-本周导读",
+          "title": "本周导读",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "text": "阅读："
+            },
+            {
+              "type": "list",
+              "ordered": false,
+              "items": [
+                "`0x_gemm_tutorial`。"
+              ]
+            },
+            {
+              "type": "paragraph",
+              "text": "实现或修改："
+            },
+            {
+              "type": "list",
+              "ordered": false,
+              "items": [
+                "CTA Tile；",
+                "Thread Partition；",
+                "Global-to-Shared Copy；",
+                "Shared-to-Register Copy；",
+                "GEMM Mainloop。"
+              ]
+            },
+            {
+              "type": "paragraph",
+              "text": "该教程从全局内存分 Tile、线程分区及 `cute::copy`、`cute::gemm` 主循环开始。[NVIDIA Docs](https://docs.nvidia.com/cutlass/latest/media/docs/cpp/cute/0x_gemm_tutorial.html)"
+            }
+          ]
+        }
+      ],
+      "searchText": "cute gemm cutlass 与 cute 本周导读 阅读： `0x_gemm_tutorial`。 实现或修改： cta tile； thread partition； global-to-shared copy； shared-to-register copy； gemm mainloop。 该教程从全局内存分 tile、线程分区及 `cute::copy`、`cute::gemm` 主循环开始。[nvidia docs](https://docs.nvidia.com/cutlass/latest/media/docs/cpp/cute/0x_gemm_tutorial.html)"
+    },
+    {
+      "id": "week-41",
+      "week": 41,
+      "title": "Fused Epilogue",
+      "stageId": "stage-7",
+      "stageName": "CUTLASS 与 CuTe",
+      "stageIndex": 7,
+      "sections": [
+        {
+          "id": "week-41-本周导读",
+          "title": "本周导读",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "text": "实现："
+            },
+            {
+              "type": "quote",
+              "text": "GEMM + Bias + SiLU / SwiGLU"
+            },
+            {
+              "type": "paragraph",
+              "text": "比较："
+            },
+            {
+              "type": "list",
+              "ordered": false,
+              "items": [
+                "PyTorch 多 Kernel；",
+                "`torch.compile`；",
+                "Triton；",
+                "CUTLASS；",
+                "自己的 CUDA。"
+              ]
+            }
+          ]
+        }
+      ],
+      "searchText": "fused epilogue cutlass 与 cute 本周导读 实现： gemm + bias + silu / swiglu 比较： pytorch 多 kernel； `torch.compile`； triton； cutlass； 自己的 cuda。"
+    },
+    {
+      "id": "week-42",
+      "week": 42,
+      "title": "CUTLASS 项目验收",
+      "stageId": "stage-7",
+      "stageName": "CUTLASS 与 CuTe",
+      "stageIndex": 7,
+      "sections": [
+        {
+          "id": "week-42-本周导读",
+          "title": "本周导读",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "text": "完成："
+            },
+            {
+              "type": "quote",
+              "text": "**Fused Linear Layer Kernel**"
+            },
+            {
+              "type": "paragraph",
+              "text": "至少支持："
+            },
+            {
+              "type": "list",
+              "ordered": false,
+              "items": [
+                "FP16/BF16；",
+                "Bias；",
+                "Activation；",
+                "多种 M、N、K；",
+                "PyTorch 调用；",
+                "正确性测试；",
+                "Benchmark；",
+                "Nsight 分析。"
+              ]
+            }
+          ]
+        }
+      ],
+      "searchText": "cutlass 项目验收 cutlass 与 cute 本周导读 完成： **fused linear layer kernel** 至少支持： fp16/bf16； bias； activation； 多种 m、n、k； pytorch 调用； 正确性测试； benchmark； nsight 分析。"
+    },
+    {
+      "id": "week-43",
+      "week": 43,
+      "title": "NCCL",
+      "stageId": "stage-8",
+      "stageName": "多 GPU 与大模型训练系统",
+      "stageIndex": 8,
+      "sections": [
+        {
+          "id": "week-43-本周导读",
+          "title": "本周导读",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "text": "学习："
+            },
+            {
+              "type": "list",
+              "ordered": false,
+              "items": [
+                "Rank；",
+                "Communicator；",
+                "AllReduce；",
+                "AllGather；",
+                "ReduceScatter；",
+                "Broadcast；",
+                "Send/Recv；",
+                "Ring；",
+                "Tree；",
+                "CUDA Stream 与 NCCL。"
+              ]
+            },
+            {
+              "type": "paragraph",
+              "text": "NCCL 官方提供 AllReduce、AllGather、ReduceScatter 和点对点通信等 GPU 通信原语。[NVIDIA Docs](https://docs.nvidia.com/deeplearning/nccl/user-guide/docs/usage/collectives.html)"
+            },
+            {
+              "type": "paragraph",
+              "text": "任务："
+            },
+            {
+              "type": "list",
+              "ordered": false,
+              "items": [
+                "双 GPU AllReduce；",
+                "不同消息大小 Benchmark；",
+                "PCIe/NVLink 带宽观察；",
+                "Nsight Systems 查看通信。"
+              ]
+            }
+          ]
+        }
+      ],
+      "searchText": "nccl 多 gpu 与大模型训练系统 本周导读 学习： rank； communicator； allreduce； allgather； reducescatter； broadcast； send/recv； ring； tree； cuda stream 与 nccl。 nccl 官方提供 allreduce、allgather、reducescatter 和点对点通信等 gpu 通信原语。[nvidia docs](https://docs.nvidia.com/deeplearning/nccl/user-guide/docs/usage/collectives.html) 任务： 双 gpu allreduce； 不同消息大小 benchmark； pcie/nvlink 带宽观察； nsight systems 查看通信。"
+    },
+    {
+      "id": "week-44",
+      "week": 44,
+      "title": "DDP 与通信分析",
+      "stageId": "stage-8",
+      "stageName": "多 GPU 与大模型训练系统",
+      "stageIndex": 8,
+      "sections": [
+        {
+          "id": "week-44-本周导读",
+          "title": "本周导读",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "text": "实现小型 GPT："
+            },
+            {
+              "type": "list",
+              "ordered": false,
+              "items": [
+                "单卡；",
+                "双卡 DDP；",
+                "Gradient Accumulation；",
+                "Mixed Precision；",
+                "Activation Checkpointing。"
+              ]
+            },
+            {
+              "type": "paragraph",
+              "text": "记录："
+            },
+            {
+              "type": "list",
+              "ordered": false,
+              "items": [
+                "Step Time；",
+                "Tokens/s；",
+                "显存；",
+                "AllReduce 时间；",
+                "Scaling Efficiency。"
+              ]
+            }
+          ]
+        }
+      ],
+      "searchText": "ddp 与通信分析 多 gpu 与大模型训练系统 本周导读 实现小型 gpt： 单卡； 双卡 ddp； gradient accumulation； mixed precision； activation checkpointing。 记录： step time； tokens/s； 显存； allreduce 时间； scaling efficiency。"
+    },
+    {
+      "id": "week-45",
+      "week": 45,
+      "title": "Tensor Parallel",
+      "stageId": "stage-8",
+      "stageName": "多 GPU 与大模型训练系统",
+      "stageIndex": 8,
+      "sections": [
+        {
+          "id": "week-45-本周导读",
+          "title": "本周导读",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "text": "学习："
+            },
+            {
+              "type": "list",
+              "ordered": false,
+              "items": [
+                "Column Parallel Linear；",
+                "Row Parallel Linear；",
+                "Attention Head 切分；",
+                "AllReduce；",
+                "AllGather；",
+                "Sequence Parallel。"
+              ]
+            },
+            {
+              "type": "paragraph",
+              "text": "任务："
+            },
+            {
+              "type": "paragraph",
+              "text": "自己实现一个简化 Tensor Parallel MLP。"
+            }
+          ]
+        }
+      ],
+      "searchText": "tensor parallel 多 gpu 与大模型训练系统 本周导读 学习： column parallel linear； row parallel linear； attention head 切分； allreduce； allgather； sequence parallel。 任务： 自己实现一个简化 tensor parallel mlp。"
+    },
+    {
+      "id": "week-46",
+      "week": 46,
+      "title": "Megatron Core",
+      "stageId": "stage-8",
+      "stageName": "多 GPU 与大模型训练系统",
+      "stageIndex": 8,
+      "sections": [
+        {
+          "id": "week-46-本周导读",
+          "title": "本周导读",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "text": "阅读官方 Parallelism Guide："
+            },
+            {
+              "type": "list",
+              "ordered": false,
+              "items": [
+                "Tensor Parallel；",
+                "Pipeline Parallel；",
+                "Sequence Parallel；",
+                "Context Parallel；",
+                "Expert Parallel。"
+              ]
+            },
+            {
+              "type": "paragraph",
+              "text": "Megatron Core 当前支持这些并行策略的组合，用于大规模模型训练。[NVIDIA Docs](https://docs.nvidia.com/megatron-core/developer-guide/latest/user-guide/parallelism-guide.html)"
+            },
+            {
+              "type": "paragraph",
+              "text": "任务："
+            },
+            {
+              "type": "list",
+              "ordered": false,
+              "items": [
+                "跑通小型 Megatron GPT；",
+                "修改 TP；",
+                "修改 Micro Batch；",
+                "观察 Pipeline Bubble。"
+              ]
+            }
+          ]
+        }
+      ],
+      "searchText": "megatron core 多 gpu 与大模型训练系统 本周导读 阅读官方 parallelism guide： tensor parallel； pipeline parallel； sequence parallel； context parallel； expert parallel。 megatron core 当前支持这些并行策略的组合，用于大规模模型训练。[nvidia docs](https://docs.nvidia.com/megatron-core/developer-guide/latest/user-guide/parallelism-guide.html) 任务： 跑通小型 megatron gpt； 修改 tp； 修改 micro batch； 观察 pipeline bubble。"
+    },
+    {
+      "id": "week-47",
+      "week": 47,
+      "title": "分布式训练报告",
+      "stageId": "stage-8",
+      "stageName": "多 GPU 与大模型训练系统",
+      "stageIndex": 8,
+      "sections": [
+        {
+          "id": "week-47-本周导读",
+          "title": "本周导读",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "text": "报告必须包含："
+            },
+            {
+              "type": "code",
+              "language": "text",
+              "text": "单卡吞吐\n双卡吞吐\n扩展效率\n显存占用\n计算时间\n通信时间\nAllReduce 占比\nPipeline Bubble\nMFU 或近似利用率"
+            },
+            {
+              "type": "paragraph",
+              "text": "通过标准："
+            },
+            {
+              "type": "paragraph",
+              "text": "能够回答："
+            },
+            {
+              "type": "list",
+              "ordered": false,
+              "items": [
+                "为什么两张 GPU 不等于两倍性能？",
+                "Tensor Parallel 为什么需要通信？",
+                "ReduceScatter 与 AllGather 如何组合？",
+                "通信与计算如何重叠？",
+                "Pipeline Bubble 如何产生？",
+                "TP、DP、PP 应该如何组合？"
+              ]
+            }
+          ]
+        }
+      ],
+      "searchText": "分布式训练报告 多 gpu 与大模型训练系统 本周导读 报告必须包含： 单卡吞吐\n双卡吞吐\n扩展效率\n显存占用\n计算时间\n通信时间\nallreduce 占比\npipeline bubble\nmfu 或近似利用率 通过标准： 能够回答： 为什么两张 gpu 不等于两倍性能？ tensor parallel 为什么需要通信？ reducescatter 与 allgather 如何组合？ 通信与计算如何重叠？ pipeline bubble 如何产生？ tp、dp、pp 应该如何组合？"
+    },
+    {
+      "id": "week-48",
+      "week": 48,
+      "title": "整理 CUDA Kernel 库",
+      "stageId": "stage-9",
+      "stageName": "作品集、源码与求职",
+      "stageIndex": 9,
+      "sections": [
+        {
+          "id": "week-48-本周导读",
+          "title": "本周导读",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "text": "保留最成熟的："
+            },
+            {
+              "type": "list",
+              "ordered": false,
+              "items": [
+                "Transpose；",
+                "Reduction；",
+                "Scan；",
+                "Softmax；",
+                "RMSNorm；",
+                "GEMM；",
+                "SwiGLU。"
+              ]
+            },
+            {
+              "type": "paragraph",
+              "text": "删除纯练习代码，统一接口和测试。"
+            }
+          ]
+        }
+      ],
+      "searchText": "整理 cuda kernel 库 作品集、源码与求职 本周导读 保留最成熟的： transpose； reduction； scan； softmax； rmsnorm； gemm； swiglu。 删除纯练习代码，统一接口和测试。"
+    },
+    {
+      "id": "week-49",
+      "week": 49,
+      "title": "整理 LLM Kernel 库",
+      "stageId": "stage-9",
+      "stageName": "作品集、源码与求职",
+      "stageIndex": 9,
+      "sections": [
+        {
+          "id": "week-49-本周导读",
+          "title": "本周导读",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "text": "保留："
+            },
+            {
+              "type": "list",
+              "ordered": false,
+              "items": [
+                "RMSNorm Forward/Backward；",
+                "RoPE；",
+                "SwiGLU；",
+                "Mini FlashAttention；",
+                "Fused Linear。"
+              ]
+            },
+            {
+              "type": "paragraph",
+              "text": "每个项目都需要中文和英文 README。"
+            }
+          ]
+        }
+      ],
+      "searchText": "整理 llm kernel 库 作品集、源码与求职 本周导读 保留： rmsnorm forward/backward； rope； swiglu； mini flashattention； fused linear。 每个项目都需要中文和英文 readme。"
+    },
+    {
+      "id": "week-50",
+      "week": 50,
+      "title": "阅读真实源码",
+      "stageId": "stage-9",
+      "stageName": "作品集、源码与求职",
+      "stageIndex": 9,
+      "sections": [
+        {
+          "id": "week-50-本周导读",
+          "title": "本周导读",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "text": "选两个项目："
+            },
+            {
+              "type": "list",
+              "ordered": false,
+              "items": [
+                "PyTorch；",
+                "Triton；",
+                "FlashAttention；",
+                "CUTLASS；",
+                "Megatron Core。"
+              ]
+            },
+            {
+              "type": "paragraph",
+              "text": "阅读目标不是全读，而是追踪一个完整调用链，例如："
+            },
+            {
+              "type": "code",
+              "language": "text",
+              "text": "Python API\n→ Operator Registration\n→ C++ Dispatch\n→ CUDA Launch\n→ Kernel"
+            }
+          ]
+        }
+      ],
+      "searchText": "阅读真实源码 作品集、源码与求职 本周导读 选两个项目： pytorch； triton； flashattention； cutlass； megatron core。 阅读目标不是全读，而是追踪一个完整调用链，例如： python api\n→ operator registration\n→ c++ dispatch\n→ cuda launch\n→ kernel"
+    },
+    {
+      "id": "week-51",
+      "week": 51,
+      "title": "开源贡献",
+      "stageId": "stage-9",
+      "stageName": "作品集、源码与求职",
+      "stageIndex": 9,
+      "sections": [
+        {
+          "id": "week-51-本周导读",
+          "title": "本周导读",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "text": "目标不是提交大型功能，而是完成至少一次："
+            },
+            {
+              "type": "list",
+              "ordered": false,
+              "items": [
+                "修复编译问题；",
+                "补测试；",
+                "补 Benchmark；",
+                "修文档；",
+                "修复边界 Shape；",
+                "添加一种 Dtype；",
+                "复现并提交 Issue。"
+              ]
+            }
+          ]
+        }
+      ],
+      "searchText": "开源贡献 作品集、源码与求职 本周导读 目标不是提交大型功能，而是完成至少一次： 修复编译问题； 补测试； 补 benchmark； 修文档； 修复边界 shape； 添加一种 dtype； 复现并提交 issue。"
+    },
+    {
+      "id": "week-52",
+      "week": 52,
+      "title": "面试准备",
+      "stageId": "stage-9",
+      "stageName": "作品集、源码与求职",
+      "stageIndex": 9,
+      "sections": [
+        {
+          "id": "week-52-本周导读",
+          "title": "本周导读",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "text": "必须能手写或讲解："
+            },
+            {
+              "type": "list",
+              "ordered": false,
+              "items": [
+                "Vector Add；",
+                "Reduction；",
+                "Tiled GEMM；",
+                "Softmax；",
+                "Online Softmax；",
+                "RMSNorm；",
+                "Warp Shuffle；",
+                "Coalesced Access；",
+                "Bank Conflict；",
+                "Occupancy；",
+                "FlashAttention；",
+                "Tensor Parallel；",
+                "AllReduce。"
+              ]
+            }
+          ]
+        }
+      ],
+      "searchText": "面试准备 作品集、源码与求职 本周导读 必须能手写或讲解： vector add； reduction； tiled gemm； softmax； online softmax； rmsnorm； warp shuffle； coalesced access； bank conflict； occupancy； flashattention； tensor parallel； allreduce。"
+    }
+  ]
+}
