@@ -27,3 +27,8 @@ npm test
 ```
 
 构建时会从 `content/course.md` 生成完整课程数据，并准备静态站点与 Sites Worker。
+
+## 服务器部署
+
+`deploy/` 包含独立的 Nginx Compose 配置：静态站点发布在 80 端口，
+`/store-api/` 反向代理到同一台服务器的 Test ScriptStore `:3021`。
