@@ -1,0 +1,186 @@
+<script setup lang="ts">
+import { computed, nextTick, ref, watch } from "vue";
+import type { CourseWeek } from "../types";
+
+type ChatMessage = {
+  role: "user" | "assistant";
+  content: string;
+};
+
+const props = defineProps<{ week: CourseWeek }>();
+
+const messages = ref<ChatMessage[]>([]);
+const draft = ref("");
+const busy = ref(false);
+const error = ref("");
+const chatEnd = ref<HTMLElement | null>(null);
+
+const storageKey = computed(() => `cuda52:tutor:week-${props.week.week}:v1`);
+const suggestions = [
+  "用三句话总结本周核心",
+  "解释本周最容易混淆的概念",
+  "给我一道本周验收题",
+];
+
+const weekContext = computed(() =>
+  props.week.sections
+    .map((section) => {
+      const content = section.blocks
+        .flatMap((block) => {
+          if (block.type === "list") return block.items;
+          if ("text" in block) return [block.text];
+          return [];
+        })
+        .join("\n");
+      return `## ${section.title}\n${content}`;
+    })
+    .join("\n\n"),
+);
+
+const loadHistory = () => {
+  try {
+    const stored = JSON.parse(localStorage.getItem(storageKey.value) || "[]");
+    messages.value = Array.isArray(stored) ? stored.slice(-20) : [];
+  } catch {
+    messages.value = [];
+  }
+  draft.value = "";
+  error.value = "";
+};
+
+watch(() => props.week.week, loadHistory, { immediate: true });
+
+watch(
+  messages,
+  (value) => {
+    localStorage.setItem(storageKey.value, JSON.stringify(value.slice(-20)));
+  },
+  { deep: true },
+);
+
+const scrollToEnd = async () => {
+  await nextTick();
+  chatEnd.value?.scrollIntoView({ behavior: "smooth", block: "nearest" });
+};
+
+const send = async (preset?: string) => {
+  const content = String(preset ?? draft.value).trim();
+  if (!content || busy.value) return;
+
+  const userMessage: ChatMessage = { role: "user", content };
+  messages.value.push(userMessage);
+  draft.value = "";
+  error.value = "";
+  busy.value = true;
+  await scrollToEnd();
+
+  try {
+    const response = await fetch("/llm-api/chat", {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        week: props.week.week,
+        title: props.week.title,
+        context: weekContext.value,
+        messages: messages.value.slice(-12),
+      }),
+    });
+    const data = await response.json().catch(() => ({}));
+    if (!response.ok) {
+      throw new Error(data?.message || `答疑服务错误（${response.status}）`);
+    }
+    messages.value.push({
+      role: "assistant",
+      content: String(data.message || "暂时没有得到有效回答。"),
+    });
+  } catch (caught) {
+    error.value = caught instanceof Error ? caught.message : "在线答疑暂时不可用";
+  } finally {
+    busy.value = false;
+    await scrollToEnd();
+  }
+};
+
+const onKeydown = (event: KeyboardEvent) => {
+  if (event.key === "Enter" && !event.shiftKey) {
+    event.preventDefault();
+    send();
+  }
+};
+
+const clearHistory = () => {
+  messages.value = [];
+  localStorage.removeItem(storageKey.value);
+  error.value = "";
+};
+</script>
+
+<template>
+  <section class="tutor-panel" aria-labelledby="tutor-title">
+    <header class="tutor-header">
+      <div class="tutor-mark">AI</div>
+      <div>
+        <span>WEEK {{ String(week.week).padStart(2, "0") }} · ONLINE OFFICE HOURS</span>
+        <h2 id="tutor-title">本周在线答疑</h2>
+        <p>针对本周内容、代码实现或不理解的概念，直接问助教。</p>
+      </div>
+      <div class="model-badge"><i /> deepseek-v4-pro</div>
+    </header>
+
+    <div class="tutor-body">
+      <div v-if="!messages.length" class="tutor-empty">
+        <strong>从一个具体问题开始。</strong>
+        <p>
+          我已经读过第 {{ week.week }} 周「{{ week.title }}」的课程内容，会结合本周目标回答。
+        </p>
+        <div class="tutor-suggestions">
+          <button v-for="suggestion in suggestions" :key="suggestion" @click="send(suggestion)">
+            {{ suggestion }} <span>↗</span>
+          </button>
+        </div>
+      </div>
+
+      <div v-else class="chat-thread" aria-live="polite">
+        <article
+          v-for="(message, index) in messages"
+          :key="index"
+          :class="['chat-message', message.role]"
+        >
+          <span>{{ message.role === "user" ? "你" : "AI" }}</span>
+          <div>{{ message.content }}</div>
+        </article>
+        <article v-if="busy" class="chat-message assistant waiting">
+          <span>AI</span>
+          <div><i /><i /><i /></div>
+        </article>
+        <div ref="chatEnd" />
+      </div>
+
+      <div v-if="error" class="tutor-error" role="alert">
+        {{ error }}
+        <button @click="send(messages.at(-1)?.content)">重试</button>
+      </div>
+
+      <div class="tutor-composer">
+        <textarea
+          v-model="draft"
+          rows="3"
+          :disabled="busy"
+          :placeholder="`问问第 ${week.week} 周的内容…`"
+          aria-label="输入在线答疑问题"
+          @keydown="onKeydown"
+        />
+        <div>
+          <span>Enter 发送 · Shift + Enter 换行</span>
+          <button v-if="messages.length" class="clear-chat" @click="clearHistory">清空</button>
+          <button class="send-chat" :disabled="!draft.trim() || busy" @click="send()">
+            {{ busy ? "思考中…" : "发送问题" }}
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+</template>

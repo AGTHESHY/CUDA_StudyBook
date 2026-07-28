@@ -11,6 +11,11 @@ export default defineConfig({
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/store-api/, ""),
       },
+      "/llm-api": {
+        target: "http://127.0.0.1:3038",
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/llm-api/, ""),
+      },
     },
   },
   build: {

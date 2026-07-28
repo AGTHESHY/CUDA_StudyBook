@@ -58,6 +58,20 @@ export default {
       });
     }
 
+    if (url.pathname === "/llm-api" || url.pathname.startsWith("/llm-api/")) {
+      const upstream = new URL(url.pathname.replace(/^\\/llm-api/, "") || "/", "http://38.92.15.80");
+      upstream.pathname = "/llm-api" + upstream.pathname;
+      upstream.search = url.search;
+      const headers = new Headers(request.headers);
+      headers.delete("host");
+      return fetch(upstream, {
+        method: request.method,
+        headers,
+        body: request.method === "GET" || request.method === "HEAD" ? undefined : request.body,
+        redirect: "follow",
+      });
+    }
+
     const key = assets[url.pathname] ? url.pathname : "/index.html";
     const [contentType, encoded] = assets[key];
     return new Response(decode(encoded), {

@@ -10,6 +10,7 @@ import {
 import courseJson from "./course-data.json";
 import AuthModal from "./components/AuthModal.vue";
 import ContentBlocks from "./components/ContentBlocks.vue";
+import LlmTutor from "./components/LlmTutor.vue";
 import type {
   CourseData,
   CourseWeek,
@@ -652,6 +653,8 @@ onBeforeUnmount(() => {
           <h2>{{ section.title }}</h2>
           <ContentBlocks :blocks="section.blocks" />
         </section>
+
+        <LlmTutor :week="selectedWeek" />
 
         <footer class="week-navigation">
           <button
