@@ -430,12 +430,16 @@ textarea:focus-visible {
 
 .hero-visual {
   position: relative;
+  isolation: isolate;
+  contain: paint;
   overflow: hidden;
   height: 520px;
   min-height: 520px;
 }
 
 .three-hero {
+  position: relative;
+  z-index: 0;
   display: block;
   width: 100%;
   height: 520px;
@@ -444,14 +448,17 @@ textarea:focus-visible {
 .hero-orbit-label,
 .hero-code-card {
   position: absolute;
+  z-index: 2;
+  pointer-events: none;
   padding: 8px 11px;
-  background: rgba(22, 27, 34, 0.9);
-  border: 1px solid rgba(86, 183, 123, 0.36);
-  color: #b1bac4;
+  background: #111820;
+  border: 1px solid rgba(56, 189, 248, 0.42);
+  color: #c3d3df;
   font-family: var(--mono);
   font-size: 9px;
   letter-spacing: 0.08em;
-  backdrop-filter: blur(7px);
+  transform: translateZ(0);
+  backface-visibility: hidden;
 }
 
 .hero-orbit-label {
@@ -463,9 +470,9 @@ textarea:focus-visible {
 .hero-orbit-label i {
   width: 5px;
   height: 5px;
-  background: var(--cyan);
+  background: #38bdf8;
   border-radius: 50%;
-  box-shadow: 0 0 9px var(--cyan);
+  box-shadow: 0 0 9px rgba(56, 189, 248, 0.8);
 }
 
 .label-one {

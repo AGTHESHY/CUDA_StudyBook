@@ -25,7 +25,7 @@ onMounted(() => {
   const core = new THREE.Mesh(
     new THREE.IcosahedronGeometry(1.45, 2),
     new THREE.MeshBasicMaterial({
-      color: 0x3fb56f,
+      color: 0x22d3ee,
       wireframe: true,
       transparent: true,
       opacity: 0.42,
@@ -36,7 +36,7 @@ onMounted(() => {
   const inner = new THREE.Mesh(
     new THREE.IcosahedronGeometry(0.88, 1),
     new THREE.MeshBasicMaterial({
-      color: 0x8bcf73,
+      color: 0xa3e635,
       wireframe: true,
       transparent: true,
       opacity: 0.28,
@@ -63,7 +63,7 @@ onMounted(() => {
   const particles = new THREE.Points(
     particlesGeometry,
     new THREE.PointsMaterial({
-      color: 0x8fa3b8,
+      color: 0x7dd3fc,
       size: 0.025,
       transparent: true,
       opacity: 0.72,
@@ -79,7 +79,7 @@ onMounted(() => {
       }),
     ),
     new THREE.LineBasicMaterial({
-      color: 0x5c8f78,
+      color: 0x38bdf8,
       transparent: true,
       opacity: 0.22,
     }),
