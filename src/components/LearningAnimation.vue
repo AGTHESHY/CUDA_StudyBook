@@ -827,15 +827,9 @@ onBeforeUnmount(() => {
     </header>
     <div class="learning-animation-stage">
       <div
-        class="learning-animation-visual"
-        :class="`scene-${spec.template}`"
+        class="learning-animation-board"
+        :class="{ 'has-example': hasExample }"
       >
-        <div
-          ref="host"
-          class="learning-animation-canvas"
-          role="img"
-          :aria-label="`${spec.title}：${currentLabel}`"
-        />
         <div v-if="hasExample" class="learning-animation-code">
           <div>
             <span>{{ effectiveLanguage }}</span>
@@ -850,6 +844,16 @@ onBeforeUnmount(() => {
             }"
           ><i>{{ String(index + 1).padStart(2, "0") }}</i>{{ line || " " }}</span></code></pre>
         </div>
+        <div
+          class="learning-animation-visual"
+          :class="`scene-${spec.template}`"
+        >
+          <div
+            ref="host"
+            class="learning-animation-canvas"
+            role="img"
+            :aria-label="`${spec.title}：${currentLabel}`"
+          />
         <div v-if="axisLabels.length" class="matrix-axis matrix-axis-columns">
           <span v-for="label in axisLabels" :key="`column-${label}`">
             {{ label }}
@@ -862,6 +866,7 @@ onBeforeUnmount(() => {
         </div>
         <div v-if="visualLegend.length" class="learning-animation-legend">
           <span v-for="label in visualLegend" :key="label">{{ label }}</span>
+        </div>
         </div>
       </div>
     </div>
