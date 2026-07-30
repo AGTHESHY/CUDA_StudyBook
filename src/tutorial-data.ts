@@ -4,6 +4,7 @@ import type {
   TutorialModule,
 } from "./types";
 import { weekOneBookModule } from "./tutorials/week-one-book";
+import { curatedWeeksTwoToEight } from "./tutorials/weeks-two-to-eight";
 import { generatedTutorialModules } from "./tutorials/generated-weeks";
 
 const p = (text: string): ContentBlock => ({ type: "paragraph", text });
@@ -740,7 +741,10 @@ int main() {
 ];
 
 const curatedByWeek = new Map(
-  curatedTutorialModules.map((module) => [module.week, module]),
+  [...curatedTutorialModules, ...curatedWeeksTwoToEight].map((module) => [
+    module.week,
+    module,
+  ]),
 );
 
 export const tutorialModules: TutorialModule[] = generatedTutorialModules.map(

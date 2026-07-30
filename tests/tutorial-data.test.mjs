@@ -6,6 +6,10 @@ const source = await readFile(
   new URL("../src/tutorials/week-one-book.ts", import.meta.url),
   "utf8",
 );
+const curatedWeeksSource = await readFile(
+  new URL("../src/tutorials/weeks-two-to-eight.ts", import.meta.url),
+  "utf8",
+);
 
 test("week one explains every assigned Effective Modern C++ item", () => {
   const actual = [...source.matchAll(/^\s+item: (\d+),$/gm)].map((match) =>
@@ -108,4 +112,61 @@ test("article header describes the current page instead of tutorial boilerplate"
   assert.doesNotMatch(app, /本周已提供教材级深度教程/);
   assert.match(app, /selectedTutorialLesson\.value\.summary/);
   assert.match(app, /汇总本周需要完成的实现、测试、性能分析与验收标准/);
+});
+
+test("weeks two through eight use compact hand-written lesson sequences", () => {
+  const lessonCounts = new Map([
+    ["Two", 8],
+    ["Four", 6],
+    ["Five", 6],
+    ["Six", 7],
+    ["Seven", 7],
+    ["Eight", 6],
+  ]);
+  const weekNames = [...lessonCounts.keys()];
+
+  for (const [index, weekName] of weekNames.entries()) {
+    const start = curatedWeeksSource.indexOf(`const week${weekName}`);
+    const end =
+      index + 1 < weekNames.length
+        ? curatedWeeksSource.indexOf(`const week${weekNames[index + 1]}`, start)
+        : curatedWeeksSource.indexOf("export const curatedWeeks", start);
+    const weekSource = curatedWeeksSource.slice(start, end);
+
+    assert.notEqual(start, -1);
+    assert.equal(
+      [...weekSource.matchAll(/makeLesson\(\{/g)].length,
+      lessonCounts.get(weekName),
+    );
+  }
+});
+
+test("new technical lessons cite only NVIDIA and PyTorch documentation", () => {
+  const allowedHosts = new Set(["docs.nvidia.com", "docs.pytorch.org"]);
+  const urls = [...curatedWeeksSource.matchAll(/url: "([^"]+)"/g)].map(
+    (match) => match[1],
+  );
+
+  assert.ok(urls.length >= 10);
+  for (const value of urls) {
+    assert.ok(
+      allowedHosts.has(new URL(value).hostname),
+      `unexpected reference host: ${value}`,
+    );
+  }
+  assert.match(curatedWeeksSource, /性能结论完全由记录环境中的实测证据决定/);
+});
+
+test("curated weeks replace generated pages without changing week one", async () => {
+  const tutorialData = await readFile(
+    new URL("../src/tutorial-data.ts", import.meta.url),
+    "utf8",
+  );
+
+  assert.match(tutorialData, /curatedWeeksTwoToEight/);
+  assert.match(
+    tutorialData,
+    /\[\.\.\.curatedTutorialModules, \.\.\.curatedWeeksTwoToEight\]/,
+  );
+  assert.match(tutorialData, /if \(generated\.week === 1\) return weekOneBookModule/);
 });
