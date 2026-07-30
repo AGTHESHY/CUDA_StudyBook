@@ -76,8 +76,6 @@ const selectRelative = (offset: number) => {
         <span>{{ selectedLesson.duration }}</span>
         <span>{{ selectedLesson.level }}</span>
       </div>
-      <h2>{{ selectedLesson.title }}</h2>
-      <p class="lesson-summary">{{ selectedLesson.summary }}</p>
 
       <div class="lesson-objectives">
         <strong>学完你能做到</strong>

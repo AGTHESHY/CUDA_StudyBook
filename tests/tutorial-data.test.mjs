@@ -120,11 +120,34 @@ test("every week begins with a chapter overview and removes repeated chapter nam
   );
 
   assert.match(generated, /export const organizeTutorialModule/);
-  assert.match(generated, /title: `本周导读：\$\{week\.title\} 是什么`/);
+  assert.match(generated, /title: "本周导读"/);
   assert.match(generated, /removeChapterName\(lesson\.title, week\.title\)/);
   assert.match(generated, /title: "后续会学什么"/);
   assert.match(generated, /不新增未经来源支持的性能结论/);
   assert.match(tutorialData, /return organizeTutorialModule\(selected\)/);
+});
+
+test("lesson pages use the lesson title without repeating the chapter heading", async () => {
+  const app = await readFile(
+    new URL("../src/App.vue", import.meta.url),
+    "utf8",
+  );
+  const tutorial = await readFile(
+    new URL("../src/components/TutorialModule.vue", import.meta.url),
+    "utf8",
+  );
+  const styles = await readFile(
+    new URL("../src/styles.css", import.meta.url),
+    "utf8",
+  );
+
+  assert.match(app, /if \(selectedTutorialLesson\.value\) return selectedTutorialLesson\.value\.title/);
+  assert.match(app, /<h1>\{\{ articleTitle \}\}<\/h1>/);
+  assert.doesNotMatch(tutorial, /<h2>\{\{ selectedLesson\.title \}\}<\/h2>/);
+  assert.match(
+    styles,
+    /\.weekly-roadmap-grid > \.weekly-roadmap-card:first-child/,
+  );
 });
 
 test("logged-in learners resume the last page while guests start at week one", async () => {

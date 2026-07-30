@@ -521,7 +521,7 @@ export const organizeTutorialModule = (
 
   const overview: TutorialLesson = {
     id: overviewId,
-    title: `本周导读：${week.title} 是什么`,
+    title: "本周导读",
     summary: `先回答“${week.title}解决什么问题”，再看清本周小节的学习顺序与完成标准。`,
     duration: "15 分钟",
     level: module.week >= 31 ? "进阶" : "基础",

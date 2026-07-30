@@ -143,9 +143,17 @@ const selectedTutorialLesson = computed(() =>
     (item) => item.id === selectedTutorialPageId.value,
   ),
 );
+const articleTitle = computed(() => {
+  if (selectedTutorialLesson.value) return selectedTutorialLesson.value.title;
+  if (isReadingPage.value) {
+    return selectedWeekNumber.value === 1 ? "推荐书籍" : "推荐阅读";
+  }
+  if (isWeeklyRoadmapPage.value) return "本周课程表与验收";
+  return selectedWeek.value.title;
+});
 const articleLead = computed(() => {
   if (selectedTutorialLesson.value) {
-    return `当前小节「${selectedTutorialLesson.value.title}」：${selectedTutorialLesson.value.summary}`;
+    return selectedTutorialLesson.value.summary;
   }
   if (isReadingPage.value) {
     return selectedWeekNumber.value === 1
@@ -914,7 +922,7 @@ onBeforeUnmount(() => {
             STAGE {{ String(selectedWeek.stageIndex).padStart(2, "0") }}
           </div>
           <p>第 {{ selectedWeek.week }} 周 · {{ selectedStage?.time || "每周 12–15 小时" }}</p>
-          <h1>{{ selectedWeek.title }}</h1>
+          <h1>{{ articleTitle }}</h1>
           <div class="article-lead">
             {{ articleLead }}
           </div>

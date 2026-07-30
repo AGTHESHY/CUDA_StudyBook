@@ -2062,19 +2062,6 @@ textarea:focus-visible {
   color: #2d7453;
 }
 
-.lesson-document > h2 {
-  margin: 16px 0 8px;
-  font-size: 34px;
-  letter-spacing: -0.035em;
-}
-
-.lesson-summary {
-  margin: 0;
-  color: #24292f;
-  font-size: 14px;
-  line-height: 1.8;
-}
-
 .lesson-objectives {
   margin-top: 28px;
   padding: 22px 24px;
@@ -2442,6 +2429,10 @@ textarea:focus-visible {
 }
 
 .weekly-roadmap-card.wide {
+  grid-column: 1 / -1;
+}
+
+.weekly-roadmap-grid > .weekly-roadmap-card:first-child {
   grid-column: 1 / -1;
 }
 
@@ -3153,10 +3144,6 @@ textarea:focus-visible {
 
   .lesson-references {
     grid-template-columns: 1fr;
-  }
-
-  .lesson-document > h2 {
-    font-size: 29px;
   }
 
   .featured-book,
