@@ -33,6 +33,6 @@ npm test
 
 ## 服务器部署
 
-`deploy/` 包含独立的 Nginx Compose 配置：静态站点发布在 80 端口，
+`deploy/` 包含独立的 Nginx Compose 配置：静态站点发布在 7260 端口，
 `/store-api/` 反向代理到同一台服务器的 Test ScriptStore `:3021`，
 `/llm-api/` 通过服务端代理调用模型，API Key 不会进入浏览器。
