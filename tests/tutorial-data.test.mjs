@@ -53,6 +53,27 @@ test("week one roadmap is a final standalone page", async () => {
   assert.match(app, /本周课程表与验收 →/);
 });
 
+test("weekly roadmap separates reading and groups the plan into cards", async () => {
+  const app = await readFile(
+    new URL("../src/App.vue", import.meta.url),
+    "utf8",
+  );
+  const styles = await readFile(
+    new URL("../src/styles.css", import.meta.url),
+    "utf8",
+  );
+
+  assert.match(app, /const weeklyReviewLessons = computed/);
+  assert.match(app, /weeklyEngineeringTasks/);
+  assert.match(app, /weeklyAcceptanceTasks/);
+  assert.match(app, /class="article-section weekly-roadmap-card"/);
+  assert.match(app, /class="weekly-brief-stats"/);
+  assert.match(app, /id="weekly-course-review"/);
+  assert.match(app, /id="weekly-acceptance-review"/);
+  assert.match(styles, /\.weekly-roadmap-grid/);
+  assert.match(styles, /\.weekly-roadmap-card\.acceptance/);
+});
+
 test("tutor switches between lesson and weekly scope", async () => {
   const tutor = await readFile(
     new URL("../src/components/LlmTutor.vue", import.meta.url),
@@ -86,6 +107,24 @@ test("all 52 weeks receive tutorial modules and final pages", async () => {
   assert.match(tutorialData, /generatedTutorialModules\.map/);
   assert.match(app, /:final-page-id="READING_PAGE_ID"/);
   assert.match(app, /selectTutorialPage\(WEEKLY_PAGE_ID\)/);
+});
+
+test("every week begins with a chapter overview and removes repeated chapter names", async () => {
+  const generated = await readFile(
+    new URL("../src/tutorials/generated-weeks.ts", import.meta.url),
+    "utf8",
+  );
+  const tutorialData = await readFile(
+    new URL("../src/tutorial-data.ts", import.meta.url),
+    "utf8",
+  );
+
+  assert.match(generated, /export const organizeTutorialModule/);
+  assert.match(generated, /title: `本周导读：\$\{week\.title\} 是什么`/);
+  assert.match(generated, /removeChapterName\(lesson\.title, week\.title\)/);
+  assert.match(generated, /title: "后续会学什么"/);
+  assert.match(generated, /不新增未经来源支持的性能结论/);
+  assert.match(tutorialData, /return organizeTutorialModule\(selected\)/);
 });
 
 test("logged-in learners resume the last page while guests start at week one", async () => {
@@ -168,5 +207,8 @@ test("curated weeks replace generated pages without changing week one", async ()
     tutorialData,
     /\[\.\.\.curatedTutorialModules, \.\.\.curatedWeeksTwoToEight\]/,
   );
-  assert.match(tutorialData, /if \(generated\.week === 1\) return weekOneBookModule/);
+  assert.match(
+    tutorialData,
+    /generated\.week === 1\s+\? weekOneBookModule/,
+  );
 });

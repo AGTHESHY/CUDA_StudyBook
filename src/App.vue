@@ -274,6 +274,18 @@ const currentTasks = computed(() => {
     }),
   );
 });
+const weeklyReviewLessons = computed(
+  () =>
+    selectedTutorial.value?.lessons.filter(
+      (lesson) => !lesson.id.endsWith("-overview"),
+    ) ?? [],
+);
+const weeklyEngineeringTasks = computed(() =>
+  currentTasks.value.filter((task) => !/验收|通过标准/.test(task.section)),
+);
+const weeklyAcceptanceTasks = computed(() =>
+  currentTasks.value.filter((task) => /验收|通过标准/.test(task.section)),
+);
 const weekChecklist = computed(
   () => progress.value.checklist[String(selectedWeekNumber.value)] ?? [],
 );
@@ -942,20 +954,125 @@ onBeforeUnmount(() => {
 
         <template v-if="!selectedTutorial || isWeeklyRoadmapPage">
           <div id="weekly-roadmap" class="weekly-brief-heading">
-            <span>WEEKLY ROADMAP</span>
-            <h2>本周课程表与验收</h2>
-            <p>深度教程解决“怎么理解”，课程表负责“这一周怎样练到工程可用”。</p>
+            <div>
+              <span>WEEKLY ROADMAP</span>
+              <h2>本周课程表与验收</h2>
+              <p>
+                完成 {{ selectedTutorial?.lessons.length ?? 0 }} 个教程小节和
+                {{ currentTasks.length }} 项工程任务，最后按验收清单逐项核对。
+              </p>
+            </div>
+            <div class="weekly-brief-stats" aria-label="本周进度摘要">
+              <div>
+                <strong>{{ completedTutorialLessons }}</strong>
+                <span>/ {{ selectedTutorial?.lessons.length ?? 0 }} 小节</span>
+              </div>
+              <div>
+                <strong>{{ weekChecklist.length }}</strong>
+                <span>/ {{ currentTasks.length }} 任务</span>
+              </div>
+              <div>
+                <strong>{{ isWeekComplete ? "完成" : "进行中" }}</strong>
+                <span>本周状态</span>
+              </div>
+            </div>
           </div>
 
-          <section
-            v-for="section in selectedWeek.sections"
-            :id="section.id"
-            :key="section.id"
-            class="article-section"
-          >
-            <h2>{{ section.title }}</h2>
-            <ContentBlocks :blocks="section.blocks" />
-          </section>
+          <div class="weekly-roadmap-grid">
+            <section
+              id="weekly-course-review"
+              class="article-section weekly-roadmap-card wide"
+            >
+              <header>
+                <span>01</span>
+                <i>LEARN</i>
+              </header>
+              <h2>课程回顾</h2>
+              <p class="weekly-review-summary">
+                本周共 {{ weeklyReviewLessons.length }} 个学习小节，回看标题即可检查知识链路；
+                需要复习时再进入对应小节。
+              </p>
+              <ul class="weekly-review-list lesson-list">
+                <li
+                  v-for="lesson in weeklyReviewLessons.slice(0, 8)"
+                  :key="lesson.id"
+                  :class="{
+                    complete: progress.completedLessons.includes(lesson.id),
+                  }"
+                >
+                  <button @click="selectTutorialPage(lesson.id)">
+                    <span>
+                      {{
+                        progress.completedLessons.includes(lesson.id)
+                          ? "✓"
+                          : "·"
+                      }}
+                    </span>
+                    {{ lesson.title }}
+                  </button>
+                </li>
+              </ul>
+              <p v-if="weeklyReviewLessons.length > 8" class="weekly-review-more">
+                另有 {{ weeklyReviewLessons.length - 8 }} 个小节，可从左侧目录继续查看。
+              </p>
+            </section>
+
+            <section
+              id="weekly-engineering-review"
+              class="article-section weekly-roadmap-card"
+            >
+              <header>
+                <span>02</span>
+                <i>BUILD</i>
+              </header>
+              <h2>工程回顾</h2>
+              <p class="weekly-review-summary">
+                已完成 {{ weeklyEngineeringTasks.filter((task) =>
+                  weekChecklist.includes(task.key),
+                ).length }} / {{ weeklyEngineeringTasks.length }} 项。
+              </p>
+              <ul v-if="weeklyEngineeringTasks.length" class="weekly-review-list">
+                <li
+                  v-for="task in weeklyEngineeringTasks.slice(0, 5)"
+                  :key="task.key"
+                  :class="{ complete: weekChecklist.includes(task.key) }"
+                >
+                  <span>{{ weekChecklist.includes(task.key) ? "✓" : "·" }}</span>
+                  {{ task.text }}
+                </li>
+              </ul>
+              <p v-else class="weekly-review-empty">
+                本周工程要求已拆入各小节练习，按顺序完成并保留实现记录。
+              </p>
+            </section>
+
+            <section
+              id="weekly-acceptance-review"
+              class="article-section weekly-roadmap-card acceptance"
+            >
+              <header>
+                <span>03</span>
+                <i>CHECK</i>
+              </header>
+              <h2>验收回顾</h2>
+              <p class="weekly-review-summary">
+                先核对正确性与边界，再核对性能记录；依赖硬件的结论保留测试条件。
+              </p>
+              <ul v-if="weeklyAcceptanceTasks.length" class="weekly-review-list">
+                <li
+                  v-for="task in weeklyAcceptanceTasks.slice(0, 5)"
+                  :key="task.key"
+                  :class="{ complete: weekChecklist.includes(task.key) }"
+                >
+                  <span>{{ weekChecklist.includes(task.key) ? "✓" : "·" }}</span>
+                  {{ task.text }}
+                </li>
+              </ul>
+              <p v-else class="weekly-review-empty">
+                完成本周小节练习与测验，并能说明实现结果和验证证据。
+              </p>
+            </section>
+          </div>
         </template>
 
         <LlmTutor
@@ -1080,8 +1197,29 @@ onBeforeUnmount(() => {
             }}
           </a>
           <a
+            v-if="isWeeklyRoadmapPage || !selectedTutorial"
+            href="#weekly-course-review"
+            @click.stop
+          >
+            课程回顾
+          </a>
+          <a
+            v-if="isWeeklyRoadmapPage || !selectedTutorial"
+            href="#weekly-engineering-review"
+            @click.stop
+          >
+            工程回顾
+          </a>
+          <a
+            v-if="isWeeklyRoadmapPage || !selectedTutorial"
+            href="#weekly-acceptance-review"
+            @click.stop
+          >
+            验收回顾
+          </a>
+          <a
             v-for="section in isWeeklyRoadmapPage || !selectedTutorial
-              ? selectedWeek.sections
+              ? []
               : selectedTutorialLesson?.sections ?? []"
             :key="section.id"
             :href="`#${section.id}`"

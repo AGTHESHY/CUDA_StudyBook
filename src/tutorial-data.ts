@@ -5,7 +5,10 @@ import type {
 } from "./types";
 import { weekOneBookModule } from "./tutorials/week-one-book";
 import { curatedWeeksTwoToEight } from "./tutorials/weeks-two-to-eight";
-import { generatedTutorialModules } from "./tutorials/generated-weeks";
+import {
+  generatedTutorialModules,
+  organizeTutorialModule,
+} from "./tutorials/generated-weeks";
 
 const p = (text: string): ContentBlock => ({ type: "paragraph", text });
 const quote = (text: string): ContentBlock => ({ type: "quote", text });
@@ -749,8 +752,11 @@ const curatedByWeek = new Map(
 
 export const tutorialModules: TutorialModule[] = generatedTutorialModules.map(
   (generated) => {
-    if (generated.week === 1) return weekOneBookModule;
-    return curatedByWeek.get(generated.week) ?? generated;
+    const selected =
+      generated.week === 1
+        ? weekOneBookModule
+        : (curatedByWeek.get(generated.week) ?? generated);
+    return organizeTutorialModule(selected);
   },
 );
 

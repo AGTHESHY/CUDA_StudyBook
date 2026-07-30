@@ -167,6 +167,14 @@ const sectionTopics = (section: CourseSection): Topic[] => {
   for (const block of section.blocks) {
     if (block.type === "list") {
       for (const item of block.items) {
+        const cleanItem = stripMarkup(item);
+        if (
+          /^(学习|任务|记录|要求|能够回答|报告必须包含|通过标准)$/.test(
+            cleanItem,
+          )
+        ) {
+          continue;
+        }
         topics.push({
           title: compactTitle(item, section.title),
           section,
@@ -456,3 +464,137 @@ export const buildGeneratedTutorialModule = (week: CourseWeek): TutorialModule =
 export const generatedTutorialModules = course.weeks.map(
   buildGeneratedTutorialModule,
 );
+
+const removeChapterName = (title: string, chapterTitle: string) => {
+  const escaped = chapterTitle.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  const cleaned = title
+    .replace(new RegExp(escaped, "gi"), "")
+    .replace(/^[\s·：:、—\-–]+|[\s·：:、—\-–]+$/g, "")
+    .trim();
+  return cleaned || "概念、边界与应用位置";
+};
+
+const representativeTitles = (titles: string[], limit = 8) => {
+  const unique = [...new Set(titles)];
+  if (unique.length <= limit) return unique;
+  const selected = Array.from({ length: limit }, (_, index) => {
+    const position = Math.round((index * (unique.length - 1)) / (limit - 1));
+    return unique[position];
+  });
+  return [...new Set(selected)];
+};
+
+const overviewReferences = (module: TutorialModule) => {
+  const references = [
+    ...module.lessons.flatMap((lesson) => lesson.references),
+    ...referencesForWeek(module.week),
+  ];
+  return [
+    ...new Map(references.map((reference) => [reference.url, reference])).values(),
+  ].slice(0, 4);
+};
+
+export const organizeTutorialModule = (
+  module: TutorialModule,
+): TutorialModule => {
+  const week = course.weeks.find((item) => item.week === module.week);
+  if (!week) return module;
+
+  const lessons = module.lessons
+    .filter((lesson) => lesson.id !== `w${String(module.week).padStart(2, "0")}-overview`)
+    .map((lesson) => ({
+      ...lesson,
+      title: removeChapterName(lesson.title, week.title),
+    }));
+  const topicTitles = representativeTitles(
+    lessons.map((lesson) => lesson.title),
+  );
+  const overviewId = `w${String(module.week).padStart(2, "0")}-overview`;
+  const overviewExplanation = module.eyebrow.includes("逐节教程")
+    ? explainTopic(week.title)
+    : module.introduction;
+  const hiddenTopicCount = Math.max(0, lessons.length - topicTitles.length);
+  const topicList = topicTitles.map((title) => `先理解「${title}」`);
+  if (hiddenTopicCount > 0) {
+    topicList.push(`再完成其余 ${hiddenTopicCount} 个实现、实验或分析小节`);
+  }
+
+  const overview: TutorialLesson = {
+    id: overviewId,
+    title: `本周导读：${week.title} 是什么`,
+    summary: `先回答“${week.title}解决什么问题”，再看清本周小节的学习顺序与完成标准。`,
+    duration: "15 分钟",
+    level: module.week >= 31 ? "进阶" : "基础",
+    objectives: [
+      `用自己的话说明“${week.title}”在完整系统中的作用`,
+      "知道后续各小节分别解决什么问题",
+      "建立从概念、实现到验证的学习顺序",
+    ],
+    sections: [
+      {
+        id: `${overviewId}-what`,
+        title: "这一章在讲什么",
+        blocks: [
+          paragraph(overviewExplanation),
+          paragraph(
+            "这一页只建立全章地图。术语、代码、边界条件和性能分析会放到后续对应小节，不在导读里提前堆叠。",
+          ),
+        ],
+      },
+      {
+        id: `${overviewId}-next`,
+        title: "后续会学什么",
+        blocks: [
+          {
+            type: "list",
+            items: topicList,
+            ordered: true,
+          },
+        ],
+      },
+      {
+        id: `${overviewId}-review`,
+        title: "学完以后怎样回顾",
+        blocks: [
+          list(
+            "概念：能用简洁语言说明本章对象、输入输出与适用边界。",
+            "实现：完成本周要求的最小代码、测试或分析记录。",
+            "证据：正确性与性能分别核对；依赖硬件的结论必须保留实测条件。",
+          ),
+        ],
+      },
+    ],
+    exercises: [
+      {
+        id: `${overviewId}-exercise`,
+        prompt: `不用 API 名称堆砌，用三句话解释“${week.title}”：它解决什么问题、后续会学什么、最后拿什么验收。`,
+        hint: "先说问题，再说学习路径，最后说证据；不要从函数参数开始。",
+        answer:
+          "合格答案应覆盖本章对象与作用、后续主要小节，以及正确性/实现结果/性能记录中的适用验收证据。具体内容以本页列出的课程小节和官方资料为准。",
+      },
+    ],
+    quiz: [
+      {
+        id: `${overviewId}-quiz`,
+        question: "章导读最重要的作用是什么？",
+        options: [
+          "一次讲完后续所有 API 细节",
+          "建立本章对象、学习顺序和验收证据的整体地图",
+          "提前给出不依赖硬件的性能结论",
+          "代替后续实验与练习",
+        ],
+        answer: 1,
+        explanation:
+          "导读负责建立地图；定义细节、代码与实测结论应留在对应小节展开。",
+      },
+    ],
+    references: overviewReferences(module),
+    verification:
+      "本章导读只归纳现有课程标题、精编介绍与页面所列资料，不新增未经来源支持的性能结论。",
+  };
+
+  return {
+    ...module,
+    lessons: [overview, ...lessons],
+  };
+};
