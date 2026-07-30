@@ -11,6 +11,8 @@ import courseJson from "./course-data.json";
 import AuthModal from "./components/AuthModal.vue";
 import ContentBlocks from "./components/ContentBlocks.vue";
 import LlmTutor from "./components/LlmTutor.vue";
+import TutorialModule from "./components/TutorialModule.vue";
+import { tutorialByWeek } from "./tutorial-data";
 import type {
   CourseData,
   CourseWeek,
@@ -28,8 +30,10 @@ const SESSION_KEY = "cuda52:session:v1";
 const ANON_PROGRESS_KEY = "cuda52:anonymous-progress:v1";
 
 const createProgress = (): StudyProgress => ({
-  version: 1,
+  version: 2,
   completedWeeks: [],
+  completedLessons: [],
+  quizScores: {},
   currentWeek: 1,
   notes: {},
   checklist: {},
@@ -48,12 +52,27 @@ const parseStored = <T,>(key: string, fallback: T): T => {
 const normalizeProgress = (value: unknown): StudyProgress => {
   const raw = (value && typeof value === "object" ? value : {}) as Partial<StudyProgress>;
   return {
-    version: 1,
+    version: 2,
     completedWeeks: Array.isArray(raw.completedWeeks)
       ? raw.completedWeeks
           .map(Number)
           .filter((week) => Number.isInteger(week) && week >= 1 && week <= 52)
       : [],
+    completedLessons: Array.isArray(raw.completedLessons)
+      ? raw.completedLessons.filter((id): id is string => typeof id === "string")
+      : [],
+    quizScores:
+      raw.quizScores && typeof raw.quizScores === "object"
+        ? Object.fromEntries(
+            Object.entries(raw.quizScores).filter(
+              ([id, score]) =>
+                typeof id === "string" &&
+                typeof score === "number" &&
+                score >= 0 &&
+                score <= 100,
+            ),
+          )
+        : {},
     currentWeek:
       Number.isInteger(raw.currentWeek) &&
       Number(raw.currentWeek) >= 1 &&
@@ -97,6 +116,9 @@ const selectedWeek = computed(
 const selectedStage = computed(() =>
   course.stages.find((item) => item.id === selectedWeek.value.stageId),
 );
+const selectedTutorial = computed(() =>
+  tutorialByWeek.get(selectedWeekNumber.value),
+);
 const completedCount = computed(() => new Set(progress.value.completedWeeks).size);
 const percentComplete = computed(() =>
   Math.round((completedCount.value / course.weeks.length) * 100),
@@ -114,6 +136,20 @@ const filteredWeeks = computed(() => {
     .filter(
       (week) =>
         week.searchText.includes(needle) ||
+        tutorialByWeek
+          .get(week.week)
+          ?.lessons.some(
+            (lesson) =>
+              lesson.title.toLowerCase().includes(needle) ||
+              lesson.summary.toLowerCase().includes(needle) ||
+              lesson.sections.some((section) =>
+                section.blocks.some((block) =>
+                  ("text" in block ? block.text : "items" in block ? block.items.join(" ") : "")
+                    .toLowerCase()
+                    .includes(needle),
+                ),
+              ),
+          ) ||
         `第 ${week.week} 周`.includes(needle),
     )
     .slice(0, 10);
@@ -327,6 +363,24 @@ const toggleWeekComplete = () => {
   progress.value.completedWeeks = [...completed].sort((a, b) => a - b);
 };
 
+const toggleLessonComplete = (lessonId: string) => {
+  const completed = new Set(progress.value.completedLessons);
+  if (completed.has(lessonId)) {
+    completed.delete(lessonId);
+    showToast("已改为进行中");
+  } else {
+    completed.add(lessonId);
+    showToast("本节完成 ✓");
+  }
+  progress.value.completedLessons = [...completed];
+};
+
+const saveQuizScore = (lessonId: string, score: number) => {
+  const previous = progress.value.quizScores[lessonId] ?? 0;
+  progress.value.quizScores[lessonId] = Math.max(previous, score);
+  showToast(score >= 80 ? `测验通过：${score}%` : `得分 ${score}%，建议复习后重试`);
+};
+
 const jumpToSearchResult = (week: CourseWeek) => {
   openWeek(week.week);
   searchFocused.value = false;
@@ -411,7 +465,7 @@ onBeforeUnmount(() => {
           v-model="query"
           data-search
           aria-label="搜索 52 周课程"
-          placeholder="搜索 Kernel、GEMM、FlashAttention…"
+          placeholder="搜索类型推导、Kernel、GEMM…"
           @focus="searchFocused = true"
           @blur="closeSearchSoon"
         />
@@ -640,9 +694,28 @@ onBeforeUnmount(() => {
           <p>第 {{ selectedWeek.week }} 周 · {{ selectedStage?.time || "每周 12–15 小时" }}</p>
           <h1>{{ selectedWeek.title }}</h1>
           <div class="article-lead">
-            本周内容来自完整 52 周课程路线。阅读后完成实现、写下性能证据，并按验收标准决定是否进入下一周。
+            {{
+              selectedTutorial
+                ? "本周已提供教材级深度教程：按小节学习、完成练习和测验，再回到课程表完成工程验收。"
+                : "本周内容来自完整 52 周课程路线。阅读后完成实现、写下性能证据，并按验收标准决定是否进入下一周。"
+            }}
           </div>
         </header>
+
+        <TutorialModule
+          v-if="selectedTutorial"
+          :module="selectedTutorial"
+          :completed-lessons="progress.completedLessons"
+          :quiz-scores="progress.quizScores"
+          @toggle-lesson="toggleLessonComplete"
+          @save-quiz="saveQuizScore"
+        />
+
+        <div class="weekly-brief-heading">
+          <span>WEEKLY ROADMAP</span>
+          <h2>本周课程表与验收</h2>
+          <p>深度教程解决“怎么理解”，课程表负责“这一周怎样练到工程可用”。</p>
+        </div>
 
         <section
           v-for="section in selectedWeek.sections"
@@ -709,6 +782,9 @@ onBeforeUnmount(() => {
 
         <div class="rail-card toc-card">
           <div class="rail-title"><span>本页目录</span></div>
+          <a v-if="selectedTutorial" href="#deep-tutorial" @click.stop>
+            深度教程
+          </a>
           <a
             v-for="section in selectedWeek.sections"
             :key="section.id"

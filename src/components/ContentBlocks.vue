@@ -1,7 +1,32 @@
 <script setup lang="ts">
+import { ref } from "vue";
 import type { ContentBlock } from "../types";
 
 defineProps<{ blocks: ContentBlock[] }>();
+const copiedBlock = ref<number | null>(null);
+
+const copyCode = async (text: string, blockIndex: number) => {
+  try {
+    if (navigator.clipboard?.writeText) {
+      await navigator.clipboard.writeText(text);
+    } else {
+      const textarea = document.createElement("textarea");
+      textarea.value = text;
+      textarea.style.position = "fixed";
+      textarea.style.opacity = "0";
+      document.body.appendChild(textarea);
+      textarea.select();
+      document.execCommand("copy");
+      textarea.remove();
+    }
+  } catch {
+    return;
+  }
+  copiedBlock.value = blockIndex;
+  window.setTimeout(() => {
+    if (copiedBlock.value === blockIndex) copiedBlock.value = null;
+  }, 1600);
+};
 
 const escapeHtml = (value: string) =>
   value
@@ -30,7 +55,15 @@ const inline = (value: string) => {
       v-html="inline(block.text)"
     />
     <blockquote v-else-if="block.type === 'quote'" v-html="inline(block.text)" />
-    <pre v-else-if="block.type === 'code'"><span v-if="block.language" class="code-language">{{ block.language }}</span><code>{{ block.text }}</code></pre>
+    <div v-else-if="block.type === 'code'" class="code-example">
+      <div>
+        <span>{{ block.language || "code" }}</span>
+        <button @click="copyCode(block.text, blockIndex)">
+          {{ copiedBlock === blockIndex ? "已复制 ✓" : "复制代码" }}
+        </button>
+      </div>
+      <pre><code>{{ block.text }}</code></pre>
+    </div>
     <component
       :is="block.ordered ? 'ol' : 'ul'"
       v-else-if="block.type === 'list'"

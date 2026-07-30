@@ -45,9 +45,53 @@ export interface UserSession {
   token: string;
 }
 
+export interface TutorialExercise {
+  id: string;
+  prompt: string;
+  hint: string;
+  answer: string;
+}
+
+export interface TutorialQuizQuestion {
+  id: string;
+  question: string;
+  options: string[];
+  answer: number;
+  explanation: string;
+}
+
+export interface TutorialReference {
+  label: string;
+  url: string;
+  source: string;
+}
+
+export interface TutorialLesson {
+  id: string;
+  title: string;
+  summary: string;
+  duration: string;
+  level: "基础" | "进阶";
+  objectives: string[];
+  sections: CourseSection[];
+  exercises: TutorialExercise[];
+  quiz: TutorialQuizQuestion[];
+  references: TutorialReference[];
+  verification: string;
+}
+
+export interface TutorialModule {
+  week: number;
+  eyebrow: string;
+  introduction: string;
+  lessons: TutorialLesson[];
+}
+
 export interface StudyProgress {
-  version: 1;
+  version: 2;
   completedWeeks: number[];
+  completedLessons: string[];
+  quizScores: Record<string, number>;
   currentWeek: number;
   notes: Record<string, string>;
   checklist: Record<string, string[]>;
