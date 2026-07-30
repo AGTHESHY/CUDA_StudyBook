@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed, nextTick, ref, watch } from "vue";
 import type { CourseWeek } from "../types";
+import { renderMarkdown } from "../utils/markdown";
 
 type ChatMessage = {
   role: "user" | "assistant";
@@ -163,7 +164,12 @@ const clearHistory = () => {
           :class="['chat-message', message.role]"
         >
           <span>{{ message.role === "user" ? "你" : "AI" }}</span>
-          <div>{{ message.content }}</div>
+          <div v-if="message.role === 'user'">{{ message.content }}</div>
+          <div
+            v-else
+            class="markdown-body"
+            v-html="renderMarkdown(message.content)"
+          />
         </article>
         <article v-if="busy" class="chat-message assistant waiting">
           <span>AI</span>

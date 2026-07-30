@@ -98,3 +98,14 @@ test("logged-in learners resume the last page while guests start at week one", a
   assert.match(app, /progress\.value\.currentPage = pageId/);
   assert.match(types, /currentPage: string/);
 });
+
+test("article header describes the current page instead of tutorial boilerplate", async () => {
+  const app = await readFile(
+    new URL("../src/App.vue", import.meta.url),
+    "utf8",
+  );
+
+  assert.doesNotMatch(app, /本周已提供教材级深度教程/);
+  assert.match(app, /selectedTutorialLesson\.value\.summary/);
+  assert.match(app, /汇总本周需要完成的实现、测试、性能分析与验收标准/);
+});

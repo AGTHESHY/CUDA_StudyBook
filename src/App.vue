@@ -143,6 +143,20 @@ const selectedTutorialLesson = computed(() =>
     (item) => item.id === selectedTutorialPageId.value,
   ),
 );
+const articleLead = computed(() => {
+  if (selectedTutorialLesson.value) {
+    return `当前小节「${selectedTutorialLesson.value.title}」：${selectedTutorialLesson.value.summary}`;
+  }
+  if (isReadingPage.value) {
+    return selectedWeekNumber.value === 1
+      ? "按类型推导、所有权、移动语义和并发主题回读本周书目，并把新增的边界条件整理成笔记与测试。"
+      : "结合本周问题查阅官方资料，核对概念定义、API 约束和实现边界。";
+  }
+  if (isWeeklyRoadmapPage.value) {
+    return "汇总本周需要完成的实现、测试、性能分析与验收标准，用工程证据决定是否进入下一周。";
+  }
+  return `本周围绕「${selectedWeek.value.title}」完成概念学习、工程实现和结果验证。`;
+});
 const stringifySections = (sections: CourseSection[]) =>
   sections
     .map((section) => {
@@ -890,11 +904,7 @@ onBeforeUnmount(() => {
           <p>第 {{ selectedWeek.week }} 周 · {{ selectedStage?.time || "每周 12–15 小时" }}</p>
           <h1>{{ selectedWeek.title }}</h1>
           <div class="article-lead">
-            {{
-              selectedTutorial
-                ? "本周已提供教材级深度教程：按小节学习、完成练习和测验，再回到课程表完成工程验收。"
-                : "本周内容来自完整 52 周课程路线。阅读后完成实现、写下性能证据，并按验收标准决定是否进入下一周。"
-            }}
+            {{ articleLead }}
           </div>
         </header>
 
