@@ -4,7 +4,7 @@
     <h2>推荐书籍</h2>
     <p class="book-page-lead">
       书放在最后，是因为它应该帮你加深理解，而不是替代教程。建议先完成左侧
-      18 个 Item，再按薄弱点回到对应章节。
+      18 个 Item 和 6 个工程基础强化小节，再按薄弱点回到对应章节。
     </p>
 
     <article class="featured-book">

@@ -25,3 +25,15 @@ test("book recommendations are consolidated outside item lessons", async () => {
   assert.match(recommendations, /推荐书籍/);
   assert.match(recommendations, /Effective Modern C\+\+/);
 });
+
+test("week one includes six engineering foundation lessons", async () => {
+  const foundations = await readFile(
+    new URL("../src/tutorials/week-one-foundations.ts", import.meta.url),
+    "utf8",
+  );
+  assert.equal(
+    [...foundations.matchAll(/^\s+"w01-foundation-[a-z-]+",$/gm)].length,
+    6,
+  );
+  assert.doesNotMatch(foundations, /科班/);
+});

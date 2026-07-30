@@ -99,6 +99,7 @@ const hydrated = ref(false);
 const currentView = ref<"home" | "week">("home");
 const selectedWeekNumber = ref(1);
 const selectedTutorialPageId = ref("");
+const collapsedTutorialWeeks = ref(new Set<number>());
 const query = ref("");
 const searchFocused = ref(false);
 const sidebarOpen = ref(false);
@@ -126,6 +127,17 @@ const isReadingPage = computed(
   () =>
     selectedWeekNumber.value === 1 &&
     selectedTutorialPageId.value === READING_PAGE_ID,
+);
+const selectedTutorialLesson = computed(() =>
+  selectedTutorial.value?.lessons.find(
+    (item) => item.id === selectedTutorialPageId.value,
+  ),
+);
+const completedTutorialLessons = computed(
+  () =>
+    selectedTutorial.value?.lessons.filter((item) =>
+      progress.value.completedLessons.includes(item.id),
+    ).length ?? 0,
 );
 const completedCount = computed(() => new Set(progress.value.completedWeeks).size);
 const percentComplete = computed(() =>
@@ -364,6 +376,27 @@ const selectTutorialPage = (pageId: string) => {
     `#week-${selectedWeekNumber.value}/${pageId}`,
   );
   window.scrollTo({ top: 0, behavior: "smooth" });
+};
+
+const isTutorialMenuExpanded = (week: number) =>
+  week === selectedWeekNumber.value &&
+  !collapsedTutorialWeeks.value.has(week);
+
+const handleWeekNavigation = (week: number) => {
+  if (
+    week === selectedWeekNumber.value &&
+    tutorialByWeek.has(week)
+  ) {
+    const collapsed = new Set(collapsedTutorialWeeks.value);
+    if (collapsed.has(week)) collapsed.delete(week);
+    else collapsed.add(week);
+    collapsedTutorialWeeks.value = collapsed;
+    return;
+  }
+  const collapsed = new Set(collapsedTutorialWeeks.value);
+  collapsed.delete(week);
+  collapsedTutorialWeeks.value = collapsed;
+  openWeek(week);
 };
 
 const goHome = () => {
@@ -699,17 +732,27 @@ onBeforeUnmount(() => {
                   active: week.week === selectedWeekNumber,
                   complete: progress.completedWeeks.includes(week.week),
                 }"
-                @click="openWeek(week.week)"
+                :aria-expanded="
+                  tutorialByWeek.has(week.week)
+                    ? isTutorialMenuExpanded(week.week)
+                    : undefined
+                "
+                @click="handleWeekNavigation(week.week)"
               >
                 <span class="week-status">
                   {{ progress.completedWeeks.includes(week.week) ? "✓" : String(week.week).padStart(2, "0") }}
                 </span>
-                <span>{{ week.title }}</span>
+                <span class="week-title">
+                  <span>{{ week.title }}</span>
+                  <i v-if="tutorialByWeek.has(week.week)">
+                    {{ isTutorialMenuExpanded(week.week) ? "−" : "+" }}
+                  </i>
+                </span>
               </button>
               <div
                 v-if="
-                  week.week === selectedWeekNumber &&
-                  tutorialByWeek.get(week.week)
+                  tutorialByWeek.get(week.week) &&
+                  isTutorialMenuExpanded(week.week)
                 "
                 class="sidebar-lessons"
               >
@@ -719,6 +762,8 @@ onBeforeUnmount(() => {
                   :class="{
                     active: selectedTutorialPageId === lesson.id,
                     complete: progress.completedLessons.includes(lesson.id),
+                    'foundation-start':
+                      lesson.id === 'w01-foundation-memory',
                   }"
                   @click="selectTutorialPage(lesson.id)"
                 >
@@ -776,10 +821,8 @@ onBeforeUnmount(() => {
           :module="selectedTutorial"
           :lesson-id="selectedTutorialPageId"
           :final-page-id="selectedWeekNumber === 1 ? READING_PAGE_ID : ''"
-          :completed-lessons="progress.completedLessons"
           :quiz-scores="progress.quizScores"
           @select-lesson="selectTutorialPage"
-          @toggle-lesson="toggleLessonComplete"
           @save-quiz="saveQuizScore"
         />
 
@@ -837,19 +880,57 @@ onBeforeUnmount(() => {
           <button v-else class="rail-login" @click="openAuth('login')">登录以同步进度 →</button>
         </div>
 
-        <div v-if="currentTasks.length" class="rail-card task-card">
+        <div
+          v-if="selectedTutorial || currentTasks.length"
+          class="rail-card task-card"
+        >
           <div class="rail-title">
-            <span>任务清单</span>
-            <b>{{ weekChecklist.length }}/{{ currentTasks.length }}</b>
+            <span>学习任务</span>
           </div>
-          <label v-for="task in currentTasks" :key="task.key">
-            <input
-              type="checkbox"
-              :checked="weekChecklist.includes(task.key)"
-              @change="toggleTask(task.key)"
-            />
-            <span>{{ task.text }}</span>
-          </label>
+
+          <section v-if="selectedTutorial" class="rail-tutorial-progress">
+            <div>
+              <span>教程小节</span>
+              <b>
+                {{ completedTutorialLessons }}/{{ selectedTutorial.lessons.length }}
+              </b>
+            </div>
+            <div class="rail-progress-bar">
+              <i
+                :style="{
+                  width: `${(completedTutorialLessons / selectedTutorial.lessons.length) * 100}%`,
+                }"
+              />
+            </div>
+            <label v-if="selectedTutorialLesson" class="current-lesson-task">
+              <input
+                type="checkbox"
+                :checked="
+                  progress.completedLessons.includes(selectedTutorialLesson.id)
+                "
+                @change="toggleLessonComplete(selectedTutorialLesson.id)"
+              />
+              <span>
+                <small>当前小节</small>
+                {{ selectedTutorialLesson.title }}
+              </span>
+            </label>
+          </section>
+
+          <section v-if="currentTasks.length" class="rail-engineering-tasks">
+            <div class="task-group-title">
+              <span>工程任务</span>
+              <b>{{ weekChecklist.length }}/{{ currentTasks.length }}</b>
+            </div>
+            <label v-for="task in currentTasks" :key="task.key">
+              <input
+                type="checkbox"
+                :checked="weekChecklist.includes(task.key)"
+                @change="toggleTask(task.key)"
+              />
+              <span>{{ task.text }}</span>
+            </label>
+          </section>
         </div>
 
         <div class="rail-card toc-card">

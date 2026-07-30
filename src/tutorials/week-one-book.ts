@@ -4,6 +4,7 @@ import type {
   TutorialModule,
   TutorialReference,
 } from "../types";
+import { weekOneFoundationLessons } from "./week-one-foundations";
 
 const paragraph = (text: string): ContentBlock => ({
   type: "paragraph",
@@ -625,5 +626,5 @@ export const weekOneBookModule: TutorialModule = {
   eyebrow: "EFFECTIVE C++ · 逐项深度教程",
   introduction:
     "先在页面里把 18 个知识点讲懂、练会，再把书当作深入阅读，而不是一上来面对一串 Item 编号。",
-  lessons: items.map(itemLesson),
+  lessons: [...items.map(itemLesson), ...weekOneFoundationLessons],
 };

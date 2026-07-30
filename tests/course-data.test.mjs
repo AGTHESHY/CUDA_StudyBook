@@ -21,3 +21,12 @@ test("all weeks belong to a stage and contain material", () => {
     assert.ok(week.sections.length > 0, `week ${week.week} has no sections`);
   }
 });
+
+test("curriculum uses skill-focused language instead of identity labels", () => {
+  assert.doesNotMatch(JSON.stringify(course), /科班/);
+  assert.ok(
+    course.weeks[0].sections.some(
+      (section) => section.title === "工程基础强化",
+    ),
+  );
+});

@@ -7,12 +7,10 @@ const props = defineProps<{
   module: TutorialModule;
   lessonId: string;
   finalPageId?: string;
-  completedLessons: string[];
   quizScores: Record<string, number>;
 }>();
 
 const emit = defineEmits<{
-  toggleLesson: [lessonId: string];
   saveQuiz: [lessonId: string, score: number];
   selectLesson: [lessonId: string];
 }>();
@@ -38,13 +36,6 @@ const selectedLesson = computed(
 
 const currentIndex = computed(() =>
   props.module.lessons.findIndex((item) => item.id === selectedLesson.value.id),
-);
-
-const completedInModule = computed(
-  () =>
-    props.module.lessons.filter((item) =>
-      props.completedLessons.includes(item.id),
-    ).length,
 );
 
 const quizScore = computed(() => {
@@ -78,25 +69,6 @@ const selectRelative = (offset: number) => {
 
 <template>
   <section id="deep-tutorial" class="tutorial-module">
-    <header class="tutorial-module-header">
-      <div>
-        <span>{{ module.eyebrow }}</span>
-        <h2>本周深度教程</h2>
-        <p>{{ module.introduction }}</p>
-      </div>
-      <div class="module-progress">
-        <strong>{{ completedInModule }}/{{ module.lessons.length }}</strong>
-        <small>小节完成</small>
-        <div>
-          <i
-            :style="{
-              width: `${(completedInModule / module.lessons.length) * 100}%`,
-            }"
-          />
-        </div>
-      </div>
-    </header>
-
     <article class="lesson-document">
       <div class="lesson-meta">
         <span>LESSON {{ String(currentIndex + 1).padStart(2, "0") }}</span>
@@ -234,16 +206,6 @@ const selectRelative = (offset: number) => {
       </section>
 
       <div class="lesson-footer">
-        <button
-          :class="{ complete: completedLessons.includes(selectedLesson.id) }"
-          @click="emit('toggleLesson', selectedLesson.id)"
-        >
-          {{
-            completedLessons.includes(selectedLesson.id)
-              ? "✓ 本节已完成"
-              : "标记本节完成"
-          }}
-        </button>
         <div>
           <button :disabled="currentIndex === 0" @click="selectRelative(-1)">
             ← 上一节

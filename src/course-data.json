@@ -112,43 +112,23 @@
       "stageIndex": 0,
       "sections": [
         {
-          "id": "week-1-需要完善的能力",
-          "title": "需要完善的能力",
+          "id": "week-1-工程基础强化",
+          "title": "工程基础强化",
           "blocks": [
             {
               "type": "paragraph",
-              "text": "**【科班复习】**"
+              "text": "这些内容已拆成左侧可独立学习的教程页，不只列名词："
             },
             {
               "type": "list",
               "ordered": false,
               "items": [
-                "栈与堆；",
-                "指针和引用；",
-                "对象生命周期；",
-                "静态库与动态库；",
-                "编译与链接；",
-                "Cache Line；",
-                "空间局部性和时间局部性。"
-              ]
-            },
-            {
-              "type": "paragraph",
-              "text": "**【必须掌握】**"
-            },
-            {
-              "type": "list",
-              "ordered": false,
-              "items": [
-                "RAII；",
-                "移动语义；",
-                "模板函数；",
-                "编译期常量；",
-                "内存对齐；",
-                "`restrict` 思想；",
-                "CMake；",
-                "GDB；",
-                "AddressSanitizer。"
+                "内存与对象生命周期：栈、堆、指针、引用与 RAII；",
+                "编译、链接与库：声明、定义、目标文件、静态库与动态库；",
+                "Cache、局部性与内存对齐：连续访问、Cache Line、对齐与 `restrict` 思想；",
+                "模板与编译期计算：类型模板、非类型模板参数、`constexpr` 与 `static_assert`；",
+                "CMake 工程组织：Target、依赖传播、库、测试与独立构建目录；",
+                "GDB 与 AddressSanitizer：调用栈、断点、越界和释放后使用。"
               ]
             }
           ]
@@ -232,7 +212,7 @@
           ]
         }
       ],
-      "searchText": "c++、内存与编译工程 前置能力诊断与定向复习 需要完善的能力 **【科班复习】** 栈与堆； 指针和引用； 对象生命周期； 静态库与动态库； 编译与链接； cache line； 空间局部性和时间局部性。 **【必须掌握】** raii； 移动语义； 模板函数； 编译期常量； 内存对齐； `restrict` 思想； cmake； gdb； addresssanitizer。 编程任务 实现一个 cpu 端的基础库： cpp-foundation/\n├── include/\n│   ├── aligned_buffer.hpp\n│   ├── timer.hpp\n│   └── tensor_view.hpp\n├── src/\n├── tests/\n└── cmakelists.txt 要求实现： 一个 raii 管理的对齐内存类； 一个支持二维 shape 和 stride 的 `tensorview`； cpu 矩阵乘法； cpu softmax； googletest 或 catch2 单元测试； 编译成共享库。 达到的深度 本周结束，你必须能回答： 移动构造函数解决什么问题？ 模板参数和运行时参数有什么区别？ 为什么矩阵按行访问通常比按列访问快？ 静态库和动态库有什么差异？ 为什么内存对齐可能影响 simd 和 gpu 访存？ cmake 是如何组织 `.cpp`、`.cu` 和测试程序的？ 验收 不看资料，能在 90 分钟内： 创建一个 cmake c++ 项目； 编译共享库； 编写一个模板函数； 用单元测试验证 cpu softmax； 使用 gdb 定位一次数组越界。 全部做到，可以把本周压缩成 3～4 天。"
+      "searchText": "c++、内存与编译工程 前置能力诊断与定向复习 工程基础强化 这些内容已拆成左侧可独立学习的教程页，不只列名词： 内存与对象生命周期：栈、堆、指针、引用与 raii； 编译、链接与库：声明、定义、目标文件、静态库与动态库； cache、局部性与内存对齐：连续访问、cache line、对齐与 `restrict` 思想； 模板与编译期计算：类型模板、非类型模板参数、`constexpr` 与 `static_assert`； cmake 工程组织：target、依赖传播、库、测试与独立构建目录； gdb 与 addresssanitizer：调用栈、断点、越界和释放后使用。 编程任务 实现一个 cpu 端的基础库： cpp-foundation/\n├── include/\n│   ├── aligned_buffer.hpp\n│   ├── timer.hpp\n│   └── tensor_view.hpp\n├── src/\n├── tests/\n└── cmakelists.txt 要求实现： 一个 raii 管理的对齐内存类； 一个支持二维 shape 和 stride 的 `tensorview`； cpu 矩阵乘法； cpu softmax； googletest 或 catch2 单元测试； 编译成共享库。 达到的深度 本周结束，你必须能回答： 移动构造函数解决什么问题？ 模板参数和运行时参数有什么区别？ 为什么矩阵按行访问通常比按列访问快？ 静态库和动态库有什么差异？ 为什么内存对齐可能影响 simd 和 gpu 访存？ cmake 是如何组织 `.cpp`、`.cu` 和测试程序的？ 验收 不看资料，能在 90 分钟内： 创建一个 cmake c++ 项目； 编译共享库； 编写一个模板函数； 用单元测试验证 cpu softmax； 使用 gdb 定位一次数组越界。 全部做到，可以把本周压缩成 3～4 天。"
     },
     {
       "id": "week-2",
@@ -293,12 +273,12 @@
           ]
         },
         {
-          "id": "week-2-需要完善的能力",
-          "title": "需要完善的能力",
+          "id": "week-2-数值与性能基础强化",
+          "title": "数值与性能基础强化",
           "blocks": [
             {
               "type": "paragraph",
-              "text": "**【科班复习】**"
+              "text": "**基础概念**"
             },
             {
               "type": "list",
@@ -314,7 +294,7 @@
             },
             {
               "type": "paragraph",
-              "text": "**【主修】**"
+              "text": "**重点能力**"
             },
             {
               "type": "list",
@@ -436,7 +416,7 @@
           ]
         }
       ],
-      "searchText": "浮点数、transformer 计算与性能模型 前置能力诊断与定向复习 阅读 pmpp4 附录 a：numerical considerations； 第 1 章：introduction。 《build a large language model from scratch》 重点读： 第 3 章：attention； 第 4 章：gpt 模型结构。 第 3 章从头实现 self-attention，第 4 章将其组装成 gpt 风格模型。[manning publications](https://www.manning.com/preview/build-a-large-language-model-from-scratch/chapter-3) csapp 第 2 章中浮点数表示部分； 第 5 章中循环展开、内存访问和编译器优化部分。 需要完善的能力 **【科班复习】** ieee 754； fp32； 矩阵乘法； 链式法则； big-o； cache 和带宽。 **【主修】** fp16； bf16； tf32； fp8 的基本概念； softmax 数值稳定性； mixed precision； flops； 内存访问量； arithmetic intensity； compute-bound 与 memory-bound。 编程任务 使用 pytorch 实现： linear； softmax； rmsnorm； rope； mha； gqa； swiglu。 再写一个模型配置分析器： python analyze_model.py --hidden-size 4096 \\\n                        --layers 32 \\\n                        --heads 32 \\\n                        --kv-heads 8 \\\n                        --seq-len 4096 \\\n                        --dtype bf16 输出： 参数量； 权重显存； 单层 qkv shape； attention 矩阵大小； kv cache 大小； 主要矩阵乘法 shape； 近似 flops； 近似内存读写量。 达到的深度 必须能够不查资料推导： x: [b, s, h]\nq: [b, nq, s, d]\nk/v: [b, nkv, s, d]\nattention score: [b, nq, s, s] 并能解释： mha、mqa、gqa 对 kv cache 的影响； softmax 为什么需要减去最大值； fp16 累加为什么容易出现精度问题； 为什么 rmsnorm 通常是带宽受限算子； 为什么矩阵乘法通常更偏计算受限。 验收 给你一个任意 transformer 配置，应在 30 分钟内算出： 权重显存的数量级； kv cache 显存； attention 的主要 tensor shape； 主要 gemm 的 m、n、k； 哪些算子值得融合。"
+      "searchText": "浮点数、transformer 计算与性能模型 前置能力诊断与定向复习 阅读 pmpp4 附录 a：numerical considerations； 第 1 章：introduction。 《build a large language model from scratch》 重点读： 第 3 章：attention； 第 4 章：gpt 模型结构。 第 3 章从头实现 self-attention，第 4 章将其组装成 gpt 风格模型。[manning publications](https://www.manning.com/preview/build-a-large-language-model-from-scratch/chapter-3) csapp 第 2 章中浮点数表示部分； 第 5 章中循环展开、内存访问和编译器优化部分。 数值与性能基础强化 **基础概念** ieee 754； fp32； 矩阵乘法； 链式法则； big-o； cache 和带宽。 **重点能力** fp16； bf16； tf32； fp8 的基本概念； softmax 数值稳定性； mixed precision； flops； 内存访问量； arithmetic intensity； compute-bound 与 memory-bound。 编程任务 使用 pytorch 实现： linear； softmax； rmsnorm； rope； mha； gqa； swiglu。 再写一个模型配置分析器： python analyze_model.py --hidden-size 4096 \\\n                        --layers 32 \\\n                        --heads 32 \\\n                        --kv-heads 8 \\\n                        --seq-len 4096 \\\n                        --dtype bf16 输出： 参数量； 权重显存； 单层 qkv shape； attention 矩阵大小； kv cache 大小； 主要矩阵乘法 shape； 近似 flops； 近似内存读写量。 达到的深度 必须能够不查资料推导： x: [b, s, h]\nq: [b, nq, s, d]\nk/v: [b, nkv, s, d]\nattention score: [b, nq, s, s] 并能解释： mha、mqa、gqa 对 kv cache 的影响； softmax 为什么需要减去最大值； fp16 累加为什么容易出现精度问题； 为什么 rmsnorm 通常是带宽受限算子； 为什么矩阵乘法通常更偏计算受限。 验收 给你一个任意 transformer 配置，应在 30 分钟内算出： 权重显存的数量级； kv cache 显存； attention 的主要 tensor shape； 主要 gemm 的 m、n、k； 哪些算子值得融合。"
     },
     {
       "id": "week-3",
