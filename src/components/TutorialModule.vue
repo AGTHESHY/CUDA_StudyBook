@@ -43,15 +43,34 @@ const selectedLesson = computed(
 const currentIndex = computed(() =>
   props.module.lessons.findIndex((item) => item.id === selectedLesson.value.id),
 );
-const lessonAnimation = computed(() =>
-  animationForLesson(
+const animationPlacement = computed(() => {
+  const spec = animationForLesson(
     selectedLesson.value.title,
     [
       selectedLesson.value.summary,
       ...selectedLesson.value.objectives,
     ].join("\n"),
-  ),
-);
+  );
+  if (!spec) return undefined;
+
+  const codeSections = selectedLesson.value.sections.flatMap((section) =>
+    section.blocks.flatMap((block) =>
+      block.type === "code" ? [{ section, block }] : [],
+    ),
+  );
+  const example =
+    codeSections.find(({ section }) =>
+      /示例|代码|实验|实现/.test(section.title),
+    ) ?? codeSections[0];
+  if (!example) return undefined;
+
+  return {
+    spec,
+    sectionId: example.section.id,
+    code: example.block.text,
+    language: example.block.language,
+  };
+});
 
 const quizScore = computed(() => {
   if (!quizSubmitted.value) return null;
@@ -100,11 +119,6 @@ const selectRelative = (offset: number) => {
         </ul>
       </div>
 
-      <LearningAnimation
-        v-if="lessonAnimation"
-        :spec="lessonAnimation"
-      />
-
       <section
         v-for="section in selectedLesson.sections"
         :id="section.id"
@@ -113,6 +127,12 @@ const selectRelative = (offset: number) => {
       >
         <h2>{{ section.title }}</h2>
         <ContentBlocks :blocks="section.blocks" />
+        <LearningAnimation
+          v-if="animationPlacement?.sectionId === section.id"
+          :spec="animationPlacement.spec"
+          :example-code="animationPlacement.code"
+          :example-language="animationPlacement.language"
+        />
       </section>
 
       <section class="practice-section">

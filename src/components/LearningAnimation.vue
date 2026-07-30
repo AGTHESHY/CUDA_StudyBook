@@ -6,11 +6,14 @@ import type { LearningAnimationSpec } from "../animations/types";
 const props = defineProps<{
   spec: LearningAnimationSpec;
   compact?: boolean;
+  exampleCode?: string;
+  exampleLanguage?: string;
 }>();
 
 const host = ref<HTMLDivElement | null>(null);
 const playing = ref(true);
 const step = ref(0);
+const speed = ref(0.5);
 let renderer: THREE.WebGLRenderer | null = null;
 let scene: THREE.Scene | null = null;
 let camera: THREE.PerspectiveCamera | null = null;
@@ -30,6 +33,20 @@ const stepLabels: Record<LearningAnimationSpec["template"], string[]> = {
 
 const labels = computed(() => stepLabels[props.spec.template]);
 const currentLabel = computed(() => labels.value[step.value] ?? labels.value[0]);
+const codeLines = computed(() =>
+  String(props.exampleCode || "")
+    .replace(/\r\n?/g, "\n")
+    .split("\n"),
+);
+const hasExample = computed(() => Boolean(props.exampleCode?.trim()));
+const isActiveCodeLine = (index: number) => {
+  const total = Math.max(1, codeLines.value.length);
+  const mappedStep = Math.min(
+    labels.value.length - 1,
+    Math.floor((index * labels.value.length) / total),
+  );
+  return mappedStep === step.value;
+};
 
 const material = (color: number, opacity = 1) =>
   new THREE.MeshBasicMaterial({
@@ -109,7 +126,7 @@ const buildMemoryCoalescing = (group: THREE.Group) => {
       const target = activeStep === 2 ? (index * 3) % cells.length : index;
       lane.position.x +=
         (cells[target].position.x - lane.position.x) *
-        (activeStep >= 1 ? 0.04 : 0);
+        (activeStep >= 1 ? 0.018 : 0);
       lane.position.y =
         1.05 - (activeStep >= 1 ? (Math.sin(time * 2 + index) + 1) * 0.18 : 0);
       const laneMaterial = lane.material as THREE.MeshBasicMaterial;
@@ -164,8 +181,8 @@ const buildWarpDivergence = (group: THREE.Group) => {
     lanes.forEach((lane, index) => {
       const direction = index < 4 ? 1 : -1;
       const split = activeStep === 1 ? 0.72 : activeStep === 2 ? 0.12 : 0;
-      lane.position.y += (direction * split - lane.position.y) * 0.08;
-      lane.position.x += activeStep === 2 ? 0.006 : 0;
+      lane.position.y += (direction * split - lane.position.y) * 0.035;
+      lane.position.x += activeStep === 2 ? 0.0025 : 0;
       (lane.material as THREE.MeshBasicMaterial).color.setHex(
         activeStep === 1
           ? index < 4
@@ -201,7 +218,10 @@ const buildCollectiveRing = (group: THREE.Group) => {
   return (time: number, activeStep: number) => {
     packets.forEach((packet, index) => {
       packet.visible = activeStep >= 1;
-      const progress = activeStep >= 1 ? (time * 0.22 + index / nodeCount) % 1 : index / nodeCount;
+      const progress =
+        activeStep >= 1
+          ? (time * 0.12 + index / nodeCount) % 1
+          : index / nodeCount;
       const angle = progress * Math.PI * 2;
       packet.position.set(Math.cos(angle) * radius, Math.sin(angle) * radius, 0.08);
     });
@@ -275,7 +295,7 @@ const resize = () => {
 const draw = (timestamp: number) => {
   if (!renderer || !scene || !camera) return;
   if (!startedAt) startedAt = timestamp;
-  const time = (timestamp - startedAt) / 1000;
+  const time = ((timestamp - startedAt) / 1000) * speed.value;
   if (playing.value) {
     root?.userData.update?.(time, step.value);
   }
@@ -286,6 +306,10 @@ const draw = (timestamp: number) => {
 const moveStep = (offset: number) => {
   const length = labels.value.length;
   step.value = (step.value + offset + length) % length;
+};
+
+const cycleSpeed = () => {
+  speed.value = speed.value === 0.5 ? 0.75 : speed.value === 0.75 ? 1 : 0.5;
 };
 
 watch(() => props.spec.template, rebuild);
@@ -323,23 +347,45 @@ onBeforeUnmount(() => {
   <section class="learning-animation" :class="{ compact }">
     <header>
       <div>
-        <span>INTERACTIVE EXPLAINER</span>
+        <span>{{ hasExample ? "CODE WALKTHROUGH" : "INTERACTIVE EXPLAINER" }}</span>
         <h3>{{ spec.title }}</h3>
       </div>
-      <button
-        type="button"
-        :aria-label="playing ? '暂停动画' : '播放动画'"
-        @click="playing = !playing"
-      >
-        {{ playing ? "暂停" : "播放" }}
-      </button>
+      <div class="learning-animation-header-actions">
+        <button
+          type="button"
+          :aria-label="`当前速度 ${speed} 倍，点击切换速度`"
+          @click="cycleSpeed"
+        >
+          {{ speed }}×
+        </button>
+        <button
+          type="button"
+          :aria-label="playing ? '暂停动画' : '播放动画'"
+          @click="playing = !playing"
+        >
+          {{ playing ? "暂停" : "播放" }}
+        </button>
+      </div>
     </header>
-    <div
-      ref="host"
-      class="learning-animation-canvas"
-      role="img"
-      :aria-label="`${spec.title}：${currentLabel}`"
-    />
+    <div class="learning-animation-stage" :class="{ 'with-example': hasExample }">
+      <div v-if="hasExample" class="learning-animation-code">
+        <div>
+          <span>{{ exampleLanguage || "code" }}</span>
+          <strong>跟随步骤观察高亮代码</strong>
+        </div>
+        <pre><code><span
+          v-for="(line, index) in codeLines"
+          :key="`${index}-${line}`"
+          :class="{ active: isActiveCodeLine(index) }"
+        ><i>{{ String(index + 1).padStart(2, "0") }}</i>{{ line || " " }}</span></code></pre>
+      </div>
+      <div
+        ref="host"
+        class="learning-animation-canvas"
+        role="img"
+        :aria-label="`${spec.title}：${currentLabel}`"
+      />
+    </div>
     <div class="learning-animation-controls">
       <button type="button" aria-label="上一步" @click="moveStep(-1)">←</button>
       <strong>{{ step + 1 }} / {{ labels.length }} · {{ currentLabel }}</strong>

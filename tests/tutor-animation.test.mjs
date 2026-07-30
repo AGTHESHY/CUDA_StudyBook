@@ -14,6 +14,10 @@ const tutor = await readFile(
   new URL("../src/components/LlmTutor.vue", import.meta.url),
   "utf8",
 );
+const tutorial = await readFile(
+  new URL("../src/components/TutorialModule.vue", import.meta.url),
+  "utf8",
+);
 const animation = await readFile(
   new URL("../src/components/LearningAnimation.vue", import.meta.url),
   "utf8",
@@ -95,10 +99,31 @@ test("learning animation provides controls and reduced-motion support", () => {
   assert.match(animation, /WebGLRenderer/);
   assert.match(animation, /prefers-reduced-motion/);
   assert.match(animation, /ResizeObserver/);
+  assert.match(animation, /const speed = ref\(0\.5\)/);
+  assert.match(animation, /exampleCode\?: string/);
+  assert.match(animation, /isActiveCodeLine/);
+  assert.match(animation, /跟随步骤观察高亮代码/);
   assert.match(animation, /暂停动画/);
   assert.match(animation, /上一步/);
   assert.match(animation, /下一步/);
   assert.match(animation, /disposeRoot/);
+});
+
+test("lesson animations appear only after a matching code example", () => {
+  assert.match(tutorial, /const animationPlacement = computed/);
+  assert.match(tutorial, /block\.type === "code"/);
+  assert.match(tutorial, /\/示例\|代码\|实验\|实现\//);
+  assert.match(
+    tutorial,
+    /animationPlacement\?\.sectionId === section\.id/,
+  );
+  assert.match(tutorial, /:example-code="animationPlacement\.code"/);
+
+  const objectivesPosition = tutorial.indexOf("lesson-objectives");
+  const contentPosition = tutorial.indexOf("<ContentBlocks");
+  const animationPosition = tutorial.lastIndexOf("<LearningAnimation");
+  assert.ok(contentPosition > objectivesPosition);
+  assert.ok(animationPosition > contentPosition);
 });
 
 test("tutorial prose uses concise concept headings and adds minimum examples", () => {
