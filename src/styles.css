@@ -1522,6 +1522,24 @@ textarea:focus-visible {
   background: #28465c;
 }
 
+.markdown-body .katex {
+  color: inherit;
+  font-size: 1.04em;
+}
+
+.markdown-body .math-display {
+  overflow-x: auto;
+  margin: 14px 0;
+  padding: 12px 14px;
+  background: rgba(85, 188, 208, 0.07);
+  border-left: 3px solid #55bcd0;
+}
+
+.markdown-body .math-display .katex-display {
+  margin: 0;
+  text-align: left;
+}
+
 .chat-message.waiting > div {
   display: flex;
   gap: 5px;
@@ -2177,16 +2195,17 @@ textarea:focus-visible {
   min-width: 0;
 }
 
-.learning-animation-stage.with-example {
-  display: grid;
-  grid-template-columns: minmax(0, 0.92fr) minmax(280px, 1.08fr);
-  align-items: stretch;
-}
-
 .learning-animation-code {
-  min-width: 0;
-  background: #1f2328;
-  border-right: 1px solid #43505a;
+  position: absolute;
+  z-index: 4;
+  top: 14px;
+  left: 14px;
+  overflow: hidden;
+  width: min(46%, 470px);
+  min-width: 250px;
+  background: rgba(31, 35, 40, 0.94);
+  border: 1px solid #56636d;
+  box-shadow: 0 8px 24px rgba(25, 39, 31, 0.12);
 }
 
 .learning-animation-code > div {
@@ -2216,7 +2235,7 @@ textarea:focus-visible {
 .article-section .learning-animation-code pre,
 .learning-animation-code pre {
   overflow: auto;
-  max-height: 330px;
+  max-height: 190px;
   margin: 0;
   padding: 12px 0;
   background: #1f2328;
@@ -2247,6 +2266,10 @@ textarea:focus-visible {
   color: #ffffff;
 }
 
+.scene-generated-scene .learning-animation-code code > span:not(.revealed) {
+  opacity: 0.2;
+}
+
 .learning-animation-code code i {
   color: #788794;
   font-style: normal;
@@ -2263,6 +2286,86 @@ textarea:focus-visible {
     #fbfcfb;
   background-size: 28px 28px;
   line-height: 0;
+}
+
+.learning-animation-visual {
+  position: relative;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.learning-animation-narration {
+  border-bottom: 1px solid #d4dfd7;
+  background: #f7faf8;
+  font-weight: 600;
+}
+
+.matrix-axis {
+  position: absolute;
+  z-index: 2;
+  display: grid;
+  pointer-events: none;
+}
+
+.matrix-axis span {
+  color: #315f4a;
+  font-family: var(--mono);
+  font-size: 9px;
+  font-weight: 700;
+  line-height: 1;
+  text-align: center;
+}
+
+.matrix-axis-columns {
+  top: 18px;
+  left: 50%;
+  width: min(43%, 205px);
+  grid-template-columns: repeat(5, 1fr);
+  transform: translateX(-50%);
+}
+
+.matrix-axis-rows {
+  top: 50%;
+  left: max(16px, calc(50% - min(25%, 122px)));
+  height: min(54%, 180px);
+  grid-template-rows: repeat(5, 1fr);
+  transform: translateY(-50%);
+}
+
+.scene-matrix-multiply .matrix-axis-columns {
+  top: 26px;
+  left: auto;
+  right: 6%;
+  width: 26%;
+  transform: none;
+}
+
+.scene-matrix-multiply .matrix-axis-rows {
+  left: auto;
+  right: calc(32% + 4px);
+  height: 32%;
+}
+
+.learning-animation-legend {
+  position: absolute;
+  right: 12px;
+  bottom: 10px;
+  left: 12px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 6px;
+  pointer-events: none;
+}
+
+.learning-animation-legend span {
+  padding: 3px 6px;
+  background: rgba(255, 255, 255, 0.88);
+  border: 1px solid #c9d6ce;
+  color: #294d3b;
+  font-family: var(--mono);
+  font-size: 8px;
+  line-height: 1.2;
 }
 
 .learning-animation-canvas canvas {
@@ -2331,6 +2434,16 @@ textarea:focus-visible {
   background-size: 24px 24px;
 }
 
+.learning-animation.compact .matrix-axis span {
+  color: #b9dbe4;
+}
+
+.learning-animation.compact .learning-animation-legend span {
+  background: rgba(8, 22, 33, 0.9);
+  border-color: #315b72;
+  color: #cfeaf0;
+}
+
 .learning-animation.compact .learning-animation-controls {
   background: #102638;
   border-top-color: #27475d;
@@ -2341,7 +2454,7 @@ textarea:focus-visible {
 }
 
 .learning-animation.compact .learning-animation-code {
-  border-right-color: #28485c;
+  border-color: #315b72;
 }
 
 .lesson-section {
@@ -3390,13 +3503,13 @@ textarea:focus-visible {
     border-right: 0;
   }
 
-  .learning-animation-stage.with-example {
-    grid-template-columns: 1fr;
-  }
-
   .learning-animation-code {
-    border-right: 0;
-    border-bottom: 1px solid #43505a;
+    top: auto;
+    right: 12px;
+    bottom: 12px;
+    left: 12px;
+    width: auto;
+    min-width: 0;
   }
 
   .learning-animation-code > div strong {

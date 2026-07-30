@@ -672,10 +672,13 @@ onBeforeUnmount(() => {
       <section class="hero">
         <div class="hero-copy">
           <div class="eyebrow"><span /> FROM CUDA KERNEL TO LLM SYSTEMS</div>
-          <h1>把 52 周走成<br /><em>一条可执行的路径。</em></h1>
+          <h1>把 52 周走成<br /><em>一条可执行的路径</em></h1>
           <p>
-            不是技术名词的堆叠，而是每周都有阅读、实现、性能分析与验收的工程课程表。
-            最终独立实现大模型 CUDA Kernel，并把它接进 PyTorch 与多 GPU 训练系统。
+            开始前需要具备 C++17 基础（指针、引用、类与模板）、Linux
+            命令行、基础线性代数与微积分，以及 Python / PyTorch 使用经验；不要求已有
+            CUDA 开发经验。课程从 C++ 工程与 GPU
+            编程模型起步，依次完成并行原语、GEMM、PyTorch 扩展、Triton、FlashAttention、
+            CUTLASS 与多 GPU 训练，最终独立实现、验证并集成大模型 CUDA Kernel。
           </p>
           <div class="hero-actions">
             <button

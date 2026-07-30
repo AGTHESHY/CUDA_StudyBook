@@ -4,7 +4,9 @@ services:
     container_name: cuda-study-tutor
     command: ["node", "/app/chat-api.mjs"]
     env_file:
-      - /opt/TestScriptStore/.env
+      # Local: deploy/.env.tutor (see docker-compose.local.yml notes).
+      # Server can symlink/copy the same filename into deploy/.
+      - ./.env.tutor
     environment:
       PORT: 3038
       MODEL_NAME: deepseek-v4-pro

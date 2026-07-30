@@ -457,6 +457,102 @@ print(out.shape)  # [1, 4, 8, 32]`,
         "观察结果：每轮把距离为 offset 的 Lane 值合并进来；示例假定完整 Warp，实际代码必须明确有效 Lane 与数据边界。",
     };
   }
+  if (/prefix sum|scan|前缀/i.test(focus)) {
+    return {
+      blocks: [
+        code(
+          `输入       = [3, 1, 4, 0, 2]
+inclusive = [3, 4, 8, 8, 10]
+exclusive = [0, 3, 4, 8, 8]`,
+          "text",
+        ),
+      ],
+      result:
+        "先用五个数核对语义：Inclusive 包含当前位置，Exclusive 不包含当前位置。并行实现无论怎样上扫、下扫，结果次序都必须与这一定义一致。",
+    };
+  }
+  if (/histogram|atomic|原子/i.test(focus)) {
+    return {
+      blocks: [
+        code(
+          `输入 = [0, 1, 1, 3, 1, 0, 3, 3]
+4 个桶的结果 = [2, 3, 0, 3]
+
+均匀数据：线程写入分散的桶
+偏斜数据：许多线程争用同一个热点桶`,
+          "text",
+        ),
+      ],
+      result:
+        "输出完全相同并不代表性能相同。直方图必须同时测试均匀、偏斜和单一取值数据，才能看见 Atomic 争用与私有化的收益边界。",
+    };
+  }
+  if (/double buffer|async copy|异步复制|双缓冲/i.test(focus)) {
+    return {
+      blocks: [
+        code(
+          `load(tile[0], global[0]);
+for (int k = 0; k < tiles; ++k) {
+  load_async(tile[(k + 1) & 1], global[k + 1]);
+  compute(tile[k & 1]);
+  wait_and_swap();
+}`,
+          "cuda",
+        ),
+      ],
+      result:
+        "两个缓冲区轮流扮演“正在计算”和“正在加载”。真正的重叠需要异步能力、正确的等待位置和足够资源；代码写成双缓冲不等于硬件时间线已经重叠。",
+    };
+  }
+  if (/online softmax|running max|running sum|分块最大值|重缩放/i.test(focus)) {
+    return {
+      blocks: [
+        code(
+          `m_new = max(m_old, max(x_block))
+l_new = exp(m_old - m_new) * l_old
+      + sum(exp(x_block - m_new))
+
+# 旧块的贡献必须随新最大值重缩放`,
+          "python",
+        ),
+      ],
+      result:
+        "若新块带来更大的最大值，旧块的指数和必须乘上 exp(m_old-m_new)。少掉这一项，分块结果就不再与完整 Softmax 等价。",
+    };
+  }
+  if (/dispatcher|custom op|extension|torch_library|registration/i.test(focus)) {
+    return {
+      blocks: [
+        code(
+          `TORCH_LIBRARY(my_ops, m) {
+  m.def("fma(Tensor a, Tensor b, Tensor c) -> Tensor");
+}
+TORCH_LIBRARY_IMPL(my_ops, CUDA, m) {
+  m.impl("fma", &fma_cuda);
+}`,
+          "cpp",
+        ),
+      ],
+      result:
+        "Schema 先定义算子契约，设备实现再注册到 Dispatcher。可用的算子还必须补齐 Shape、Dtype、Device、连续性和错误信息检查。",
+    };
+  }
+  if (/triton|tl\./i.test(focus)) {
+    return {
+      blocks: [
+        code(
+          `pid = tl.program_id(0)
+offsets = pid * BLOCK + tl.arange(0, BLOCK)
+mask = offsets < n
+x = tl.load(x_ptr + offsets, mask=mask)
+tl.store(y_ptr + offsets, x, mask=mask)`,
+          "python",
+        ),
+      ],
+      result:
+        "一个 Program Instance 负责一个数据块，offsets 是向量化下标，Mask 处理尾块。Triton 隐藏了逐线程写法，但没有替你决定分块和边界。",
+    };
+  }
   if (/stream|event|异步|overlap|并发/i.test(focus)) {
     return {
       blocks: [
@@ -518,127 +614,445 @@ print(y.shape, y.stride())  # [4,3], (1,4)`,
   };
 };
 
-const topicLesson = (
+type TeachingFamily =
+  | "algorithm"
+  | "numerical"
+  | "memory"
+  | "parallel"
+  | "matrix"
+  | "framework"
+  | "distributed"
+  | "performance"
+  | "project";
+
+type TopicUnit = {
+  title: string;
+  focus: string;
+  topics: Topic[];
+  family: TeachingFamily;
+  kind: ReturnType<typeof lessonKind>;
+};
+
+const familyFor = (focus: string, sectionTitle: string): TeachingFamily => {
+  const text = `${focus}\n${sectionTitle}`;
+  if (/阶段项目|项目|报告|整理|开源贡献|面试|通过标准|完整算子/i.test(text)) {
+    return "project";
+  }
+  if (/nccl|rank|communicator|allreduce|allgather|reducescatter|broadcast|send\/recv|ddp|parallel|通信|多卡|扩展效率|pipeline bubble/i.test(text)) {
+    return "distributed";
+  }
+  if (/pytorch|dispatcher|extension|autograd|backward|fake.?tensor|opcheck|torch\.compile|triton|cutlass|cute|registration/i.test(text)) {
+    return "framework";
+  }
+  if (/gemm|matmul|矩阵乘|tensor core|wmma|mma|tile/i.test(text)) {
+    return "matrix";
+  }
+  if (/fp16|bf16|fp8|tf32|softmax|误差|精度|accumul|rmsnorm/i.test(text)) {
+    return "numerical";
+  }
+  if (/memory|cache|stride|storage|contiguous|coalesc|bank|shared|register|内存|缓存|访存|halo/i.test(text)) {
+    return "memory";
+  }
+  if (/warp|simt|thread|block|grid|stream|event|同步|atomic|shuffle|occupancy/i.test(text)) {
+    return "parallel";
+  }
+  if (/roofline|benchmark|nsight|flops|bandwidth|arithmetic intensity|性能|吞吐|延迟/i.test(text)) {
+    return "performance";
+  }
+  return "algorithm";
+};
+
+const unitTitle = (topics: Topic[]) => {
+  if (topics.length === 1) return topics[0].title;
+  const names = topics.map((topic) => stripMarkup(topic.title));
+  const joined =
+    names.length === 2
+      ? `${names[0]}与${names[1]}`
+      : `${names[0]}、${names[1]}与相关实现`;
+  return compactTitle(joined, names[0]);
+};
+
+const cohesiveUnits = (topics: Topic[]): TopicUnit[] => {
+  const targetCount = Math.min(7, Math.max(4, Math.ceil(topics.length / 2)));
+  const chunkSize = Math.max(1, Math.ceil(topics.length / targetCount));
+  const units: TopicUnit[] = [];
+  for (let index = 0; index < topics.length; index += chunkSize) {
+    const grouped = topics.slice(index, index + chunkSize);
+    const focus = grouped.map((topic) => stripMarkup(topic.source)).join("；");
+    units.push({
+      title: unitTitle(grouped),
+      focus,
+      topics: grouped,
+      family: familyFor(focus, grouped[0].section.title),
+      kind: lessonKind(grouped[0].section.title),
+    });
+  }
+  return units;
+};
+
+const familyDepth: Record<TeachingFamily, string[]> = {
+  algorithm: [
+    "先用 5～8 个具体输入手算结果，确认 Inclusive/Exclusive、边界或合并顺序的语义。",
+    "再画出线程或线程块的分工，标出每轮读写位置与同步点。",
+    "最后覆盖非二次幂、空输入、尾块和跨 Block 合并；不能只测试整齐尺寸。",
+  ],
+  numerical: [
+    "写出数学定义、输入输出 Shape 与累加类型，不从某个 API 的默认值反推定义。",
+    "分别检查溢出、下溢、消减误差和低精度累加；误差阈值要随 Dtype 与规模解释。",
+    "至少与 FP32 参考实现比较 atol/rtol，并记录最大误差出现在哪个元素。",
+  ],
+  memory: [
+    "把逻辑坐标代入地址公式，列出同一 Warp 每个 Lane 访问的实际地址。",
+    "区分请求字节、传输字节、缓存命中与片上复用，不能把它们统称为“访存优化”。",
+    "用连续、错位、跨步和非连续 View 做反例，再用 Profiler 指标核对推断。",
+  ],
+  parallel: [
+    "明确谁做什么：线程、Lane、Warp、Block、Stream 各自负责的工作不能混写。",
+    "所有同步都要回答参与者是谁、等待什么、等待前的数据由谁写入。",
+    "覆盖部分 Warp、尾块和资源极限；Kernel launch 后同时检查 launch error 与异步执行错误。",
+  ],
+  matrix: [
+    "先锁定 A[M,K]、B[K,N]、C[M,N]，沿一个 C[row,col] 手算完整的 K 维点积。",
+    "再说明 Tile 在 Global Memory、Shared Memory 与 Register 之间怎样移动和复用。",
+    "正确性覆盖非整除 M/N/K 与多种布局；性能同时报告 cuBLAS 基线、FLOP/s 和瓶颈证据。",
+  ],
+  framework: [
+    "沿调用链追踪 Python API、Schema/Dispatcher、设备实现与 Kernel launch，不把“能 import”当成完成。",
+    "接口契约明确 Shape、Stride、Dtype、Device、空输入、非连续输入与错误信息。",
+    "补齐参考实现、opcheck/gradcheck（适用时）、编译路径与 CI，避免只有一条 CUDA happy path。",
+  ],
+  distributed: [
+    "先为每个 Rank 写出调用前后的 Tensor Shape 与数据内容，再选择 Collective。",
+    "所有 Rank 的 Collective 次序、count、dtype 与 communicator 必须匹配；异步错误也要传播。",
+    "基准覆盖消息大小与拓扑，拆开计算、通信和等待时间，再讨论重叠与扩展效率。",
+  ],
+  performance: [
+    "先写性能假设：更可能受计算、内存、同步还是启动开销限制，并给出可证伪的指标。",
+    "固定硬件、软件版本、时钟条件、输入、预热、同步与重复统计；同时保留 median 和尾延迟。",
+    "把端到端、Host-to-Device、Kernel 与通信时间分开，结论只对记录的环境和 Shape 有效。",
+  ],
+  project: [
+    "先冻结接口与支持矩阵，再按 Reference、Naive、Correctness、Optimize、Integrate 的顺序推进。",
+    "每次优化只改变一个主要因素，保留失败尝试、Profiler 证据和回退方式。",
+    "交付物至少包括可构建代码、自动测试、Benchmark、环境记录、性能分析与双语使用说明。",
+  ],
+};
+
+const familyMistakes: Record<TeachingFamily, string[]> = {
+  algorithm: ["只验证总和，不验证每一步的中间状态。", "把跨 Block 同步写进单个 Kernel 的错误位置。"],
+  numerical: ["用完全相等比较浮点结果。", "只测随机小值，遗漏极值、长序列和全相等输入。"],
+  memory: ["只看源代码下标“像是连续”，没有列出一个 Warp 的地址。", "看到缓存命中后就忽略错位或跨步访问。"],
+  parallel: ["把 Warp 当前大小硬编码成永远成立的业务假设。", "部分线程提前返回后，其余线程仍到达 Block 屏障。"],
+  matrix: ["只测 M=N=K 且都是 Tile 整数倍。", "只报告 Occupancy，不解释加载、复用和指令流水线。"],
+  framework: ["直接对非连续 Tensor 取 data_ptr 并按连续数组解释。", "只注册 CUDA 实现，不检查设备、Dtype 与 FakeTensor 路径。"],
+  distributed: ["不同 Rank 以不同顺序进入 Collective，最终表现为挂起。", "把函数异步返回当成通信已经完成。"],
+  performance: ["在未预热、未同步的情况下比较一次耗时。", "把单一 Shape 上的胜出写成普遍结论。"],
+  project: ["先写复杂优化，再补参考实现和测试。", "README 只给结果截图，没有复现命令与环境。"],
+};
+
+const familySectionTitles: Record<
+  TeachingFamily,
+  [string, string, string, string]
+> = {
+  algorithm: ["概念与顺序", "用小输入走一遍", "从串行语义到并行步骤", "边界与反例"],
+  numerical: ["数学定义与数值范围", "用具体数值核对", "精度策略", "误差怎样验收"],
+  memory: ["地址与存储模型", "跟着访问序列走", "从代码推到内存事务", "用工具验证"],
+  parallel: ["执行者与工作划分", "按轮次观察代码", "同步和有效线程", "并发错误排查"],
+  matrix: ["矩阵 Shape 与点积", "跟着一个输出元素计算", "Tile、复用与流水线", "正确性和性能基线"],
+  framework: ["框架中的调用位置", "最小可调用路径", "接口契约", "测试与集成"],
+  distributed: ["参与者和数据变化", "跟随一个数据分片", "调用顺序与失效模式", "通信性能证据"],
+  performance: ["先提出可证伪的假设", "建立可信基线", "读取 Profiler 证据", "结论的适用范围"],
+  project: ["交付目标", "按风险安排实现顺序", "工程质量门槛", "最终验收"],
+};
+
+const contextParagraph = (
+  family: TeachingFamily,
   week: CourseWeek,
-  topic: Topic,
+  focus: string,
+) => {
+  const messages: Record<TeachingFamily, string> = {
+    algorithm: `在「${week.title}」中，先保持算法定义不变，再改变分工方式。并行化不是换一组 API，而是在不破坏顺序、结合律要求和边界语义的前提下缩短关键路径。`,
+    numerical: `这里必须把数学等价与浮点实现分开：公式等价不保证有限精度下逐位相同。Dtype、累加顺序和输入规模共同决定可接受误差。`,
+    memory: `这一主题真正处理的是地址集合与数据复用。先列出地址，再讨论事务、Bank、Cache 或 Tile；没有地址证据时，“更连续”“更缓存友好”都只是猜测。`,
+    parallel: `控制流要写成参与者之间的时序关系。只要有一个线程、Warp、Block 或 Stream 的等待条件不清楚，正确性就还没有建立。`,
+    matrix: `矩阵 Kernel 的学习主线是同一份 A、B 数据能服务多少次乘加。先让任意 Shape 都正确，再逐层增加 Shared Memory、Register 和异步流水线的复用。`,
+    framework: `就业场景中的 Kernel 很少孤立存在。${focus}必须放进框架的分派、构建、错误处理和自动测试链路里，调用成功只是第一步。`,
+    distributed: `分布式程序的状态分散在多个 Rank。阅读${focus}时要画出每张卡“调用前有什么、调用后得到什么”，再检查调用顺序和同步。`,
+    performance: `性能工作遵循“评估—并行化—优化—部署”的迭代。先用真实工作负载定位热点，再改变实现，最后用同一测量协议比较。`,
+    project: `本节不再增加孤立术语，而是把${focus}收束为可安装、可测试、可复现和可解释的工程交付物。`,
+  };
+  return messages[family];
+};
+
+const needsWorkedExample = (unit: TopicUnit) =>
+  unit.family !== "performance" &&
+  unit.family !== "project" &&
+  !/报告|阅读目标|通过标准|整理/.test(unit.focus);
+
+const jobReadyAdditions = (week: number, focus: string): string[] => {
+  const additions: string[] = [];
+  if (/kernel|thread|block|stream|cuda|实现/i.test(focus) && week <= 20) {
+    additions.push(
+      "Host 侧检查每个 CUDA Runtime 返回值；Kernel launch 后先用 cudaGetLastError 检查启动配置，调试异步错误时再在明确位置同步。",
+    );
+  }
+  if (/reduction|scan|histogram|convolution|gemm|softmax|rmsnorm/i.test(focus)) {
+    additions.push(
+      "建立 CPU、PyTorch、cuBLAS、CUB 或数学定义中的适用参考结果；正常 Shape、尾块、空输入与非整除尺寸要进入自动测试。",
+    );
+  }
+  if (week >= 15 && week <= 20) {
+    additions.push(
+      "Benchmark 必须包含预热、CUDA Event、显式同步、重复统计和 cuBLAS 基线；不同 M/N/K 与布局分开报告。",
+    );
+  }
+  if (week >= 21 && week <= 25) {
+    additions.push(
+      "生产算子还要覆盖 Dispatcher/Schema、Meta 或 FakeTensor 路径、非连续输入、opcheck；有梯度时补 gradcheck 与混合精度误差测试。",
+    );
+  }
+  if (week >= 26 && week <= 30) {
+    additions.push(
+      "Triton 尾块使用 Mask；Autotune key 必须包含会改变最佳配置的 Shape 或属性，避免把一次调优结果错误复用于不同问题。",
+    );
+  }
+  if (week >= 31 && week <= 37) {
+    additions.push(
+      "Attention 测试覆盖 causal/non-causal、不同序列长度与头维度、全 Mask 行和低精度累加；Backward 还要与框架梯度对照。",
+    );
+  }
+  if (week >= 43 && week <= 47) {
+    additions.push(
+      "分布式运行要记录 Rank、local device、communicator 与拓扑；设置可诊断的超时并检查异步通信错误，避免只留下“程序卡住”。",
+    );
+  }
+  return [...new Set(additions)];
+};
+
+const explicitAnimation = (
+  week: number,
+  focus: string,
+): TutorialLesson["animation"] => {
+  const candidates: Array<
+    [number, RegExp, NonNullable<TutorialLesson["animation"]>]
+  > = [
+    [
+      9,
+      /reduction tree|interleaved|sequential|归约/i,
+      {
+        template: "reduction-tree",
+        title: "8 个输入怎样逐层归约成 1 个结果",
+        caption:
+          "动画对应本节 Warp/Block 归约代码：每一轮把距离为 offset 的元素合并，标出仍然活跃的 Lane 与同步边界。",
+      },
+    ],
+    [
+      15,
+      /gemm|矩阵乘|C\[M,N\]/i,
+      {
+        template: "matrix-multiply",
+        title: "C[2,3] 的 K 维点积",
+        caption:
+          "行列下标均标为 0～4。固定 C[2,3]，逐个读取 A[2,k] 与 B[k,3]，把 2MNK 中的一条点积变成可观察步骤。",
+      },
+    ],
+    [
+      18,
+      /双缓冲|async|load tile|异步复制/i,
+      {
+        template: "pipeline-buffer",
+        title: "Tile 0 计算时，Tile 1 在哪里",
+        caption:
+          "动画严格对应双缓冲伪代码，展示两个 Shared Memory 缓冲区在 Load、Compute 与 Wait 之间交换角色。",
+      },
+    ],
+    [
+      31,
+      /QK|scale|mask|softmax|PV|attention/i,
+      {
+        template: "attention-flow",
+        title: "一次 Attention 前向的数据流",
+        caption:
+          "动画对应本节 QKᵀ→Scale/Mask→Softmax→PV 示例，并标出中间分数矩阵何时产生。",
+      },
+    ],
+    [
+      32,
+      /running max|running sum|重缩放|online softmax/i,
+      {
+        template: "online-softmax",
+        title: "新分块到来后为何要重缩放旧结果",
+        caption:
+          "动画代入两块具体分数，展示 running max 变大时，旧的指数和如何乘 exp(m_old-m_new) 后再与新块合并。",
+      },
+    ],
+    [
+      43,
+      /ring|allreduce|reducescatter|allgather/i,
+      {
+        template: "collective-ring",
+        title: "一个分片如何完成 Ring AllReduce",
+        caption:
+          "动画标出 Rank 0～5，只跟踪一个数据分片经历 Reduce-Scatter 与 AllGather；它不代表 NCCL 在所有拓扑上固定选择 Ring。",
+      },
+    ],
+  ];
+  return candidates.find(
+    ([candidateWeek, pattern]) =>
+      candidateWeek === week && pattern.test(focus),
+  )?.[2];
+};
+
+const buildFamilySections = (
+  week: CourseWeek,
+  unit: TopicUnit,
+  id: string,
+): CourseSection[] => {
+  const headings = familySectionTitles[unit.family];
+  const clarification = clarificationForTopic(unit.focus);
+  const sourceCode = unit.topics.find((topic) => topic.code)?.code;
+  const example = minimumExampleForTopic(unit.focus);
+  const useExample = needsWorkedExample(unit);
+  const courseRequirements = unit.topics.map((topic) => stripMarkup(topic.source));
+  const additions = jobReadyAdditions(week.week, unit.focus);
+
+  return [
+    {
+      id: `${id}-definition`,
+      title: headings[0],
+      blocks: [
+        paragraph(explainTopic(unit.focus)),
+        ...(clarification ? [quote(`理解提示：${clarification}`)] : []),
+        paragraph(contextParagraph(unit.family, week, unit.focus)),
+      ],
+    },
+    ...(useExample
+      ? [
+          {
+            id: `${id}-worked`,
+            title: headings[1],
+            blocks: [
+              ...(sourceCode ? [sourceCode] : example.blocks),
+              paragraph(
+                sourceCode
+                  ? "阅读时逐行写出输入、输出、下标和边界；若无法预测这一小段的结果，先不要进入性能优化。"
+                  : example.result,
+              ),
+            ],
+          } satisfies CourseSection,
+        ]
+      : []),
+    {
+      id: `${id}-depth`,
+      title: headings[2],
+      blocks: [
+        list(...familyDepth[unit.family]),
+        ...(additions.length
+          ? [
+              {
+                type: "subheading" as const,
+                text: "工程中还必须补齐",
+              },
+              list(...additions),
+            ]
+          : []),
+        quote(
+          `本节要落实的原始要求：${courseRequirements.join("；")}。这些要求被放在同一页，是因为它们共同描述一条实现或验证链，而不是彼此独立的名词。`,
+        ),
+      ],
+    },
+    {
+      id: `${id}-evidence`,
+      title: headings[3],
+      blocks: [
+        list(...familyMistakes[unit.family]),
+        paragraph(
+          unit.family === "performance"
+            ? "最后保留原始测量数据、运行命令和 Profiler 截图。若新数据推翻假设，应修改解释，而不是只挑选支持优化的结果。"
+            : "完成后同时留下正确性证据与工程证据：参考结果、边界输入、错误处理，以及能复现实验的环境和命令。",
+        ),
+      ],
+    },
+  ];
+};
+
+const familyExercise = (
+  unit: TopicUnit,
+  id: string,
+): TutorialLesson["exercises"][number] => {
+  const prompts: Record<TeachingFamily, string> = {
+    algorithm: `用 8 个以内的具体输入，手算“${unit.title}”每一轮中间结果，再写出一个非整除边界案例。`,
+    numerical: `为“${unit.title}”设计三组数值输入：普通值、极值和容易发生消减的值，并分别给出参考结果与误差标准。`,
+    memory: `选择一个 Warp，列出执行“${unit.title}”时 Lane 0～7 的地址，并预测事务、Bank 或复用情况。`,
+    parallel: `画出“${unit.title}”的参与者时间线，标出每个同步点前后的生产者、消费者和有效线程。`,
+    matrix: `取 M=N=K=5，手算 C[2,3]，再说明 2×2 Tile 如何处理最后一行、最后一列和最后一个 K 分块。`,
+    framework: `为“${unit.title}”写一张接口支持表，至少覆盖 CPU/CUDA、Dtype、连续/非连续、空输入和错误信息。`,
+    distributed: `用 4 个 Rank、每个 Rank 4 个数，写出“${unit.title}”调用前后的数据，并列出必须匹配的参数。`,
+    performance: `为“${unit.title}”写一份可复现 Benchmark 协议：输入分布、预热、同步、重复统计、环境和需要验证的瓶颈指标。`,
+    project: `把“${unit.title}”拆成 5 个可独立验收的里程碑，每个里程碑写明输入、产物、测试与失败回退方式。`,
+  };
+  return {
+    id: `${id}-exercise`,
+    prompt: prompts[unit.family],
+    hint: "答案必须含具体输入、预期结果或通过条件；只写“实现并优化”不算完成。",
+    answer:
+      "合格答案会先固定语义和接口，再给出至少一个正常案例、一个边界或反例，以及能复现的验证步骤。性能主题还必须分离测量区间并记录环境；并行或分布式主题必须标出参与者与同步关系。",
+  };
+};
+
+const familyQuiz = (
+  unit: TopicUnit,
+  id: string,
+): TutorialLesson["quiz"][number] => ({
+  id: `${id}-quiz`,
+  question: `完成“${unit.title}”后，哪项证据最能说明你已经达到工程可用深度？`,
+  options: [
+    "记住本页出现的 API 名称",
+    "只在一个整齐 Shape 上运行成功",
+    "能解释定义与边界，并用参考结果、反例和可复现实测支持结论",
+    "代码行数比参考实现更少",
+  ],
+  answer: 2,
+  explanation:
+    "工程可用要求语义、边界、错误处理和证据同时成立；API 记忆、单一输入或代码长度都不能替代这些条件。",
+});
+
+const topicUnitLesson = (
+  week: CourseWeek,
+  unit: TopicUnit,
   index: number,
 ): TutorialLesson => {
-  const kind = lessonKind(topic.section.title);
-  const id = `w${String(week.week).padStart(2, "0")}-${slug(topic.title)}-${index + 1}`;
-  const focus = stripMarkup(topic.source);
-  const clarification = clarificationForTopic(focus);
-  const example = minimumExampleForTopic(focus);
-  const practiceSteps =
-    kind === "practice"
-      ? [
-          "先写出最小正确版本，并明确输入、输出、数据类型和 Shape。",
-          "加入 CPU 或框架参考实现，覆盖正常输入、边界输入和非整除 Shape。",
-          "固定预热与重复次数，记录延迟、吞吐、误差和运行环境。",
-          "每次只改变一个优化因素，用数据证明它是否有效。",
-        ]
-      : [
-          "先用一句话说明它解决的问题，不从 API 名称开始背。",
-          "画出输入到输出的数据流，标出 Shape、内存位置与同步边界。",
-          "写一个最小示例，再主动构造一个会失败或变慢的反例。",
-          "用正确性结果和性能证据分别验收，不用“程序跑通”代替结论。",
-        ];
-
+  const id = `w${String(week.week).padStart(2, "0")}-${slug(unit.title)}-${index + 1}`;
   return {
     id,
-    title: topic.title,
-    summary: `围绕“${focus}”建立直觉、工程步骤和可验证的完成标准。`,
-    duration: kind === "practice" ? "35 分钟" : "20 分钟",
-    level: week.week >= 31 || kind === "concept" ? "进阶" : "基础",
+    title: unit.title,
+    summary:
+      unit.family === "project"
+        ? `把 ${unit.focus} 收束成可构建、可测试、可复现的交付物。`
+        : `本节把 ${unit.focus} 放进同一条数据或执行链中讲清楚，并明确做到什么深度。`,
+    duration:
+      unit.kind === "practice" || unit.family === "project"
+        ? "45 分钟"
+        : unit.topics.length > 1
+          ? "35 分钟"
+          : "25 分钟",
+    level:
+      week.week >= 31 ||
+      ["framework", "distributed", "matrix"].includes(unit.family)
+        ? "进阶"
+        : "基础",
     objectives: [
-      `用自己的话解释“${focus}”解决什么问题`,
-      "说明输入、输出、数据布局与主要性能代价",
-      "用最小实验验证正确性，并记录能够复现的证据",
+      `解释“${unit.title}”处理的数据、执行关系或工程问题`,
+      `达到${familyDepth[unit.family][0].replace(/[。；]$/, "")}的深度`,
+      "用边界输入、参考结果或测量证据支持结论",
     ],
-    sections: [
-      {
-        id: `${id}-intuition`,
-        title: "概念",
-        blocks: [
-          paragraph(explainTopic(focus)),
-          ...(clarification
-            ? [quote(`理解提示：${clarification}`)]
-            : []),
-          paragraph(
-            `这一节的重点不是记住“${focus}”这个名词，而是看清它在「${week.title}」中的位置：上游给它什么数据，它做了什么变换，下游依赖什么结果。只要这三件事说不清，代码即使能运行，也很难判断是否正确或值得优化。`,
-          ),
-          quote(
-            "先保证语义正确，再观察瓶颈，最后才选择优化手段。正确性、性能和可维护性要分别给出证据。",
-          ),
-        ],
-      },
-      {
-        id: `${id}-example`,
-        title: "最小示例",
-        blocks: [...example.blocks, paragraph(example.result)],
-      },
-      {
-        id: `${id}-model`,
-        title: "把问题拆成四个检查点",
-        blocks: [
-          list(
-            `语义：${focus} 的定义、适用条件和不适用条件是什么？`,
-            "数据：输入输出的 Shape、Stride、Dtype、对齐和所在设备是什么？",
-            "执行：线程、Warp、Block、Stream 或通信 Rank 如何分工与同步？",
-            "证据：用什么参考结果、误差阈值和性能指标证明实现达标？",
-          ),
-        ],
-      },
-      {
-        id: `${id}-source`,
-        title: "原课程要求，逐项落实",
-        blocks: [
-          paragraph(
-            `原课程要求是：${topic.source}。把它转成可执行任务时，不要省略环境、输入规模、比较基线和通过条件。`,
-          ),
-          ...(topic.code ? [topic.code] : []),
-          list(...practiceSteps),
-        ],
-      },
-      {
-        id: `${id}-mistakes`,
-        title: "常见误区",
-        blocks: [
-          list(
-            "只测一个方便的 Shape，导致尾部、空输入或非对齐路径从未被覆盖。",
-            "把端到端时间、Kernel 时间和数据搬运时间混在一起比较。",
-            "看到更高 Occupancy 或更少代码就直接断言性能更好。",
-            "只保存最终数字，没有记录硬件、软件版本、编译选项和测量方法。",
-          ),
-        ],
-      },
-    ],
-    exercises: [
-      {
-        id: `${id}-exercise`,
-        prompt: `针对“${focus}”，写出一个最小验证计划：至少包含参考实现、3 组边界输入、误差标准和一个性能指标。`,
-        hint: "先写清输入输出，再分别考虑正确性与性能；两者不要共用一个模糊的“通过”。",
-        answer:
-          "合格答案应明确参考实现或数学定义；覆盖空值/最小值、非整除或非连续 Shape、常用大 Shape；给出 atol/rtol 或精确匹配标准；并选择延迟、吞吐、有效带宽或 FLOP/s 中与本题匹配的指标，同时记录环境与重复方法。",
-      },
-    ],
-    quiz: [
-      {
-        id: `${id}-quiz`,
-        question: `判断“${focus}”已经掌握，哪组证据最可靠？`,
-        options: [
-          "代码能够编译，而且只运行了一次",
-          "记住了 API 参数和一组固定配置",
-          "参考结果与边界测试通过，并有可复现的性能记录和瓶颈解释",
-          "Occupancy 数值比之前更高",
-        ],
-        answer: 2,
-        explanation:
-          "掌握需要同时覆盖语义、边界和证据；单次运行、背 API 或单一性能指标都不足以完成工程验收。",
-      },
-    ],
+    sections: buildFamilySections(week, unit, id),
+    exercises: [familyExercise(unit, id)],
+    quiz: [familyQuiz(unit, id)],
     references: referencesForWeek(week.week),
     verification:
-      "本页由原 52 周课程要求拆解而来；外部定义与 API 以页面末尾的官方文档为准，性能结论必须在自己的目标硬件上复测。",
+      "定义与 API 以本页列出的官方资料为准；性能结论必须使用真实工作负载在目标硬件复测，并保留环境、输入与测量方法。",
+    animation: explicitAnimation(week.week, unit.focus),
   };
 };
 
@@ -647,11 +1061,23 @@ export const buildGeneratedTutorialModule = (week: CourseWeek): TutorialModule =
     (section) => !/阅读|验收|通过标准/.test(section.title),
   );
   const topics = learningSections.flatMap(sectionTopics);
+  const units = cohesiveUnits(topics);
+  let animationAssigned = false;
+  const lessons = units.map((unit, index) => {
+    const built = topicUnitLesson(week, unit, index);
+    if (!built.animation) return built;
+    if (animationAssigned) {
+      const { animation: _animation, ...withoutAnimation } = built;
+      return withoutAnimation;
+    }
+    animationAssigned = true;
+    return built;
+  });
   return {
     week: week.week,
     eyebrow: `${week.stageName} · 逐节教程`,
-    introduction: `把第 ${week.week} 周的提纲拆成可以逐页学习、练习和验证的教材。每一节都从直觉开始，最后落到工程证据。`,
-    lessons: topics.map((topic, index) => topicLesson(week, topic, index)),
+    introduction: `第 ${week.week} 周按知识依赖组织为 ${units.length} 个小节：先建立定义和数据流，再实现、验证和分析。只有静态文字难以解释的过程才配置动画。`,
+    lessons,
   };
 };
 

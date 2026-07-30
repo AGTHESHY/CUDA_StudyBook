@@ -5,6 +5,7 @@ import type {
   TutorialModule,
   TutorialReference,
 } from "../types";
+import type { LearningAnimationSpec } from "../animations/types";
 
 const p = (text: string): ContentBlock => ({ type: "paragraph", text });
 const code = (text: string, language = "cpp"): ContentBlock => ({
@@ -45,6 +46,7 @@ type LessonSpec = {
   };
   references: TutorialReference[];
   verification: string;
+  animation?: LearningAnimationSpec;
 };
 
 const clarificationForLesson = (id: string) => {
@@ -120,6 +122,7 @@ const makeLesson = (spec: LessonSpec): TutorialLesson => ({
   ],
   references: spec.references,
   verification: spec.verification,
+  animation: spec.animation,
 });
 
 const mixedPrecisionReferences: TutorialReference[] = [
@@ -444,6 +447,12 @@ print(gemm_model(4096, 4096, 4096))`,
       references: mixedPrecisionReferences,
       verification:
         "FLOPs 与最少字节数是明确写出口径的性能模型；实际执行路径和流量必须在目标硬件上测量。",
+      animation: {
+        template: "matrix-multiply",
+        title: "跟着 C[2,3] 完成一次点积",
+        caption:
+          "动画只解释上面的矩阵乘法示例：固定输出 C[2,3]，按 k=0…4 读取 A[2,k] 与 B[k,3]，逐项累加得到一个输出元素。",
+      },
     }),
     makeLesson({
       id: "w02-attention-shapes",
@@ -499,6 +508,12 @@ print(out.shape)  # [2, 8, 128, 64]`,
       references: attentionReferences,
       verification:
         "公式、参数和 Mask 注意事项依据 PyTorch scaled_dot_product_attention 当前官方文档。",
+      animation: {
+        template: "attention-flow",
+        title: "Q、K、V 如何生成一个输出位置",
+        caption:
+          "动画对应上方 scaled_dot_product_attention 调用，依次展示 QKᵀ、Mask 与 Softmax，以及权重对 V 的加权求和。",
+      },
     }),
     makeLesson({
       id: "w02-kv-cache",
@@ -727,6 +742,12 @@ dim3 grid((cols + block.x - 1) / block.x,
       },
       references: programmingGuideReferences,
       verification: "线程层级与 SIMT 语义依据 NVIDIA CUDA Programming Guide。",
+      animation: {
+        template: "thread-grid",
+        title: "二维线程坐标落到矩阵下标",
+        caption:
+          "动画对应 matrix_add：先选择一个 (blockIdx, threadIdx)，再代入 row/col 公式，最后高亮它负责的矩阵元素。",
+      },
     }),
     makeLesson({
       id: "w04-shape-stride",
@@ -770,6 +791,12 @@ dim3 grid((cols + block.x - 1) / block.x,
       },
       references: programmingGuideReferences,
       verification: "CUDA 地址计算由显式 Shape/Stride 公式定义；布局支持范围由接口测试验证。",
+      animation: {
+        template: "tensor-layout",
+        title: "坐标 [row,col] 怎样变成线性偏移",
+        caption:
+          "矩阵行列都标为 0～4。沿行与沿列移动时，观察偏移分别增加哪个 Stride；这正是上方地址公式在二维切片上的含义。",
+      },
     }),
     makeLesson({
       id: "w04-boundary-mask",
@@ -1024,6 +1051,12 @@ else                 out[i] = path_b(x[i]);`,
       },
       references: programmingGuideReferences,
       verification: "SIMT 控制流解释依据 CUDA Programming Guide；具体生成指令和性能由编译器输出与 Profiler 确认。",
+      animation: {
+        template: "warp-divergence",
+        title: "lane 奇偶分支为何拆成两条路径",
+        caption:
+          "动画只对应上方 lane 奇偶示例：同一 Warp 的偶数 Lane 与奇数 Lane 分别执行 path_a、path_b，随后再汇合。",
+      },
     }),
     makeLesson({
       id: "w05-block-size",
@@ -1283,6 +1316,12 @@ float strided = input[(long long)i * stride];`,
       },
       references: bestPracticesReferences,
       verification: "事务大小与连续访问示例依据 CUDA Best Practices 对 CC 6.0+ 的说明。",
+      animation: {
+        template: "memory-coalescing",
+        title: "连续下标与跨步下标形成的事务",
+        caption:
+          "动画对应 input[i] 和 input[i*stride] 两行代码，比较同一组 Lane 的地址集中在少量内存段或分散到更多内存段。",
+      },
     }),
     makeLesson({
       id: "w06-stride-misalignment",

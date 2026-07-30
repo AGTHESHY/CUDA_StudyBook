@@ -1,3 +1,5 @@
+import type { LearningAnimationSpec } from "./animations/types";
+
 export type ContentBlock =
   | { type: "paragraph"; text: string }
   | { type: "quote"; text: string }
@@ -78,6 +80,7 @@ export interface TutorialLesson {
   quiz: TutorialQuizQuestion[];
   references: TutorialReference[];
   verification: string;
+  animation?: LearningAnimationSpec;
 }
 
 export interface TutorialModule {

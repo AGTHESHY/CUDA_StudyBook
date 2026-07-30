@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 import ts from "typescript";
+import katex from "katex";
 
 const source = await readFile(
   new URL("../src/utils/markdown.ts", import.meta.url),
@@ -12,7 +13,11 @@ const compiled = ts.transpileModule(source, {
     module: ts.ModuleKind.ESNext,
     target: ts.ScriptTarget.ES2022,
   },
-}).outputText;
+}).outputText.replace(
+  'import katex from "katex";',
+  "const katex = globalThis.__cuda52Katex;",
+);
+globalThis.__cuda52Katex = katex;
 const moduleUrl = `data:text/javascript;base64,${Buffer.from(compiled).toString("base64")}`;
 const { renderMarkdown } = await import(moduleUrl);
 
@@ -46,4 +51,20 @@ test("escapes HTML and rejects executable links", () => {
   assert.doesNotMatch(html, /href="javascript:/);
   assert.match(html, /&lt;script&gt;/);
   assert.match(html, /href="https:\/\/example\.com"/);
+});
+
+test("renders inline and display TeX formulas", () => {
+  const html = renderMarkdown(
+    String.raw`SiLU 是 $\text{SiLU}(x)=x\cdot\sigma(x)$。
+
+$$
+\sigma(x)=\frac{1}{1+e^{-x}}
+$$`,
+  );
+
+  assert.match(html, /class="katex"/);
+  assert.match(html, /class="math-display"/);
+  assert.match(html, /<mtext>SiLU<\/mtext>/);
+  assert.match(html, /<mfrac>/);
+  assert.doesNotMatch(html, /<p>.*\$\\text\{SiLU\}/);
 });

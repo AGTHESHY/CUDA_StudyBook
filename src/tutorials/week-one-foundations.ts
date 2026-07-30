@@ -51,6 +51,16 @@ const lesson = (
   references,
   verification:
     "本页用最小工程例子解释概念；完成练习后，再把结论应用到本周 CPU 基础库。",
+  ...(id === "w01-foundation-memory"
+    ? {
+        animation: {
+          template: "pointer-memory" as const,
+          title: "指针、对象与生命周期不是一回事",
+          caption:
+            "动画对应上面的 maybe_launch 示例：对象拥有状态，指针只保存地址；解引用前要确认地址非空，而且对象仍然存活。",
+        },
+      }
+    : {}),
 });
 
 export const weekOneFoundationLessons: TutorialLesson[] = [
@@ -394,4 +404,3 @@ cmake --build build-asan
     ],
   ),
 ];
-

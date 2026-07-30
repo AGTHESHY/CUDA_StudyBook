@@ -1,3 +1,5 @@
+import katex from "katex";
+
 const escapeHtml = (value: string) =>
   value
     .replace(/&/g, "&amp;")
@@ -6,12 +8,31 @@ const escapeHtml = (value: string) =>
     .replace(/"/g, "&quot;")
     .replace(/'/g, "&#39;");
 
+const renderMath = (value: string, displayMode: boolean) =>
+  katex.renderToString(value, {
+    displayMode,
+    throwOnError: false,
+    strict: "warn",
+    trust: false,
+    output: "htmlAndMathml",
+  });
+
 const renderInline = (value: string) => {
   const codeTokens: string[] = [];
-  let output = escapeHtml(value).replace(/`([^`\n]+)`/g, (_, code: string) => {
-    const index = codeTokens.push(`<code>${code}</code>`) - 1;
+  const mathTokens: string[] = [];
+  let output = value.replace(/`([^`\n]+)`/g, (_, code: string) => {
+    const index = codeTokens.push(`<code>${escapeHtml(code)}</code>`) - 1;
     return `\u0000CODE${index}\u0000`;
   });
+  output = output.replace(
+    /\$(?!\$)([^$\n]+?)\$/g,
+    (_, formula: string) => {
+      const index =
+        mathTokens.push(renderMath(formula.trim(), false)) - 1;
+      return `\u0000MATH${index}\u0000`;
+    },
+  );
+  output = escapeHtml(output);
 
   output = output.replace(
     /\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g,
@@ -23,9 +44,13 @@ const renderInline = (value: string) => {
     .replace(/~~([^~\n]+)~~/g, "<del>$1</del>")
     .replace(/(^|[^*])\*([^*\n]+)\*/g, "$1<em>$2</em>");
 
-  return output.replace(/\u0000CODE(\d+)\u0000/g, (_, index: string) =>
-    codeTokens[Number(index)] ?? "",
-  );
+  return output
+    .replace(/\u0000CODE(\d+)\u0000/g, (_, index: string) =>
+      codeTokens[Number(index)] ?? "",
+    )
+    .replace(/\u0000MATH(\d+)\u0000/g, (_, index: string) =>
+      mathTokens[Number(index)] ?? "",
+    );
 };
 
 export const renderMarkdown = (markdown: string) => {
@@ -36,6 +61,7 @@ export const renderMarkdown = (markdown: string) => {
   let listItems: string[] = [];
   let codeLanguage = "";
   let codeLines: string[] | null = null;
+  let mathLines: string[] | null = null;
 
   const flushParagraph = () => {
     if (!paragraph.length) return;
@@ -81,6 +107,38 @@ export const renderMarkdown = (markdown: string) => {
 
     if (codeLines) {
       codeLines.push(line);
+      continue;
+    }
+
+    if (mathLines) {
+      const closing = line.match(/^(.*?)\$\$\s*$/);
+      if (closing) {
+        mathLines.push(closing[1]);
+        html.push(
+          `<div class="math-display">${renderMath(mathLines.join("\n"), true)}</div>`,
+        );
+        mathLines = null;
+      } else {
+        mathLines.push(line);
+      }
+      continue;
+    }
+
+    const singleLineMath = line.match(/^\s*\$\$(.+?)\$\$\s*$/);
+    if (singleLineMath) {
+      flushParagraph();
+      flushList();
+      html.push(
+        `<div class="math-display">${renderMath(singleLineMath[1], true)}</div>`,
+      );
+      continue;
+    }
+
+    const mathStart = line.match(/^\s*\$\$(.*)$/);
+    if (mathStart) {
+      flushParagraph();
+      flushList();
+      mathLines = [mathStart[1]];
       continue;
     }
 
@@ -130,8 +188,12 @@ export const renderMarkdown = (markdown: string) => {
   }
 
   if (codeLines) flushCode();
+  if (mathLines) {
+    html.push(
+      `<div class="math-display">${renderMath(mathLines.join("\n"), true)}</div>`,
+    );
+  }
   flushParagraph();
   flushList();
   return html.join("");
 };
-

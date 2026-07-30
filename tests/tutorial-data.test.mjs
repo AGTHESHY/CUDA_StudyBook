@@ -104,6 +104,12 @@ test("all 52 weeks receive tutorial modules and final pages", async () => {
   assert.match(generated, /Online Softmax/);
   assert.match(generated, /CUTLASS 把 GEMM 分解/);
   assert.match(generated, /NCCL Collective/);
+  assert.match(generated, /const cohesiveUnits/);
+  assert.match(generated, /Math\.min\(7/);
+  assert.match(generated, /launch error 与异步执行错误/);
+  assert.match(generated, /opcheck\/gradcheck/);
+  assert.match(generated, /预热、同步与重复统计/);
+  assert.match(generated, /Collective 次序、count、dtype/);
   assert.match(tutorialData, /generatedTutorialModules\.map/);
   assert.match(app, /:final-page-id="READING_PAGE_ID"/);
   assert.match(app, /selectTutorialPage\(WEEKLY_PAGE_ID\)/);
@@ -163,6 +169,20 @@ test("logged-in learners resume the last page while guests start at week one", a
   assert.match(app, /if \(!session\.value\) return \{ week: 1, page: ""/);
   assert.match(app, /progress\.value\.currentPage = pageId/);
   assert.match(types, /currentPage: string/);
+});
+
+test("home page states prerequisites and the complete course outcome", async () => {
+  const app = await readFile(
+    new URL("../src/App.vue", import.meta.url),
+    "utf8",
+  );
+
+  assert.match(app, /一条可执行的路径<\/em>/);
+  assert.doesNotMatch(app, /一条可执行的路径。<\/em>/);
+  assert.match(app, /C\+\+17 基础/);
+  assert.match(app, /不要求已有\s*CUDA 开发经验/);
+  assert.match(app, /PyTorch 扩展、Triton、FlashAttention/);
+  assert.match(app, /最终独立实现、验证并集成大模型 CUDA Kernel/);
 });
 
 test("article header describes the current page instead of tutorial boilerplate", async () => {

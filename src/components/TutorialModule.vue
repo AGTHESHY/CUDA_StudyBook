@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { computed, defineAsyncComponent, ref, watch } from "vue";
-import { animationForLesson } from "../animations/types";
 import type { TutorialModule } from "../types";
 import ContentBlocks from "./ContentBlocks.vue";
 
@@ -44,13 +43,7 @@ const currentIndex = computed(() =>
   props.module.lessons.findIndex((item) => item.id === selectedLesson.value.id),
 );
 const animationPlacement = computed(() => {
-  const spec = animationForLesson(
-    selectedLesson.value.title,
-    [
-      selectedLesson.value.summary,
-      ...selectedLesson.value.objectives,
-    ].join("\n"),
-  );
+  const spec = selectedLesson.value.animation;
   if (!spec) return undefined;
 
   const codeSections = selectedLesson.value.sections.flatMap((section) =>
