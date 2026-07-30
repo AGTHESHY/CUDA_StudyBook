@@ -7,6 +7,7 @@ const props = defineProps<{
   module: TutorialModule;
   lessonId: string;
   finalPageId?: string;
+  finalPageLabel?: string;
   quizScores: Record<string, number>;
 }>();
 
@@ -218,7 +219,7 @@ const selectRelative = (offset: number) => {
           >
             {{
               currentIndex === module.lessons.length - 1 && finalPageId
-                ? "推荐书籍 →"
+                ? `${finalPageLabel || "推荐阅读"} →`
                 : "下一节 →"
             }}
           </button>

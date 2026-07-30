@@ -88,11 +88,12 @@ export interface TutorialModule {
 }
 
 export interface StudyProgress {
-  version: 2;
+  version: 3;
   completedWeeks: number[];
   completedLessons: string[];
   quizScores: Record<string, number>;
   currentWeek: number;
+  currentPage: string;
   notes: Record<string, string>;
   checklist: Record<string, string[]>;
   updatedAt: string;

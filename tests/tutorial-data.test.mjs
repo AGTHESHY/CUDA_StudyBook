@@ -59,3 +59,42 @@ test("tutor switches between lesson and weekly scope", async () => {
   assert.match(tutor, /"本周" : "本节"/);
   assert.match(tutor, /props\.scopeId/);
 });
+
+test("all 52 weeks receive tutorial modules and final pages", async () => {
+  const generated = await readFile(
+    new URL("../src/tutorials/generated-weeks.ts", import.meta.url),
+    "utf8",
+  );
+  const tutorialData = await readFile(
+    new URL("../src/tutorial-data.ts", import.meta.url),
+    "utf8",
+  );
+  const app = await readFile(
+    new URL("../src/App.vue", import.meta.url),
+    "utf8",
+  );
+
+  assert.match(generated, /course\.weeks\.map/);
+  assert.match(generated, /buildGeneratedTutorialModule/);
+  assert.match(generated, /Online Softmax/);
+  assert.match(generated, /CUTLASS 把 GEMM 分解/);
+  assert.match(generated, /NCCL Collective/);
+  assert.match(tutorialData, /generatedTutorialModules\.map/);
+  assert.match(app, /:final-page-id="READING_PAGE_ID"/);
+  assert.match(app, /selectTutorialPage\(WEEKLY_PAGE_ID\)/);
+});
+
+test("logged-in learners resume the last page while guests start at week one", async () => {
+  const app = await readFile(
+    new URL("../src/App.vue", import.meta.url),
+    "utf8",
+  );
+  const types = await readFile(
+    new URL("../src/types.ts", import.meta.url),
+    "utf8",
+  );
+
+  assert.match(app, /if \(!session\.value\) return \{ week: 1, page: ""/);
+  assert.match(app, /progress\.value\.currentPage = pageId/);
+  assert.match(types, /currentPage: string/);
+});

@@ -4,6 +4,7 @@ import type {
   TutorialModule,
 } from "./types";
 import { weekOneBookModule } from "./tutorials/week-one-book";
+import { generatedTutorialModules } from "./tutorials/generated-weeks";
 
 const p = (text: string): ContentBlock => ({ type: "paragraph", text });
 const quote = (text: string): ContentBlock => ({ type: "quote", text });
@@ -68,7 +69,7 @@ const lesson = (
   ...value,
 });
 
-export const tutorialModules: TutorialModule[] = [
+const curatedTutorialModules: TutorialModule[] = [
   {
     week: 1,
     eyebrow: "C++ FOUNDATION · 深度教程",
@@ -738,9 +739,17 @@ int main() {
   },
 ];
 
+const curatedByWeek = new Map(
+  curatedTutorialModules.map((module) => [module.week, module]),
+);
+
+export const tutorialModules: TutorialModule[] = generatedTutorialModules.map(
+  (generated) => {
+    if (generated.week === 1) return weekOneBookModule;
+    return curatedByWeek.get(generated.week) ?? generated;
+  },
+);
+
 export const tutorialByWeek = new Map(
-  tutorialModules.map((module) => [
-    module.week,
-    module.week === 1 ? weekOneBookModule : module,
-  ]),
+  tutorialModules.map((module) => [module.week, module]),
 );

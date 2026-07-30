@@ -13,6 +13,7 @@ import BookRecommendations from "./components/BookRecommendations.vue";
 import ContentBlocks from "./components/ContentBlocks.vue";
 import LlmTutor from "./components/LlmTutor.vue";
 import TutorialModule from "./components/TutorialModule.vue";
+import WeekReading from "./components/WeekReading.vue";
 import { tutorialByWeek } from "./tutorial-data";
 import type {
   CourseData,
@@ -34,11 +35,12 @@ const READING_PAGE_ID = "recommended-reading";
 const WEEKLY_PAGE_ID = "weekly-roadmap";
 
 const createProgress = (): StudyProgress => ({
-  version: 2,
+  version: 3,
   completedWeeks: [],
   completedLessons: [],
   quizScores: {},
   currentWeek: 1,
+  currentPage: "",
   notes: {},
   checklist: {},
   updatedAt: new Date().toISOString(),
@@ -56,7 +58,7 @@ const parseStored = <T,>(key: string, fallback: T): T => {
 const normalizeProgress = (value: unknown): StudyProgress => {
   const raw = (value && typeof value === "object" ? value : {}) as Partial<StudyProgress>;
   return {
-    version: 2,
+    version: 3,
     completedWeeks: Array.isArray(raw.completedWeeks)
       ? raw.completedWeeks
           .map(Number)
@@ -83,6 +85,7 @@ const normalizeProgress = (value: unknown): StudyProgress => {
       Number(raw.currentWeek) <= 52
         ? Number(raw.currentWeek)
         : 1,
+    currentPage: typeof raw.currentPage === "string" ? raw.currentPage : "",
     notes:
       raw.notes && typeof raw.notes === "object"
         ? (raw.notes as Record<string, string>)
@@ -127,12 +130,12 @@ const selectedTutorial = computed(() =>
 );
 const isReadingPage = computed(
   () =>
-    selectedWeekNumber.value === 1 &&
+    Boolean(selectedTutorial.value) &&
     selectedTutorialPageId.value === READING_PAGE_ID,
 );
 const isWeeklyRoadmapPage = computed(
   () =>
-    selectedWeekNumber.value === 1 &&
+    Boolean(selectedTutorial.value) &&
     selectedTutorialPageId.value === WEEKLY_PAGE_ID,
 );
 const selectedTutorialLesson = computed(() =>
@@ -161,16 +164,26 @@ const tutorConfig = computed(() => {
     };
   }
   if (isReadingPage.value) {
+    const readingSections = selectedWeek.value.sections.filter((section) =>
+      /阅读|资料/.test(section.title),
+    );
     return {
       scope: "lesson" as const,
       scopeId: READING_PAGE_ID,
       scopeTitle: "推荐书籍与阅读方法",
-      context: [
-        "本节是第 1 周的推荐阅读页。",
-        "主读《Effective Modern C++》Item 1—8、17—23、37—39。",
-        "补充阅读《深入理解计算机系统》第 3、5、6 章与第 7 章前半。",
-        "阅读原则：先完成教程和练习，再按薄弱点阅读对应章节，并把新增边界条件记入学习笔记。",
-      ].join("\n"),
+      context:
+        selectedWeekNumber.value === 1
+          ? [
+              "本节是第 1 周的推荐阅读页。",
+              "主读《Effective Modern C++》Item 1—8、17—23、37—39。",
+              "补充阅读《深入理解计算机系统》第 3、5、6 章与第 7 章前半。",
+              "阅读原则：先完成教程和练习，再按薄弱点阅读对应章节，并把新增边界条件记入学习笔记。",
+            ].join("\n")
+          : [
+              `本节是第 ${selectedWeekNumber.value} 周的推荐阅读页。`,
+              stringifySections(readingSections),
+              "阅读原则：带着具体问题查官方资料，把答案转成代码注释、测试或性能实验。",
+            ].join("\n\n"),
     };
   }
   const lesson = selectedTutorialLesson.value;
@@ -198,12 +211,15 @@ const completedCount = computed(() => new Set(progress.value.completedWeeks).siz
 const percentComplete = computed(() =>
   Math.round((completedCount.value / course.weeks.length) * 100),
 );
-const nextWeek = computed(
-  () =>
-    course.weeks.find(
-      (item) => !progress.value.completedWeeks.includes(item.week),
-    ) ?? course.weeks.at(-1)!,
-);
+const homeStart = computed(() => {
+  if (!session.value) return { week: 1, page: "", label: "从第 1 周开始" };
+  const week = Math.min(52, Math.max(1, progress.value.currentWeek || 1));
+  return {
+    week,
+    page: progress.value.currentPage || "",
+    label: `继续第 ${week} 周`,
+  };
+});
 const filteredWeeks = computed(() => {
   const needle = query.value.trim().toLowerCase();
   if (!needle) return [];
@@ -404,7 +420,7 @@ const openWeek = (week: number, requestedPageId = "") => {
   const tutorial = tutorialByWeek.get(resolved);
   const pageExists =
     tutorial?.lessons.some((item) => item.id === requestedPageId) ||
-    (resolved === 1 &&
+    (Boolean(tutorial) &&
       [READING_PAGE_ID, WEEKLY_PAGE_ID].includes(requestedPageId));
   const pageId = pageExists
     ? requestedPageId
@@ -413,6 +429,7 @@ const openWeek = (week: number, requestedPageId = "") => {
   selectedTutorialPageId.value = pageId;
   currentView.value = "week";
   progress.value.currentWeek = resolved;
+  progress.value.currentPage = pageId;
   sidebarOpen.value = false;
   query.value = "";
   window.history.replaceState(
@@ -425,6 +442,7 @@ const openWeek = (week: number, requestedPageId = "") => {
 
 const selectTutorialPage = (pageId: string) => {
   selectedTutorialPageId.value = pageId;
+  progress.value.currentPage = pageId;
   sidebarOpen.value = false;
   window.history.replaceState(
     null,
@@ -626,8 +644,11 @@ onBeforeUnmount(() => {
             最终独立实现大模型 CUDA Kernel，并把它接进 PyTorch 与多 GPU 训练系统。
           </p>
           <div class="hero-actions">
-            <button class="primary-button" @click="openWeek(nextWeek.week)">
-              {{ completedCount ? `继续第 ${nextWeek.week} 周` : "从第 1 周开始" }}
+            <button
+              class="primary-button"
+              @click="openWeek(homeStart.week, homeStart.page)"
+            >
+              {{ homeStart.label }}
               <span>→</span>
             </button>
             <button class="secondary-button" @click="openWeek(1)">浏览完整手册</button>
@@ -831,16 +852,14 @@ onBeforeUnmount(() => {
                   <span>{{ lesson.title }}</span>
                 </button>
                 <button
-                  v-if="week.week === 1"
                   class="reading-link"
                   :class="{ active: isReadingPage }"
                   @click="selectTutorialPage(READING_PAGE_ID)"
                 >
                   <span>R</span>
-                  <span>推荐书籍</span>
+                  <span>{{ week.week === 1 ? "推荐书籍" : "推荐阅读" }}</span>
                 </button>
                 <button
-                  v-if="week.week === 1"
                   class="reading-link"
                   :class="{ active: isWeeklyRoadmapPage }"
                   @click="selectTutorialPage(WEEKLY_PAGE_ID)"
@@ -880,7 +899,8 @@ onBeforeUnmount(() => {
         </header>
 
         <template v-if="selectedTutorial && isReadingPage">
-          <BookRecommendations />
+          <BookRecommendations v-if="selectedWeekNumber === 1" />
+          <WeekReading v-else :week="selectedWeek" />
           <div class="lesson-footer">
             <div>
               <button
@@ -903,7 +923,8 @@ onBeforeUnmount(() => {
           v-else-if="selectedTutorial && !isWeeklyRoadmapPage"
           :module="selectedTutorial"
           :lesson-id="selectedTutorialPageId"
-          :final-page-id="selectedWeekNumber === 1 ? READING_PAGE_ID : ''"
+          :final-page-id="READING_PAGE_ID"
+          :final-page-label="selectedWeekNumber === 1 ? '推荐书籍' : '推荐阅读'"
           :quiz-scores="progress.quizScores"
           @select-lesson="selectTutorialPage"
           @save-quiz="saveQuizScore"
