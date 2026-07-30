@@ -216,7 +216,7 @@ const generatedObject = (spec: GeneratedSceneObject) => {
     for (let row = 0; row < rows; row += 1) {
       const label = textSprite(String(row), "#315f4a", spacingY * 0.5);
       label.position.set(
-        (-(columns - 1) / 2 - 0.75) * spacingX,
+        (-(columns - 1) / 2 - 1.15) * spacingX,
         ((rows - 1) / 2 - row) * spacingY,
         0.25,
       );
