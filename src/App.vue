@@ -30,6 +30,7 @@ const API_BASE = (import.meta.env.VITE_SCRIPT_STORE_URL || "/store-api").replace
 const SESSION_KEY = "cuda52:session:v1";
 const ANON_PROGRESS_KEY = "cuda52:anonymous-progress:v1";
 const READING_PAGE_ID = "recommended-reading";
+const WEEKLY_PAGE_ID = "weekly-roadmap";
 
 const createProgress = (): StudyProgress => ({
   version: 2,
@@ -127,6 +128,11 @@ const isReadingPage = computed(
   () =>
     selectedWeekNumber.value === 1 &&
     selectedTutorialPageId.value === READING_PAGE_ID,
+);
+const isWeeklyRoadmapPage = computed(
+  () =>
+    selectedWeekNumber.value === 1 &&
+    selectedTutorialPageId.value === WEEKLY_PAGE_ID,
 );
 const selectedTutorialLesson = computed(() =>
   selectedTutorial.value?.lessons.find(
@@ -349,7 +355,8 @@ const openWeek = (week: number, requestedPageId = "") => {
   const tutorial = tutorialByWeek.get(resolved);
   const pageExists =
     tutorial?.lessons.some((item) => item.id === requestedPageId) ||
-    (resolved === 1 && requestedPageId === READING_PAGE_ID);
+    (resolved === 1 &&
+      [READING_PAGE_ID, WEEKLY_PAGE_ID].includes(requestedPageId));
   const pageId = pageExists
     ? requestedPageId
     : (tutorial?.lessons[0]?.id ?? "");
@@ -783,6 +790,15 @@ onBeforeUnmount(() => {
                   <span>R</span>
                   <span>推荐书籍</span>
                 </button>
+                <button
+                  v-if="week.week === 1"
+                  class="reading-link"
+                  :class="{ active: isWeeklyRoadmapPage }"
+                  @click="selectTutorialPage(WEEKLY_PAGE_ID)"
+                >
+                  <span>W</span>
+                  <span>本周课程表与验收</span>
+                </button>
               </div>
             </template>
           </section>
@@ -814,10 +830,28 @@ onBeforeUnmount(() => {
           </div>
         </header>
 
-        <BookRecommendations v-if="selectedTutorial && isReadingPage" />
+        <template v-if="selectedTutorial && isReadingPage">
+          <BookRecommendations />
+          <div class="lesson-footer">
+            <div>
+              <button
+                @click="
+                  selectTutorialPage(
+                    selectedTutorial.lessons[selectedTutorial.lessons.length - 1].id,
+                  )
+                "
+              >
+                ← 上一节
+              </button>
+              <button @click="selectTutorialPage(WEEKLY_PAGE_ID)">
+                本周课程表与验收 →
+              </button>
+            </div>
+          </div>
+        </template>
 
         <TutorialModule
-          v-else-if="selectedTutorial"
+          v-else-if="selectedTutorial && !isWeeklyRoadmapPage"
           :module="selectedTutorial"
           :lesson-id="selectedTutorialPageId"
           :final-page-id="selectedWeekNumber === 1 ? READING_PAGE_ID : ''"
@@ -826,25 +860,30 @@ onBeforeUnmount(() => {
           @save-quiz="saveQuizScore"
         />
 
-        <div class="weekly-brief-heading">
-          <span>WEEKLY ROADMAP</span>
-          <h2>本周课程表与验收</h2>
-          <p>深度教程解决“怎么理解”，课程表负责“这一周怎样练到工程可用”。</p>
-        </div>
+        <template v-if="!selectedTutorial || isWeeklyRoadmapPage">
+          <div id="weekly-roadmap" class="weekly-brief-heading">
+            <span>WEEKLY ROADMAP</span>
+            <h2>本周课程表与验收</h2>
+            <p>深度教程解决“怎么理解”，课程表负责“这一周怎样练到工程可用”。</p>
+          </div>
 
-        <section
-          v-for="section in selectedWeek.sections"
-          :id="section.id"
-          :key="section.id"
-          class="article-section"
-        >
-          <h2>{{ section.title }}</h2>
-          <ContentBlocks :blocks="section.blocks" />
-        </section>
+          <section
+            v-for="section in selectedWeek.sections"
+            :id="section.id"
+            :key="section.id"
+            class="article-section"
+          >
+            <h2>{{ section.title }}</h2>
+            <ContentBlocks :blocks="section.blocks" />
+          </section>
+        </template>
 
         <LlmTutor :week="selectedWeek" />
 
-        <footer class="week-navigation">
+        <footer
+          v-if="!selectedTutorial || isWeeklyRoadmapPage"
+          class="week-navigation"
+        >
           <button
             :disabled="selectedWeekNumber === 1"
             @click="openWeek(selectedWeekNumber - 1)"
@@ -937,13 +976,27 @@ onBeforeUnmount(() => {
           <div class="rail-title"><span>本页目录</span></div>
           <a
             v-if="selectedTutorial"
-            :href="isReadingPage ? '#recommended-reading' : '#deep-tutorial'"
+            :href="
+              isReadingPage
+                ? '#recommended-reading'
+                : isWeeklyRoadmapPage
+                  ? '#weekly-roadmap'
+                  : '#deep-tutorial'
+            "
             @click.stop
           >
-            {{ isReadingPage ? "推荐书籍" : "当前 Item 教程" }}
+            {{
+              isReadingPage
+                ? "推荐书籍"
+                : isWeeklyRoadmapPage
+                  ? "本周课程表与验收"
+                  : "当前小节教程"
+            }}
           </a>
           <a
-            v-for="section in selectedWeek.sections"
+            v-for="section in isWeeklyRoadmapPage || !selectedTutorial
+              ? selectedWeek.sections
+              : selectedTutorialLesson?.sections ?? []"
             :key="section.id"
             :href="`#${section.id}`"
             @click.stop

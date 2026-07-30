@@ -6,16 +6,16 @@ const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const source = await readFile(resolve(root, "content/course.md"), "utf8");
 
 const stageColors = [
-  "#38bdf8",
-  "#22d3ee",
-  "#2dd4bf",
-  "#4ade80",
-  "#a3e635",
-  "#facc15",
-  "#fb923c",
-  "#f472b6",
-  "#a78bfa",
-  "#818cf8",
+  "#34875f",
+  "#3f8f75",
+  "#4a9784",
+  "#5c9d72",
+  "#759c63",
+  "#9a9458",
+  "#a47f58",
+  "#9b6f78",
+  "#7c7392",
+  "#667e98",
 ];
 
 const cleanInline = (value) =>

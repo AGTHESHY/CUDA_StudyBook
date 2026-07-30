@@ -37,3 +37,14 @@ test("week one includes six engineering foundation lessons", async () => {
   );
   assert.doesNotMatch(foundations, /科班/);
 });
+
+test("week one roadmap is a final standalone page", async () => {
+  const app = await readFile(
+    new URL("../src/App.vue", import.meta.url),
+    "utf8",
+  );
+
+  assert.match(app, /const WEEKLY_PAGE_ID = "weekly-roadmap"/);
+  assert.match(app, /!selectedTutorial \|\| isWeeklyRoadmapPage/);
+  assert.match(app, /本周课程表与验收 →/);
+});
