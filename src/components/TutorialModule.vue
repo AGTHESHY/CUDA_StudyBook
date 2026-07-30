@@ -5,6 +5,8 @@ import ContentBlocks from "./ContentBlocks.vue";
 
 const props = defineProps<{
   module: TutorialModule;
+  lessonId: string;
+  finalPageId?: string;
   completedLessons: string[];
   quizScores: Record<string, number>;
 }>();
@@ -12,39 +14,25 @@ const props = defineProps<{
 const emit = defineEmits<{
   toggleLesson: [lessonId: string];
   saveQuiz: [lessonId: string, score: number];
+  selectLesson: [lessonId: string];
 }>();
 
-const selectedLessonId = ref(props.module.lessons[0]?.id ?? "");
 const revealedHints = ref<Record<string, boolean>>({});
 const revealedAnswers = ref<Record<string, boolean>>({});
 const quizAnswers = ref<Record<string, number>>({});
 const quizSubmitted = ref(false);
 
 watch(
-  () => props.module.week,
+  () => props.lessonId,
   () => {
-    selectedLessonId.value = props.module.lessons[0]?.id ?? "";
-    revealedHints.value = {};
-    revealedAnswers.value = {};
     quizAnswers.value = {};
     quizSubmitted.value = false;
   },
 );
 
-watch(selectedLessonId, () => {
-  quizAnswers.value = {};
-  quizSubmitted.value = false;
-  window.setTimeout(() => {
-    document.querySelector("#deep-tutorial")?.scrollIntoView({
-      behavior: "smooth",
-      block: "start",
-    });
-  });
-});
-
 const selectedLesson = computed(
   () =>
-    props.module.lessons.find((item) => item.id === selectedLessonId.value) ??
+    props.module.lessons.find((item) => item.id === props.lessonId) ??
     props.module.lessons[0],
 );
 
@@ -83,7 +71,8 @@ const submitQuiz = () => {
 
 const selectRelative = (offset: number) => {
   const next = props.module.lessons[currentIndex.value + offset];
-  if (next) selectedLessonId.value = next.id;
+  if (next) emit("selectLesson", next.id);
+  else if (offset > 0 && props.finalPageId) emit("selectLesson", props.finalPageId);
 };
 </script>
 
@@ -107,28 +96,6 @@ const selectRelative = (offset: number) => {
         </div>
       </div>
     </header>
-
-    <nav class="lesson-tabs" aria-label="深度教程小节">
-      <button
-        v-for="(item, index) in module.lessons"
-        :key="item.id"
-        :class="{
-          active: item.id === selectedLesson.id,
-          complete: completedLessons.includes(item.id),
-        }"
-        @click="selectedLessonId = item.id"
-      >
-        <span>{{
-          completedLessons.includes(item.id)
-            ? "✓"
-            : String(index + 1).padStart(2, "0")
-        }}</span>
-        <div>
-          <strong>{{ item.title }}</strong>
-          <small>{{ item.duration }} · {{ item.level }}</small>
-        </div>
-      </button>
-    </nav>
 
     <article class="lesson-document">
       <div class="lesson-meta">
@@ -264,10 +231,6 @@ const selectRelative = (offset: number) => {
           <strong>{{ reference.label }}</strong>
           <span>↗</span>
         </a>
-        <aside v-if="selectedLesson.readingNote" class="reading-note">
-          <strong>推荐阅读</strong>
-          <p>{{ selectedLesson.readingNote }}</p>
-        </aside>
       </section>
 
       <div class="lesson-footer">
@@ -286,10 +249,16 @@ const selectRelative = (offset: number) => {
             ← 上一节
           </button>
           <button
-            :disabled="currentIndex === module.lessons.length - 1"
+            :disabled="
+              currentIndex === module.lessons.length - 1 && !finalPageId
+            "
             @click="selectRelative(1)"
           >
-            下一节 →
+            {{
+              currentIndex === module.lessons.length - 1 && finalPageId
+                ? "推荐书籍 →"
+                : "下一节 →"
+            }}
           </button>
         </div>
       </div>

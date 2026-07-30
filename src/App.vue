@@ -9,6 +9,7 @@ import {
 } from "vue";
 import courseJson from "./course-data.json";
 import AuthModal from "./components/AuthModal.vue";
+import BookRecommendations from "./components/BookRecommendations.vue";
 import ContentBlocks from "./components/ContentBlocks.vue";
 import LlmTutor from "./components/LlmTutor.vue";
 import TutorialModule from "./components/TutorialModule.vue";
@@ -28,6 +29,7 @@ const API_BASE = (import.meta.env.VITE_SCRIPT_STORE_URL || "/store-api").replace
 );
 const SESSION_KEY = "cuda52:session:v1";
 const ANON_PROGRESS_KEY = "cuda52:anonymous-progress:v1";
+const READING_PAGE_ID = "recommended-reading";
 
 const createProgress = (): StudyProgress => ({
   version: 2,
@@ -96,6 +98,7 @@ const progress = ref<StudyProgress>(createProgress());
 const hydrated = ref(false);
 const currentView = ref<"home" | "week">("home");
 const selectedWeekNumber = ref(1);
+const selectedTutorialPageId = ref("");
 const query = ref("");
 const searchFocused = ref(false);
 const sidebarOpen = ref(false);
@@ -118,6 +121,11 @@ const selectedStage = computed(() =>
 );
 const selectedTutorial = computed(() =>
   tutorialByWeek.get(selectedWeekNumber.value),
+);
+const isReadingPage = computed(
+  () =>
+    selectedWeekNumber.value === 1 &&
+    selectedTutorialPageId.value === READING_PAGE_ID,
 );
 const completedCount = computed(() => new Set(progress.value.completedWeeks).size);
 const percentComplete = computed(() =>
@@ -324,14 +332,37 @@ const openAuth = (mode: "login" | "register" = "login") => {
   authOpen.value = true;
 };
 
-const openWeek = (week: number) => {
+const openWeek = (week: number, requestedPageId = "") => {
   const resolved = Math.min(52, Math.max(1, week));
+  const tutorial = tutorialByWeek.get(resolved);
+  const pageExists =
+    tutorial?.lessons.some((item) => item.id === requestedPageId) ||
+    (resolved === 1 && requestedPageId === READING_PAGE_ID);
+  const pageId = pageExists
+    ? requestedPageId
+    : (tutorial?.lessons[0]?.id ?? "");
   selectedWeekNumber.value = resolved;
+  selectedTutorialPageId.value = pageId;
   currentView.value = "week";
   progress.value.currentWeek = resolved;
   sidebarOpen.value = false;
   query.value = "";
-  window.history.replaceState(null, "", `#week-${resolved}`);
+  window.history.replaceState(
+    null,
+    "",
+    pageId ? `#week-${resolved}/${pageId}` : `#week-${resolved}`,
+  );
+  window.scrollTo({ top: 0, behavior: "smooth" });
+};
+
+const selectTutorialPage = (pageId: string) => {
+  selectedTutorialPageId.value = pageId;
+  sidebarOpen.value = false;
+  window.history.replaceState(
+    null,
+    "",
+    `#week-${selectedWeekNumber.value}/${pageId}`,
+  );
   window.scrollTo({ top: 0, behavior: "smooth" });
 };
 
@@ -393,8 +424,8 @@ const closeSearchSoon = () => {
 };
 
 const onHashChange = () => {
-  const match = window.location.hash.match(/^#week-(\d+)$/);
-  if (match) openWeek(Number(match[1]));
+  const match = window.location.hash.match(/^#week-(\d+)(?:\/([^/]+))?$/);
+  if (match) openWeek(Number(match[1]), match[2] ?? "");
 };
 
 const onKeydown = (event: KeyboardEvent) => {
@@ -659,20 +690,56 @@ onBeforeUnmount(() => {
               <i :style="{ background: stage.color }" />
               <span>{{ stage.index }} · {{ stage.shortTitle }}</span>
             </div>
-            <button
+            <template
               v-for="week in course.weeks.filter((item) => item.stageId === stage.id)"
               :key="week.id"
-              :class="{
-                active: week.week === selectedWeekNumber,
-                complete: progress.completedWeeks.includes(week.week),
-              }"
-              @click="openWeek(week.week)"
             >
-              <span class="week-status">
-                {{ progress.completedWeeks.includes(week.week) ? "✓" : String(week.week).padStart(2, "0") }}
-              </span>
-              <span>{{ week.title }}</span>
-            </button>
+              <button
+                :class="{
+                  active: week.week === selectedWeekNumber,
+                  complete: progress.completedWeeks.includes(week.week),
+                }"
+                @click="openWeek(week.week)"
+              >
+                <span class="week-status">
+                  {{ progress.completedWeeks.includes(week.week) ? "✓" : String(week.week).padStart(2, "0") }}
+                </span>
+                <span>{{ week.title }}</span>
+              </button>
+              <div
+                v-if="
+                  week.week === selectedWeekNumber &&
+                  tutorialByWeek.get(week.week)
+                "
+                class="sidebar-lessons"
+              >
+                <button
+                  v-for="(lesson, lessonIndex) in tutorialByWeek.get(week.week)?.lessons"
+                  :key="lesson.id"
+                  :class="{
+                    active: selectedTutorialPageId === lesson.id,
+                    complete: progress.completedLessons.includes(lesson.id),
+                  }"
+                  @click="selectTutorialPage(lesson.id)"
+                >
+                  <span>{{
+                    progress.completedLessons.includes(lesson.id)
+                      ? "✓"
+                      : String(lessonIndex + 1).padStart(2, "0")
+                  }}</span>
+                  <span>{{ lesson.title }}</span>
+                </button>
+                <button
+                  v-if="week.week === 1"
+                  class="reading-link"
+                  :class="{ active: isReadingPage }"
+                  @click="selectTutorialPage(READING_PAGE_ID)"
+                >
+                  <span>R</span>
+                  <span>推荐书籍</span>
+                </button>
+              </div>
+            </template>
           </section>
         </nav>
       </aside>
@@ -702,11 +769,16 @@ onBeforeUnmount(() => {
           </div>
         </header>
 
+        <BookRecommendations v-if="selectedTutorial && isReadingPage" />
+
         <TutorialModule
-          v-if="selectedTutorial"
+          v-else-if="selectedTutorial"
           :module="selectedTutorial"
+          :lesson-id="selectedTutorialPageId"
+          :final-page-id="selectedWeekNumber === 1 ? READING_PAGE_ID : ''"
           :completed-lessons="progress.completedLessons"
           :quiz-scores="progress.quizScores"
+          @select-lesson="selectTutorialPage"
           @toggle-lesson="toggleLessonComplete"
           @save-quiz="saveQuizScore"
         />
@@ -782,8 +854,12 @@ onBeforeUnmount(() => {
 
         <div class="rail-card toc-card">
           <div class="rail-title"><span>本页目录</span></div>
-          <a v-if="selectedTutorial" href="#deep-tutorial" @click.stop>
-            深度教程
+          <a
+            v-if="selectedTutorial"
+            :href="isReadingPage ? '#recommended-reading' : '#deep-tutorial'"
+            @click.stop
+          >
+            {{ isReadingPage ? "推荐书籍" : "当前 Item 教程" }}
           </a>
           <a
             v-for="section in selectedWeek.sections"

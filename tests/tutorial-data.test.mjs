@@ -16,7 +16,12 @@ test("week one explains every assigned Effective Modern C++ item", () => {
   ]);
 });
 
-test("every book item ends with a reading note", () => {
-  assert.match(source, /readingNote:/);
-  assert.match(source, /讲完本页再读《Effective Modern C\+\+》Item/);
+test("book recommendations are consolidated outside item lessons", async () => {
+  assert.doesNotMatch(source, /readingNote:/);
+  const recommendations = await readFile(
+    new URL("../src/components/BookRecommendations.vue", import.meta.url),
+    "utf8",
+  );
+  assert.match(recommendations, /推荐书籍/);
+  assert.match(recommendations, /Effective Modern C\+\+/);
 });

@@ -134,7 +134,6 @@ const itemLesson = (item: BookItem): TutorialLesson => {
     references: item.references,
     verification:
       "页面内容按现代 C++ 规则重新组织，并配合官方文档校验；示例强调可读性和工程语义，不照搬书中原文。",
-    readingNote: `讲完本页再读《Effective Modern C++》Item ${item.item}。建议先独立完成练习，再带着自己的答案对照原书。`,
   };
 };
 
@@ -628,4 +627,3 @@ export const weekOneBookModule: TutorialModule = {
     "先在页面里把 18 个知识点讲懂、练会，再把书当作深入阅读，而不是一上来面对一串 Item 编号。",
   lessons: items.map(itemLesson),
 };
-
