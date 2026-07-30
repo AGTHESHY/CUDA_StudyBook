@@ -1398,8 +1398,34 @@ textarea:focus-visible {
   border-color: #1c4d5a;
 }
 
-.chat-message.assistant > .markdown-body {
+.chat-message.assistant > .markdown-body,
+.assistant-response {
   white-space: normal;
+}
+
+.assistant-response > .markdown-body {
+  padding: 0;
+  border: 0;
+  background: transparent;
+}
+
+.animation-consent {
+  margin-top: 10px;
+  padding: 8px 11px;
+  border: 1px solid #3d91a5;
+  background: #123448;
+  color: #d8f4f8;
+  font-size: 9px;
+}
+
+.animation-consent:hover:not(:disabled) {
+  border-color: #73d2e2;
+  background: #174158;
+}
+
+.animation-consent:disabled {
+  cursor: not-allowed;
+  opacity: 0.45;
 }
 
 .markdown-body > :first-child {
@@ -2094,6 +2120,138 @@ textarea:focus-visible {
   content: "✓";
   color: var(--cyan);
   font-family: var(--mono);
+}
+
+.learning-animation {
+  overflow: hidden;
+  margin-top: 28px;
+  background: #f2f6f3;
+  border: 1px solid #cfd9d2;
+  border-top: 3px solid #2f8a60;
+}
+
+.learning-animation > header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  padding: 17px 20px 14px;
+  border-bottom: 1px solid #d7e0da;
+}
+
+.learning-animation > header span {
+  color: #2f7956;
+  font-family: var(--mono);
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: 0.11em;
+}
+
+.learning-animation > header h3 {
+  margin: 5px 0 0;
+  color: #1f2328;
+  font-size: 16px;
+}
+
+.learning-animation > header button,
+.learning-animation-controls button {
+  min-width: 38px;
+  min-height: 30px;
+  border: 1px solid #b9c9bf;
+  background: #fff;
+  color: #285d45;
+  font-size: 9px;
+}
+
+.learning-animation > header button:hover,
+.learning-animation-controls button:hover {
+  border-color: #4d9b72;
+}
+
+.learning-animation-canvas {
+  width: 100%;
+  min-height: 250px;
+  background:
+    linear-gradient(rgba(46, 113, 79, 0.045) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(46, 113, 79, 0.045) 1px, transparent 1px),
+    #fbfcfb;
+  background-size: 28px 28px;
+  line-height: 0;
+}
+
+.learning-animation-canvas canvas {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.learning-animation-controls {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  background: #e7eee9;
+  border-top: 1px solid #d4dfd7;
+}
+
+.learning-animation-controls strong {
+  color: #244d39;
+  font-family: var(--mono);
+  font-size: 9px;
+  text-align: center;
+}
+
+.learning-animation > p {
+  margin: 0;
+  padding: 13px 18px 16px;
+  color: #24292f;
+  font-size: 10px;
+  line-height: 1.7;
+}
+
+.learning-animation.compact {
+  margin-top: 14px;
+  background: #0c1d2b;
+  border-color: #28516a;
+  border-top-color: #55bcd0;
+}
+
+.learning-animation.compact > header {
+  border-bottom-color: #25465a;
+}
+
+.learning-animation.compact > header span {
+  color: #61bfd0;
+}
+
+.learning-animation.compact > header h3,
+.learning-animation.compact > p {
+  color: #dcebf2;
+}
+
+.learning-animation.compact > header button,
+.learning-animation.compact .learning-animation-controls button {
+  border-color: #315b72;
+  background: #102c3d;
+  color: #cfeaf0;
+}
+
+.learning-animation.compact .learning-animation-canvas {
+  background:
+    linear-gradient(rgba(85, 188, 208, 0.055) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(85, 188, 208, 0.055) 1px, transparent 1px),
+    #081621;
+  background-size: 24px 24px;
+}
+
+.learning-animation.compact .learning-animation-controls {
+  background: #102638;
+  border-top-color: #27475d;
+}
+
+.learning-animation.compact .learning-animation-controls strong {
+  color: #b9dbe4;
 }
 
 .lesson-section {

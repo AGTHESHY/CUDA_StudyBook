@@ -1,7 +1,12 @@
 <script setup lang="ts">
-import { computed, ref, watch } from "vue";
+import { computed, defineAsyncComponent, ref, watch } from "vue";
+import { animationForLesson } from "../animations/types";
 import type { TutorialModule } from "../types";
 import ContentBlocks from "./ContentBlocks.vue";
+
+const LearningAnimation = defineAsyncComponent(
+  () => import("./LearningAnimation.vue"),
+);
 
 const props = defineProps<{
   module: TutorialModule;
@@ -37,6 +42,15 @@ const selectedLesson = computed(
 
 const currentIndex = computed(() =>
   props.module.lessons.findIndex((item) => item.id === selectedLesson.value.id),
+);
+const lessonAnimation = computed(() =>
+  animationForLesson(
+    selectedLesson.value.title,
+    [
+      selectedLesson.value.summary,
+      ...selectedLesson.value.objectives,
+    ].join("\n"),
+  ),
 );
 
 const quizScore = computed(() => {
@@ -85,6 +99,11 @@ const selectRelative = (offset: number) => {
           </li>
         </ul>
       </div>
+
+      <LearningAnimation
+        v-if="lessonAnimation"
+        :spec="lessonAnimation"
+      />
 
       <section
         v-for="section in selectedLesson.sections"

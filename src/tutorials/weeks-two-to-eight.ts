@@ -47,6 +47,28 @@ type LessonSpec = {
   verification: string;
 };
 
+const clarificationForLesson = (id: string) => {
+  const notes: Record<string, string> = {
+    "w02-fp16-bf16":
+      "可以把指数位理解成“尺子能量多远”，把尾数位理解成“刻度有多细”。BF16 的尺子更远但刻度更粗，FP16 的刻度更细但更容易够不到很大或很小的数。",
+    "w02-stable-softmax":
+      "减去最大值不会改变 Softmax 的结果，因为分子和分母同时乘上了同一个缩放因子；它只是把最大的指数项移到 1，避免先算出无穷大。",
+    "w02-attention-shapes":
+      "把每个注意力头看成一张独立的小表：Q 决定“拿什么去问”，K 决定“和谁匹配”，V 决定“匹配后取回什么内容”。",
+    "w04-shape-stride":
+      "Shape 回答“每一维有多少元素”，Stride 回答“这一维前进一步，底层地址要跨过多少个元素”。二者共同决定逻辑坐标如何落到内存。",
+    "w05-warp-simt":
+      "一个 Warp 像一组同时听同一条指令的执行单元：数据可以不同，但若走向不同分支，硬件需要分批完成各条路径。",
+    "w06-coalescing":
+      "线程请求的是若干地址，硬件真正搬运的是对齐的内存块。请求越集中在少数内存块里，有效数据占比通常越高。",
+    "w06-bank-conflict":
+      "共享内存可以想成多列并行服务窗口；同一 Warp 的线程若挤到同一窗口访问不同地址，请求就需要排队。",
+    "w08-events":
+      "Stream 是操作队列，Event 是插入队列里的里程碑。另一个 Stream 等待该里程碑，就能建立依赖而不必让整个设备停下来。",
+  };
+  return notes[id];
+};
+
 const makeLesson = (spec: LessonSpec): TutorialLesson => ({
   id: spec.id,
   title: spec.title,
@@ -57,13 +79,26 @@ const makeLesson = (spec: LessonSpec): TutorialLesson => ({
   sections: [
     {
       id: `${spec.id}-explain`,
-      title: "先把概念说清楚",
+      title: "概念",
       blocks: [
         p(spec.explanation),
-        ...(spec.example ? [code(spec.example, spec.language)] : []),
-        ...(spec.exampleNote ? [p(spec.exampleNote)] : []),
+        ...(clarificationForLesson(spec.id)
+          ? [quote(`理解提示：${clarificationForLesson(spec.id)}`)]
+          : []),
       ],
     },
+    ...(spec.example
+      ? [
+          {
+            id: `${spec.id}-example`,
+            title: "示例",
+            blocks: [
+              code(spec.example, spec.language),
+              ...(spec.exampleNote ? [p(spec.exampleNote)] : []),
+            ],
+          } satisfies CourseSection,
+        ]
+      : []),
     ...(spec.extraSections ?? []),
     {
       id: `${spec.id}-checks`,
@@ -2060,4 +2095,3 @@ export const curatedWeeksTwoToEight: TutorialModule[] = [
   weekSeven,
   weekEight,
 ];
-

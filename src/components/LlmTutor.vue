@@ -1,11 +1,21 @@
 <script setup lang="ts">
-import { computed, nextTick, ref, watch } from "vue";
+import { computed, defineAsyncComponent, nextTick, ref, watch } from "vue";
+import {
+  parseLearningAnimation,
+  type LearningAnimationSpec,
+} from "../animations/types";
 import type { CourseWeek } from "../types";
 import { renderMarkdown } from "../utils/markdown";
+
+const LearningAnimation = defineAsyncComponent(
+  () => import("./LearningAnimation.vue"),
+);
 
 type ChatMessage = {
   role: "user" | "assistant";
   content: string;
+  kind?: "answer" | "animation_offer" | "animation";
+  animation?: LearningAnimationSpec;
 };
 
 const props = defineProps<{
@@ -23,14 +33,14 @@ const error = ref("");
 const chatEnd = ref<HTMLElement | null>(null);
 
 const storageKey = computed(
-  () => `cuda52:tutor:week-${props.week.week}:${props.scopeId}:v2`,
+  () => `cuda52:tutor:week-${props.week.week}:${props.scopeId}:v3`,
 );
 const isWeekScope = computed(() => props.scope === "week");
 const scopeLabel = computed(() => (isWeekScope.value ? "本周" : "本节"));
 const suggestions = computed(() =>
   isWeekScope.value
     ? ["用三句话总结本周核心", "解释本周验收标准", "给我一道本周验收题"]
-    : ["用三句话总结本节核心", "解释本节最容易混淆的概念", "给我一道本节练习题"],
+    : ["用三句话总结本节核心", "解释本节最容易混淆的概念", "这个概念能用动画解释吗？"],
 );
 
 const weekContext = computed(() =>
@@ -54,7 +64,22 @@ const activeContext = computed(
 const loadHistory = () => {
   try {
     const stored = JSON.parse(localStorage.getItem(storageKey.value) || "[]");
-    messages.value = Array.isArray(stored) ? stored.slice(-20) : [];
+    messages.value = Array.isArray(stored)
+      ? stored.slice(-20).flatMap((value) => {
+          if (!value || typeof value !== "object") return [];
+          const role = value.role === "assistant" ? "assistant" : "user";
+          const content = String(value.content || "").slice(0, 12_000);
+          if (!content.trim()) return [];
+          const animation = parseLearningAnimation(value.animation);
+          const kind =
+            value.kind === "animation" && animation
+              ? "animation"
+              : value.kind === "animation_offer"
+                ? "animation_offer"
+                : "answer";
+          return [{ role, content, kind, ...(animation ? { animation } : {}) }];
+        })
+      : [];
   } catch {
     messages.value = [];
   }
@@ -106,9 +131,18 @@ const send = async (preset?: string) => {
     if (!response.ok) {
       throw new Error(data?.message || `答疑服务错误（${response.status}）`);
     }
+    const animation = parseLearningAnimation(data.animation);
+    const kind =
+      data.kind === "animation" && animation
+        ? "animation"
+        : data.kind === "animation_offer"
+          ? "animation_offer"
+          : "answer";
     messages.value.push({
       role: "assistant",
       content: String(data.message || "暂时没有得到有效回答。"),
+      kind,
+      ...(animation ? { animation } : {}),
     });
   } catch (caught) {
     error.value = caught instanceof Error ? caught.message : "在线答疑暂时不可用";
@@ -165,11 +199,25 @@ const clearHistory = () => {
         >
           <span>{{ message.role === "user" ? "你" : "AI" }}</span>
           <div v-if="message.role === 'user'">{{ message.content }}</div>
-          <div
-            v-else
-            class="markdown-body"
-            v-html="renderMarkdown(message.content)"
-          />
+          <div v-else class="assistant-response">
+            <div
+              class="markdown-body"
+              v-html="renderMarkdown(message.content)"
+            />
+            <button
+              v-if="message.kind === 'animation_offer'"
+              class="animation-consent"
+              :disabled="busy"
+              @click="send('需要，请用动画展示你刚才解释的概念。')"
+            >
+              需要，用动画展示 →
+            </button>
+            <LearningAnimation
+              v-if="message.animation"
+              :spec="message.animation"
+              compact
+            />
+          </div>
         </article>
         <article v-if="busy" class="chat-message assistant waiting">
           <span>AI</span>

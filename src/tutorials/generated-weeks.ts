@@ -13,6 +13,11 @@ const course = courseJson as CourseData;
 
 const paragraph = (text: string): ContentBlock => ({ type: "paragraph", text });
 const quote = (text: string): ContentBlock => ({ type: "quote", text });
+const code = (text: string, language = "text"): ContentBlock => ({
+  type: "code",
+  text,
+  language,
+});
 const list = (...items: string[]): ContentBlock => ({
   type: "list",
   items,
@@ -334,6 +339,185 @@ const explainTopic = (focus: string) => {
   );
 };
 
+const clarificationForTopic = (focus: string) => {
+  const rules: Array<[RegExp, string]> = [
+    [
+      /storage|shape|stride|contiguous|view|data pointer|tensor 内部/i,
+      "Shape 是逻辑坐标系，Stride 是从逻辑坐标走到真实地址时使用的步长表。同一块 Storage 可以被不同的 Shape 和 Stride 解释成不同视图。",
+    ],
+    [
+      /warp|simt|branch divergence|分支发散/i,
+      "可以把 Warp 想成一组共同接收指令的 Lane。Lane 的数据互不相同，但控制路径分开时，硬件需要依次推进各条路径。",
+    ],
+    [
+      /coalesc|bank conflict|共享内存|内存事务|合并访存/i,
+      "程序写的是逐线程地址，硬件执行的是内存事务。判断访问是否高效，要看一个 Warp 的地址最终落入多少个对齐内存块或共享内存 Bank。",
+    ],
+    [
+      /reduction|归约|prefix sum|scan|前缀/i,
+      "串行代码从左到右累计；并行代码把输入先分组得到局部结果，再按树形结构合并。难点不在加法本身，而在分工、同步和边界。",
+    ],
+    [
+      /online softmax|flashattention|flash attention/i,
+      "新数据块到来时，旧的最大值可能失效，因此旧的归一化和也要按新旧最大值之差重新缩放；这一步是分块结果仍与完整 Softmax 等价的关键。",
+    ],
+    [
+      /nccl|allreduce|allgather|reducescatter|communicator|rank/i,
+      "Rank 是通信参与者的编号，Communicator 定义哪些 Rank 属于同一个通信组，Collective 则规定所有参与者共同完成的数据交换方式。",
+    ],
+    [
+      /tensor parallel|pipeline parallel|sequence parallel|数据并行|张量并行/i,
+      "并行策略的本质是决定“哪一维数据或计算由哪张卡负责”，随后补上跨卡依赖所需的通信。切分方式不同，通信原语与通信量也会不同。",
+    ],
+  ];
+  return rules.find(([pattern]) => pattern.test(focus))?.[1];
+};
+
+const minimumExampleForTopic = (
+  focus: string,
+): { blocks: ContentBlock[]; result: string } => {
+  if (/softmax/i.test(focus)) {
+    return {
+      blocks: [
+        code(
+          `import torch
+
+x = torch.tensor([1000.0, 1001.0, 1002.0])
+stable = torch.softmax(x - x.max(), dim=0)
+print(stable, stable.sum())`,
+          "python",
+        ),
+      ],
+      result:
+        "观察结果：三个权重均为有限值，且总和接近 1。减去最大值只改善数值范围，不改变归一化后的理论结果。",
+    };
+  }
+  if (/matmul|gemm|矩阵乘/i.test(focus)) {
+    return {
+      blocks: [
+        code(
+          `import torch
+
+A = torch.randn(2, 3)
+B = torch.randn(3, 4)
+C = A @ B
+print(A.shape, B.shape, C.shape)  # [2,3] [3,4] [2,4]`,
+          "python",
+        ),
+      ],
+      result:
+        "观察结果：A 的最后一维必须与 B 的倒数第二维相等；输出保留外侧的 M 与 N 两个维度。",
+    };
+  }
+  if (/attention|qk|mha|mqa|gqa/i.test(focus)) {
+    return {
+      blocks: [
+        code(
+          `import torch
+import torch.nn.functional as F
+
+q = torch.randn(1, 4, 8, 32)
+k = torch.randn(1, 4, 8, 32)
+v = torch.randn(1, 4, 8, 32)
+out = F.scaled_dot_product_attention(q, k, v)
+print(out.shape)  # [1, 4, 8, 32]`,
+          "python",
+        ),
+      ],
+      result:
+        "观察结果：输出保留 Q 的批次、头数、查询长度和头维度；Mask、GQA 与因果约束应在后续小节单独验证。",
+    };
+  }
+  if (/threadidx|blockidx|blockdim|线程映射|grid|block/i.test(focus)) {
+    return {
+      blocks: [
+        code(
+          `__global__ void write_index(int* out, int n) {
+  int i = blockIdx.x * blockDim.x + threadIdx.x;
+  if (i < n) out[i] = i;
+}`,
+          "cuda",
+        ),
+      ],
+      result:
+        "观察结果：每个线程计算一个全局索引；当 n 不能整除 blockDim.x 时，边界判断负责屏蔽尾部多出的线程。",
+    };
+  }
+  if (/warp|shuffle|归约|reduction/i.test(focus)) {
+    return {
+      blocks: [
+        code(
+          `for (int offset = 16; offset > 0; offset /= 2) {
+  value += __shfl_down_sync(0xffffffff, value, offset);
+}`,
+          "cuda",
+        ),
+      ],
+      result:
+        "观察结果：每轮把距离为 offset 的 Lane 值合并进来；示例假定完整 Warp，实际代码必须明确有效 Lane 与数据边界。",
+    };
+  }
+  if (/stream|event|异步|overlap|并发/i.test(focus)) {
+    return {
+      blocks: [
+        code(
+          `cudaEventRecord(ready, producer);
+cudaStreamWaitEvent(consumer, ready);
+kernel<<<grid, block, 0, consumer>>>(data);`,
+          "cuda",
+        ),
+      ],
+      result:
+        "观察结果：consumer 只等待 ready 之前的工作，不需要用设备级同步阻塞所有 Stream；是否产生重叠仍需看时间线。",
+    };
+  }
+  if (/nccl|allreduce|communicator|rank/i.test(focus)) {
+    return {
+      blocks: [
+        code(
+          `ncclAllReduce(
+  sendBuffer, recvBuffer, count,
+  ncclFloat, ncclSum, communicator, stream
+);`,
+          "cpp",
+        ),
+      ],
+      result:
+        "观察结果：通信发生在 communicator 定义的 Rank 集合中，并按给定 CUDA Stream 排序；所有参与 Rank 必须以匹配参数调用。",
+    };
+  }
+  if (/storage|shape|stride|contiguous|view|tensor|布局/i.test(focus)) {
+    return {
+      blocks: [
+        code(
+          `import torch
+
+x = torch.arange(12).reshape(3, 4)
+y = x.t()
+print(x.shape, x.stride())  # [3,4], (4,1)
+print(y.shape, y.stride())  # [4,3], (1,4)`,
+          "python",
+        ),
+      ],
+      result:
+        "观察结果：转置后的视图可以共享底层数据，但 Shape 与 Stride 改变，因此不能仅凭元素数量推断连续布局。",
+    };
+  }
+  return {
+    blocks: [
+      code(
+        `输入：选取一个最小正常案例和一个边界案例
+操作：只执行本节讨论的一个变换
+对照：使用数学定义、CPU 版本或框架实现
+记录：输出、误差、耗时与运行环境`,
+        "text",
+      ),
+    ],
+    result:
+      "观察结果：最小例子用于隔离一个概念，不替代完整工程测试；若无法明确输入、输出和对照结果，说明概念仍需继续拆分。",
+  };
+};
+
 const topicLesson = (
   week: CourseWeek,
   topic: Topic,
@@ -342,6 +526,8 @@ const topicLesson = (
   const kind = lessonKind(topic.section.title);
   const id = `w${String(week.week).padStart(2, "0")}-${slug(topic.title)}-${index + 1}`;
   const focus = stripMarkup(topic.source);
+  const clarification = clarificationForTopic(focus);
+  const example = minimumExampleForTopic(focus);
   const practiceSteps =
     kind === "practice"
       ? [
@@ -371,9 +557,12 @@ const topicLesson = (
     sections: [
       {
         id: `${id}-intuition`,
-        title: "先用通俗的话讲明白",
+        title: "概念",
         blocks: [
           paragraph(explainTopic(focus)),
+          ...(clarification
+            ? [quote(`理解提示：${clarification}`)]
+            : []),
           paragraph(
             `这一节的重点不是记住“${focus}”这个名词，而是看清它在「${week.title}」中的位置：上游给它什么数据，它做了什么变换，下游依赖什么结果。只要这三件事说不清，代码即使能运行，也很难判断是否正确或值得优化。`,
           ),
@@ -381,6 +570,11 @@ const topicLesson = (
             "先保证语义正确，再观察瓶颈，最后才选择优化手段。正确性、性能和可维护性要分别给出证据。",
           ),
         ],
+      },
+      {
+        id: `${id}-example`,
+        title: "最小示例",
+        blocks: [...example.blocks, paragraph(example.result)],
       },
       {
         id: `${id}-model`,
