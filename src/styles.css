@@ -8,7 +8,7 @@
   --paper: #f6f8fa;
   --paper-strong: #ffffff;
   --text: #24292f;
-  --muted: #57606a;
+  --muted: #424a53;
   --line: #d0d7de;
   --cyan: #2f8f5b;
   --cyan-bright: #56b77b;
@@ -873,9 +873,9 @@ textarea:focus-visible {
 }
 
 .docs-sidebar {
-  background: #e9eee9;
-  border-right: 1px solid #c7d0c8;
-  color: #46554e;
+  background: #f3f5f3;
+  border-right: 1px solid #d0d7de;
+  color: #24292f;
 }
 
 .sidebar-progress {
@@ -883,19 +883,19 @@ textarea:focus-visible {
   top: 0;
   z-index: 2;
   padding: 22px 22px 18px;
-  background: #e2e9e3;
-  border-bottom: 1px solid #c7d0c8;
+  background: #eef1ee;
+  border-bottom: 1px solid #d0d7de;
 }
 
 .sidebar-progress > div:first-child {
   display: flex;
   justify-content: space-between;
-  color: #596a62;
+  color: #32383f;
   font-size: 10px;
 }
 
 .sidebar-progress strong {
-  color: #2e3f37;
+  color: #1f2328;
   font-family: var(--mono);
   font-weight: 500;
 }
@@ -926,7 +926,7 @@ textarea:focus-visible {
   align-items: center;
   gap: 8px;
   padding: 8px 10px;
-  color: #596a62;
+  color: #32383f;
   font-family: var(--mono);
   font-size: 9px;
   font-weight: 600;
@@ -950,7 +950,7 @@ textarea:focus-visible {
   border: 0;
   border-left: 2px solid transparent;
   background: transparent;
-  color: #485850;
+  color: #24292f;
   font-size: 11px;
   line-height: 1.35;
   text-align: left;
@@ -1015,12 +1015,12 @@ textarea:focus-visible {
   gap: 6px;
   padding: 7px 8px;
   border-left-width: 1px;
-  color: #53635b;
+  color: #24292f;
   font-size: 9px;
 }
 
 .sidebar-lessons button > span:first-child {
-  color: #8a9891;
+  color: #424a53;
   font-family: var(--mono);
   font-size: 8px;
 }
@@ -1063,7 +1063,7 @@ textarea:focus-visible {
   flex-wrap: wrap;
   align-items: center;
   gap: 8px;
-  color: #6a7972;
+  color: #424a53;
   font-family: var(--mono);
   font-size: 9px;
 }
@@ -1077,7 +1077,7 @@ textarea:focus-visible {
 }
 
 .article-breadcrumb strong {
-  color: #3e5048;
+  color: #24292f;
   font-weight: 500;
 }
 
@@ -1100,7 +1100,7 @@ textarea:focus-visible {
 
 .article-header > p {
   margin: 24px 0 8px;
-  color: #4f6159;
+  color: #32383f;
   font-family: var(--mono);
   font-size: 11px;
 }
@@ -1116,7 +1116,7 @@ textarea:focus-visible {
   margin-top: 22px;
   padding-left: 18px;
   border-left: 2px solid var(--cyan);
-  color: #52645b;
+  color: #24292f;
   font-size: 14px;
   line-height: 1.85;
 }
@@ -1143,7 +1143,7 @@ textarea:focus-visible {
 
 .content-paragraph,
 .content-list {
-  color: #394a43;
+  color: #1f2328;
   font-size: 14px;
   line-height: 1.95;
 }
@@ -1184,9 +1184,9 @@ textarea:focus-visible {
   overflow-x: auto;
   margin: 24px 0;
   padding: 24px;
-  background: #202b27;
-  border: 1px solid #394841;
-  color: #d3dfd8;
+  background: #1f2328;
+  border: 1px solid #444c56;
+  color: #f0f3f1;
   font-family: var(--mono);
   font-size: 12px;
   line-height: 1.75;
@@ -1197,7 +1197,7 @@ textarea:focus-visible {
   position: absolute;
   top: 8px;
   right: 10px;
-  color: #557086;
+  color: #d0d7de;
   font-size: 8px;
   text-transform: uppercase;
 }
@@ -1207,14 +1207,14 @@ textarea:focus-visible {
   padding: 18px 22px;
   background: #eef8f9;
   border-left: 3px solid var(--cyan);
-  color: #2f5863;
+  color: #1f2328;
   font-size: 14px;
   line-height: 1.8;
 }
 
 .content-subheading {
   margin: 28px 0 10px;
-  color: #273a32;
+  color: #1f2328;
   font-size: 15px;
 }
 
@@ -1547,7 +1547,7 @@ textarea:focus-visible {
 
 .docs-rail {
   padding: 24px 18px 50px;
-  background: #e9eeea;
+  background: #f6f8fa;
   border-left: 1px solid var(--line);
 }
 
@@ -1566,7 +1566,7 @@ textarea:focus-visible {
   align-items: center;
   justify-content: space-between;
   margin-bottom: 14px;
-  color: #4b5d54;
+  color: #24292f;
   font-size: 10px;
   font-weight: 700;
   letter-spacing: 0.06em;
@@ -1575,7 +1575,7 @@ textarea:focus-visible {
 .rail-title i {
   padding: 3px 5px;
   background: #e6ece7;
-  color: #5d6e65;
+  color: #32383f;
   font-family: var(--mono);
   font-size: 8px;
   font-style: normal;
@@ -1587,7 +1587,7 @@ textarea:focus-visible {
 }
 
 .rail-title b {
-  color: #63736b;
+  color: #32383f;
   font-family: var(--mono);
   font-size: 9px;
 }
@@ -1612,7 +1612,7 @@ textarea:focus-visible {
 .rail-login {
   display: block;
   margin-top: 10px;
-  color: #687970;
+  color: #32383f;
   font-size: 9px;
   text-align: center;
 }
@@ -1631,7 +1631,7 @@ textarea:focus-visible {
   gap: 8px;
   padding: 9px 0;
   border-top: 1px solid #e2e8e3;
-  color: #3f5148;
+  color: #24292f;
   font-size: 10px;
   line-height: 1.5;
 }
@@ -1653,7 +1653,7 @@ textarea:focus-visible {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  color: #4b5f55;
+  color: #24292f;
   font-size: 9px;
   font-weight: 600;
 }
@@ -1713,7 +1713,7 @@ textarea:focus-visible {
 .toc-card a {
   padding: 6px 0 6px 10px;
   border-left: 1px solid #d9e2e6;
-  color: #6c7d8d;
+  color: #24292f;
   font-size: 10px;
   line-height: 1.4;
   text-decoration: none;
@@ -1879,8 +1879,8 @@ textarea:focus-visible {
 .code-example {
   overflow: hidden;
   margin: 24px 0;
-  background: #202b27;
-  border: 1px solid #394841;
+  background: #1f2328;
+  border: 1px solid #444c56;
 }
 
 .code-example > div {
@@ -1889,12 +1889,12 @@ textarea:focus-visible {
   justify-content: space-between;
   min-height: 34px;
   padding: 0 10px 0 16px;
-  background: #2a3732;
-  border-bottom: 1px solid #46564f;
+  background: #24292f;
+  border-bottom: 1px solid #444c56;
 }
 
 .code-example > div span {
-  color: #5f788d;
+  color: #d0d7de;
   font-family: var(--mono);
   font-size: 8px;
   text-transform: uppercase;
@@ -1902,9 +1902,9 @@ textarea:focus-visible {
 
 .code-example > div button {
   padding: 5px 9px;
-  border: 1px solid #53665d;
-  background: #33433d;
-  color: #b6c7be;
+  border: 1px solid #57606a;
+  background: #32383f;
+  color: #f0f3f1;
   font-family: var(--mono);
   font-size: 8px;
 }
@@ -1946,7 +1946,7 @@ textarea:focus-visible {
 .lesson-meta span {
   padding: 5px 8px;
   background: #e8eeea;
-  color: #40564b;
+  color: #24292f;
   font-family: var(--mono);
   font-size: 8px;
 }
@@ -1964,7 +1964,7 @@ textarea:focus-visible {
 
 .lesson-summary {
   margin: 0;
-  color: #4d5f56;
+  color: #24292f;
   font-size: 14px;
   line-height: 1.8;
 }
@@ -1977,7 +1977,7 @@ textarea:focus-visible {
 }
 
 .lesson-objectives strong {
-  color: #213b4a;
+  color: #1f2328;
   font-size: 12px;
 }
 
@@ -1992,14 +1992,14 @@ textarea:focus-visible {
 .lesson-objectives li {
   display: flex;
   gap: 9px;
-  color: #405349;
+  color: #1f2328;
   font-size: 12px;
   line-height: 1.55;
 }
 
 .lesson-objectives li::before {
   content: "✓";
-  color: #0ca4bd;
+  color: var(--cyan);
   font-family: var(--mono);
 }
 
@@ -2045,7 +2045,7 @@ textarea:focus-visible {
 
 .exercise-card > p {
   margin: 0;
-  color: #334c5e;
+  color: #1f2328;
   font-size: 13px;
   line-height: 1.75;
 }
@@ -2060,7 +2060,7 @@ textarea:focus-visible {
   padding: 7px 10px;
   border: 1px solid #bfcdd2;
   background: #fff;
-  color: #526979;
+  color: #24292f;
   font-size: 9px;
 }
 
@@ -2076,7 +2076,7 @@ textarea:focus-visible {
   padding: 13px 15px;
   background: #e9f7f9;
   border-left: 3px solid var(--cyan);
-  color: #365765;
+  color: #1f2328;
   font-size: 11px;
   line-height: 1.75;
 }
@@ -2087,7 +2087,7 @@ textarea:focus-visible {
 }
 
 .exercise-reveal strong {
-  color: #143645;
+  color: #1f2328;
   font-size: 9px;
   letter-spacing: 0.08em;
 }
@@ -2102,7 +2102,7 @@ textarea:focus-visible {
 
 .quiz-card legend {
   padding: 0 8px;
-  color: #294253;
+  color: #1f2328;
   font-size: 13px;
   font-weight: 600;
 }
@@ -2115,7 +2115,7 @@ textarea:focus-visible {
   padding: 10px 12px;
   background: #f6f9f8;
   border: 1px solid transparent;
-  color: #536678;
+  color: #24292f;
   font-size: 11px;
 }
 
@@ -2139,7 +2139,7 @@ textarea:focus-visible {
   margin: 5px 0 0;
   padding: 10px 12px;
   background: #edf6f8;
-  color: #41616e;
+  color: #1f2328;
   font-size: 10px;
   line-height: 1.65;
 }
@@ -2175,7 +2175,7 @@ textarea:focus-visible {
 }
 
 .quiz-submit small {
-  color: #718290;
+  color: #32383f;
   font-size: 10px;
 }
 
@@ -2195,7 +2195,7 @@ textarea:focus-visible {
 
 .lesson-references > div p {
   margin: 0 0 16px;
-  color: #748392;
+  color: #24292f;
   font-size: 10px;
   line-height: 1.7;
 }
@@ -2208,7 +2208,7 @@ textarea:focus-visible {
   padding: 15px 36px 15px 16px;
   background: #f6f9f9;
   border: 1px solid #dbe5e7;
-  color: #284657;
+  color: #1f2328;
   text-decoration: none;
 }
 
@@ -2253,7 +2253,7 @@ textarea:focus-visible {
   padding: 0 12px;
   border: 1px solid #cbd7db;
   background: #fff;
-  color: #526777;
+  color: #24292f;
   font-size: 9px;
 }
 
@@ -2276,7 +2276,7 @@ textarea:focus-visible {
 
 .weekly-brief-heading p {
   margin: 0;
-  color: #718293;
+  color: #24292f;
   font-size: 11px;
   line-height: 1.7;
 }
@@ -2303,7 +2303,7 @@ textarea:focus-visible {
 .book-page-lead {
   max-width: 620px;
   margin: 0;
-  color: #66798b;
+  color: #24292f;
   font-size: 14px;
   line-height: 1.85;
 }
@@ -2350,7 +2350,7 @@ textarea:focus-visible {
 
 .featured-book p {
   margin: 0;
-  color: #8fa4b5;
+  color: #f0f3f6;
   font-size: 11px;
   line-height: 1.75;
 }
@@ -2384,7 +2384,7 @@ textarea:focus-visible {
 
 .reading-groups p,
 .reading-groups small {
-  color: #617587;
+  color: #24292f;
   font-size: 10px;
   line-height: 1.65;
 }
@@ -2392,7 +2392,7 @@ textarea:focus-visible {
 .reading-groups small {
   display: block;
   margin-top: 13px;
-  color: #8a98a4;
+  color: #32383f;
 }
 
 .secondary-book {
@@ -2410,7 +2410,7 @@ textarea:focus-visible {
   gap: 8px;
   padding-left: 20px;
   margin: 0;
-  color: #526778;
+  color: #24292f;
   font-size: 11px;
   line-height: 1.6;
 }
@@ -2430,7 +2430,7 @@ textarea:focus-visible {
   padding: 16px 38px 16px 17px;
   background: #fff;
   border: 1px solid var(--line);
-  color: #294657;
+  color: #1f2328;
   text-decoration: none;
 }
 
@@ -2472,7 +2472,7 @@ textarea:focus-visible {
 
 .reading-method p {
   margin: 7px 0 0;
-  color: #705d35;
+  color: #3b2f18;
   font-size: 11px;
   line-height: 1.75;
 }
