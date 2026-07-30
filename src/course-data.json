@@ -112,52 +112,6 @@
       "stageIndex": 0,
       "sections": [
         {
-          "id": "week-1-阅读",
-          "title": "阅读",
-          "blocks": [
-            {
-              "type": "subheading",
-              "text": "《Effective Modern C++》"
-            },
-            {
-              "type": "paragraph",
-              "text": "读："
-            },
-            {
-              "type": "list",
-              "ordered": false,
-              "items": [
-                "Item 1～4：类型推导；",
-                "Item 5～8：`auto`、初始化、`nullptr`；",
-                "Item 17～23：特殊成员函数、移动语义、完美转发；",
-                "Item 37～39：线程、异步和内存模型基础。"
-              ]
-            },
-            {
-              "type": "paragraph",
-              "text": "不需要把所有 Item 都读完。"
-            },
-            {
-              "type": "subheading",
-              "text": "《深入理解计算机系统》第 3 版"
-            },
-            {
-              "type": "paragraph",
-              "text": "复习："
-            },
-            {
-              "type": "list",
-              "ordered": false,
-              "items": [
-                "第 3 章中与汇编、函数调用、数据布局有关的部分；",
-                "第 5 章：优化程序性能；",
-                "第 6 章：存储器层次结构；",
-                "第 7 章前半部分：链接基础。"
-              ]
-            }
-          ]
-        },
-        {
           "id": "week-1-需要完善的能力",
           "title": "需要完善的能力",
           "blocks": [
@@ -276,9 +230,34 @@
               "text": "全部做到，可以把本周压缩成 3～4 天。"
             }
           ]
+        },
+        {
+          "id": "week-1-推荐阅读",
+          "title": "推荐阅读",
+          "blocks": [
+            {
+              "type": "paragraph",
+              "text": "先完成本周页面中的 18 个 Item 教程、练习与测验，再带着具体问题阅读原书："
+            },
+            {
+              "type": "list",
+              "ordered": false,
+              "items": [
+                "《Effective Modern C++》Item 1～4：类型推导；",
+                "《Effective Modern C++》Item 5～8：`auto`、初始化与 `nullptr`；",
+                "《Effective Modern C++》Item 17～23：特殊成员函数、智能指针、Pimpl、移动与完美转发；",
+                "《Effective Modern C++》Item 37～39：线程收尾、异步句柄与一次性事件通信；",
+                "《深入理解计算机系统》第 3 版第 3、5、6 章及第 7 章前半部分：函数调用、性能、存储层次与链接。"
+              ]
+            },
+            {
+              "type": "quote",
+              "text": "推荐阅读是知识点讲完后的延伸，不代替页面教程。先做题，再对照书里的完整论证。"
+            }
+          ]
         }
       ],
-      "searchText": "c++、内存与编译工程 前置能力诊断与定向复习 阅读 《effective modern c++》 读： item 1～4：类型推导； item 5～8：`auto`、初始化、`nullptr`； item 17～23：特殊成员函数、移动语义、完美转发； item 37～39：线程、异步和内存模型基础。 不需要把所有 item 都读完。 《深入理解计算机系统》第 3 版 复习： 第 3 章中与汇编、函数调用、数据布局有关的部分； 第 5 章：优化程序性能； 第 6 章：存储器层次结构； 第 7 章前半部分：链接基础。 需要完善的能力 **【科班复习】** 栈与堆； 指针和引用； 对象生命周期； 静态库与动态库； 编译与链接； cache line； 空间局部性和时间局部性。 **【必须掌握】** raii； 移动语义； 模板函数； 编译期常量； 内存对齐； `restrict` 思想； cmake； gdb； addresssanitizer。 编程任务 实现一个 cpu 端的基础库： cpp-foundation/\n├── include/\n│   ├── aligned_buffer.hpp\n│   ├── timer.hpp\n│   └── tensor_view.hpp\n├── src/\n├── tests/\n└── cmakelists.txt 要求实现： 一个 raii 管理的对齐内存类； 一个支持二维 shape 和 stride 的 `tensorview`； cpu 矩阵乘法； cpu softmax； googletest 或 catch2 单元测试； 编译成共享库。 达到的深度 本周结束，你必须能回答： 移动构造函数解决什么问题？ 模板参数和运行时参数有什么区别？ 为什么矩阵按行访问通常比按列访问快？ 静态库和动态库有什么差异？ 为什么内存对齐可能影响 simd 和 gpu 访存？ cmake 是如何组织 `.cpp`、`.cu` 和测试程序的？ 验收 不看资料，能在 90 分钟内： 创建一个 cmake c++ 项目； 编译共享库； 编写一个模板函数； 用单元测试验证 cpu softmax； 使用 gdb 定位一次数组越界。 全部做到，可以把本周压缩成 3～4 天。"
+      "searchText": "c++、内存与编译工程 前置能力诊断与定向复习 需要完善的能力 **【科班复习】** 栈与堆； 指针和引用； 对象生命周期； 静态库与动态库； 编译与链接； cache line； 空间局部性和时间局部性。 **【必须掌握】** raii； 移动语义； 模板函数； 编译期常量； 内存对齐； `restrict` 思想； cmake； gdb； addresssanitizer。 编程任务 实现一个 cpu 端的基础库： cpp-foundation/\n├── include/\n│   ├── aligned_buffer.hpp\n│   ├── timer.hpp\n│   └── tensor_view.hpp\n├── src/\n├── tests/\n└── cmakelists.txt 要求实现： 一个 raii 管理的对齐内存类； 一个支持二维 shape 和 stride 的 `tensorview`； cpu 矩阵乘法； cpu softmax； googletest 或 catch2 单元测试； 编译成共享库。 达到的深度 本周结束，你必须能回答： 移动构造函数解决什么问题？ 模板参数和运行时参数有什么区别？ 为什么矩阵按行访问通常比按列访问快？ 静态库和动态库有什么差异？ 为什么内存对齐可能影响 simd 和 gpu 访存？ cmake 是如何组织 `.cpp`、`.cu` 和测试程序的？ 验收 不看资料，能在 90 分钟内： 创建一个 cmake c++ 项目； 编译共享库； 编写一个模板函数； 用单元测试验证 cpu softmax； 使用 gdb 定位一次数组越界。 全部做到，可以把本周压缩成 3～4 天。 推荐阅读 先完成本周页面中的 18 个 item 教程、练习与测验，再带着具体问题阅读原书： 《effective modern c++》item 1～4：类型推导； 《effective modern c++》item 5～8：`auto`、初始化与 `nullptr`； 《effective modern c++》item 17～23：特殊成员函数、智能指针、pimpl、移动与完美转发； 《effective modern c++》item 37～39：线程收尾、异步句柄与一次性事件通信； 《深入理解计算机系统》第 3 版第 3、5、6 章及第 7 章前半部分：函数调用、性能、存储层次与链接。 推荐阅读是知识点讲完后的延伸，不代替页面教程。先做题，再对照书里的完整论证。"
     },
     {
       "id": "week-2",

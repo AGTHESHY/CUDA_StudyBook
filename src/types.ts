@@ -78,6 +78,7 @@ export interface TutorialLesson {
   quiz: TutorialQuizQuestion[];
   references: TutorialReference[];
   verification: string;
+  readingNote?: string;
 }
 
 export interface TutorialModule {

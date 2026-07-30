@@ -3,6 +3,7 @@ import type {
   TutorialLesson,
   TutorialModule,
 } from "./types";
+import { weekOneBookModule } from "./tutorials/week-one-book";
 
 const p = (text: string): ContentBlock => ({ type: "paragraph", text });
 const quote = (text: string): ContentBlock => ({ type: "quote", text });
@@ -738,6 +739,8 @@ int main() {
 ];
 
 export const tutorialByWeek = new Map(
-  tutorialModules.map((module) => [module.week, module]),
+  tutorialModules.map((module) => [
+    module.week,
+    module.week === 1 ? weekOneBookModule : module,
+  ]),
 );
-

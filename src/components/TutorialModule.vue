@@ -264,6 +264,10 @@ const selectRelative = (offset: number) => {
           <strong>{{ reference.label }}</strong>
           <span>↗</span>
         </a>
+        <aside v-if="selectedLesson.readingNote" class="reading-note">
+          <strong>推荐阅读</strong>
+          <p>{{ selectedLesson.readingNote }}</p>
+        </aside>
       </section>
 
       <div class="lesson-footer">
