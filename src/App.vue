@@ -16,6 +16,7 @@ import TutorialModule from "./components/TutorialModule.vue";
 import { tutorialByWeek } from "./tutorial-data";
 import type {
   CourseData,
+  CourseSection,
   CourseWeek,
   StudyProgress,
   UserSession,
@@ -139,6 +140,54 @@ const selectedTutorialLesson = computed(() =>
     (item) => item.id === selectedTutorialPageId.value,
   ),
 );
+const stringifySections = (sections: CourseSection[]) =>
+  sections
+    .map((section) => {
+      const body = section.blocks
+        .flatMap((block) =>
+          block.type === "list" ? block.items : block.text ? [block.text] : [],
+        )
+        .join("\n");
+      return `## ${section.title}\n${body}`;
+    })
+    .join("\n\n");
+const tutorConfig = computed(() => {
+  if (!selectedTutorial.value || isWeeklyRoadmapPage.value) {
+    return {
+      scope: "week" as const,
+      scopeId: WEEKLY_PAGE_ID,
+      scopeTitle: `${selectedWeek.value.title} · 本周课程表与验收`,
+      context: "",
+    };
+  }
+  if (isReadingPage.value) {
+    return {
+      scope: "lesson" as const,
+      scopeId: READING_PAGE_ID,
+      scopeTitle: "推荐书籍与阅读方法",
+      context: [
+        "本节是第 1 周的推荐阅读页。",
+        "主读《Effective Modern C++》Item 1—8、17—23、37—39。",
+        "补充阅读《深入理解计算机系统》第 3、5、6 章与第 7 章前半。",
+        "阅读原则：先完成教程和练习，再按薄弱点阅读对应章节，并把新增边界条件记入学习笔记。",
+      ].join("\n"),
+    };
+  }
+  const lesson = selectedTutorialLesson.value;
+  return {
+    scope: "lesson" as const,
+    scopeId: lesson?.id ?? selectedTutorialPageId.value,
+    scopeTitle: lesson?.title ?? selectedWeek.value.title,
+    context: lesson
+      ? [
+          lesson.summary,
+          `学习目标：\n${lesson.objectives.join("\n")}`,
+          stringifySections(lesson.sections),
+          `练习：\n${lesson.exercises.map((item) => item.prompt).join("\n")}`,
+        ].join("\n\n")
+      : "",
+  };
+});
 const completedTutorialLessons = computed(
   () =>
     selectedTutorial.value?.lessons.filter((item) =>
@@ -878,7 +927,13 @@ onBeforeUnmount(() => {
           </section>
         </template>
 
-        <LlmTutor :week="selectedWeek" />
+        <LlmTutor
+          :week="selectedWeek"
+          :scope="tutorConfig.scope"
+          :scope-id="tutorConfig.scopeId"
+          :scope-title="tutorConfig.scopeTitle"
+          :context="tutorConfig.context"
+        />
 
         <footer
           v-if="!selectedTutorial || isWeeklyRoadmapPage"

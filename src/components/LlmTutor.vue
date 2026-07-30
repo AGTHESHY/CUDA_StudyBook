@@ -7,7 +7,13 @@ type ChatMessage = {
   content: string;
 };
 
-const props = defineProps<{ week: CourseWeek }>();
+const props = defineProps<{
+  week: CourseWeek;
+  scope: "lesson" | "week";
+  scopeId: string;
+  scopeTitle: string;
+  context?: string;
+}>();
 
 const messages = ref<ChatMessage[]>([]);
 const draft = ref("");
@@ -15,12 +21,16 @@ const busy = ref(false);
 const error = ref("");
 const chatEnd = ref<HTMLElement | null>(null);
 
-const storageKey = computed(() => `cuda52:tutor:week-${props.week.week}:v1`);
-const suggestions = [
-  "用三句话总结本周核心",
-  "解释本周最容易混淆的概念",
-  "给我一道本周验收题",
-];
+const storageKey = computed(
+  () => `cuda52:tutor:week-${props.week.week}:${props.scopeId}:v2`,
+);
+const isWeekScope = computed(() => props.scope === "week");
+const scopeLabel = computed(() => (isWeekScope.value ? "本周" : "本节"));
+const suggestions = computed(() =>
+  isWeekScope.value
+    ? ["用三句话总结本周核心", "解释本周验收标准", "给我一道本周验收题"]
+    : ["用三句话总结本节核心", "解释本节最容易混淆的概念", "给我一道本节练习题"],
+);
 
 const weekContext = computed(() =>
   props.week.sections
@@ -36,6 +46,9 @@ const weekContext = computed(() =>
     })
     .join("\n\n"),
 );
+const activeContext = computed(
+  () => props.context?.trim() || weekContext.value,
+);
 
 const loadHistory = () => {
   try {
@@ -48,7 +61,7 @@ const loadHistory = () => {
   error.value = "";
 };
 
-watch(() => props.week.week, loadHistory, { immediate: true });
+watch(storageKey, loadHistory, { immediate: true });
 
 watch(
   messages,
@@ -83,8 +96,8 @@ const send = async (preset?: string) => {
       },
       body: JSON.stringify({
         week: props.week.week,
-        title: props.week.title,
-        context: weekContext.value,
+        title: props.scopeTitle,
+        context: activeContext.value,
         messages: messages.value.slice(-12),
       }),
     });
@@ -124,8 +137,8 @@ const clearHistory = () => {
       <div class="tutor-mark">AI</div>
       <div>
         <span>WEEK {{ String(week.week).padStart(2, "0") }} · ONLINE OFFICE HOURS</span>
-        <h2 id="tutor-title">本周在线答疑</h2>
-        <p>针对本周内容、代码实现或不理解的概念，直接问助教。</p>
+        <h2 id="tutor-title">{{ scopeLabel }}答疑</h2>
+        <p>针对{{ scopeLabel }}内容、代码实现或不理解的概念，直接问助教。</p>
       </div>
       <div class="model-badge"><i /> deepseek-v4-pro</div>
     </header>
@@ -134,7 +147,7 @@ const clearHistory = () => {
       <div v-if="!messages.length" class="tutor-empty">
         <strong>从一个具体问题开始。</strong>
         <p>
-          我已经读过第 {{ week.week }} 周「{{ week.title }}」的课程内容，会结合本周目标回答。
+          我已经读过「{{ scopeTitle }}」的内容，会结合{{ scopeLabel }}知识点回答。
         </p>
         <div class="tutor-suggestions">
           <button v-for="suggestion in suggestions" :key="suggestion" @click="send(suggestion)">
@@ -169,7 +182,7 @@ const clearHistory = () => {
           v-model="draft"
           rows="3"
           :disabled="busy"
-          :placeholder="`问问第 ${week.week} 周的内容…`"
+          :placeholder="`问问${scopeLabel}「${scopeTitle}」的内容…`"
           aria-label="输入在线答疑问题"
           @keydown="onKeydown"
         />

@@ -48,3 +48,14 @@ test("week one roadmap is a final standalone page", async () => {
   assert.match(app, /!selectedTutorial \|\| isWeeklyRoadmapPage/);
   assert.match(app, /本周课程表与验收 →/);
 });
+
+test("tutor switches between lesson and weekly scope", async () => {
+  const tutor = await readFile(
+    new URL("../src/components/LlmTutor.vue", import.meta.url),
+    "utf8",
+  );
+
+  assert.match(tutor, /props\.scope === "week"/);
+  assert.match(tutor, /"本周" : "本节"/);
+  assert.match(tutor, /props\.scopeId/);
+});
