@@ -94,6 +94,8 @@ onMounted(() => {
   let pointerX = 0;
   let pointerY = 0;
   let animationFrame = 0;
+  let animationTime = 0;
+  let lastFrameTime: number | undefined;
 
   const resize = () => {
     if (!canvas.value) return;
@@ -110,29 +112,48 @@ onMounted(() => {
     pointerY = ((event.clientY - rect.top) / rect.height - 0.5) * 0.2;
   };
 
-  const clock = new THREE.Clock();
-  const render = () => {
-    const elapsed = clock.getElapsedTime();
+  const render = (frameTime: number) => {
+    const delta =
+      lastFrameTime === undefined
+        ? 0
+        : Math.min((frameTime - lastFrameTime) / 1000, 0.05);
+    lastFrameTime = frameTime;
+    animationTime += delta;
     if (!reducedMotion) {
-      group.rotation.y += (elapsed * 0.06 + pointerX - group.rotation.y) * 0.035;
+      group.rotation.y +=
+        (animationTime * 0.06 + pointerX - group.rotation.y) * 0.035;
       group.rotation.x += (pointerY - group.rotation.x) * 0.03;
-      inner.rotation.y = -elapsed * 0.13;
-      particles.rotation.y = elapsed * 0.025;
+      inner.rotation.y = -animationTime * 0.13;
+      particles.rotation.y = animationTime * 0.025;
     }
     renderer.render(scene, camera);
     animationFrame = window.requestAnimationFrame(render);
   };
 
+  const onVisibilityChange = () => {
+    if (document.hidden) {
+      window.cancelAnimationFrame(animationFrame);
+      animationFrame = 0;
+      lastFrameTime = undefined;
+      return;
+    }
+    if (!animationFrame) {
+      animationFrame = window.requestAnimationFrame(render);
+    }
+  };
+
   const observer = new ResizeObserver(resize);
   observer.observe(canvas.value);
   canvas.value.addEventListener("pointermove", onPointerMove);
+  document.addEventListener("visibilitychange", onVisibilityChange);
   resize();
-  render();
+  animationFrame = window.requestAnimationFrame(render);
 
   cleanup = () => {
     window.cancelAnimationFrame(animationFrame);
     observer.disconnect();
     canvas.value?.removeEventListener("pointermove", onPointerMove);
+    document.removeEventListener("visibilitychange", onVisibilityChange);
     particlesGeometry.dispose();
     (particles.material as THREE.Material).dispose();
     core.geometry.dispose();
